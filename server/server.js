@@ -18,17 +18,17 @@ Meteor.startup(function () {
 		 */
 		getPicturesFromFacebook: function(fbToken) {
 			var graph = Meteor.npmRequire('fbgraph');
-      if (Meteor.user().services.facebook.accessToken) {
-        graph.setAccessToken(Meteor.user().services.facebook.accessToken);
+			if (Meteor.user().services.facebook.accessToken) {
+			  graph.setAccessToken(Meteor.user().services.facebook.accessToken);
 
-        var fetchFromFacebook = Meteor.wrapAsync(graph.get);
-        var photos = fetchFromFacebook('/me/photos').data
+			  var fetchFromFacebook = Meteor.wrapAsync(graph.get);
+			  var photos = fetchFromFacebook('/me/photos').data
 
-        return photos;
-      } else {
-      	throw new Meteor.Error(401,
-      		'Error 401: Not found', 'Unauthorized');
-      }
+			  return photos;
+			} else {
+				throw new Meteor.Error(401,
+					'Error 401: Not found', 'Unauthorized');
+			}
 		}
 	})
 });
