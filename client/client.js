@@ -12,8 +12,8 @@ Template.body.events({
             return console.log(error);
           }
 
-          Meteor.call("getPicturesFromFacebook", function(err, result) {
-            Session.set('photos', result);
+          Meteor.call("getPicturesFromFacebook", function(err, urls) {
+            Session.set('photos', urls);
           });
       });
   }
