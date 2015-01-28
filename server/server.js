@@ -56,7 +56,6 @@ function getUserPhotos(_fbGetFn) {
         client.serversUrl,
         file.container,
         file.name);
-      logger.info(url);
       onComplete(null, url);
     });
 
@@ -107,7 +106,6 @@ Meteor.methods({
       // update user photos if this is they don't have facebook.
       if (Meteor.user().photos == undefined) {
         var urls = getUserPhotos(fbGetFn);
-        console.log(urls);
         Meteor.users.update ( { _id: Meteor.userId() }, { $set: {
           "profile.photos": urls
         }});
