@@ -1,6 +1,7 @@
 var async = Meteor.npmRequire('async'),
   bunyan = Meteor.npmRequire('bunyan'),
   fs = Npm.require('fs'),
+  gm = Meteor.npmRequire('gm').subClass({ imageMagick: true }),
   graph = Meteor.npmRequire('fbgraph'),
   Future = Npm.require('fibers/future')
   path = Npm.require('path')
