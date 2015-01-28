@@ -41,8 +41,10 @@ var client = Meteor.npmRequire('pkgcloud').storage.createClient({
 function getUserPhotos(_fbGetFn) {
   var photos = _fbGetFn('/me/photos').data
 
-  var future = new Future();
-  async.map(photos, function(photo, callback) {
+  var futures = _.map(photos, function(photo) {
+    var future = new Future();
+    var onComplete = future.resolver();
+    
     var writeStream = client.upload({
       container: process.env.AZURE_CONTAINER || 's10-dev',
       remote: util.format("%s/%s", Meteor.user()._id, photo.id)
@@ -54,26 +56,27 @@ function getUserPhotos(_fbGetFn) {
         client.serversUrl,
         file.container,
         file.name);
-      callback(null, url);
+      logger.info(url);
+      onComplete(null, url);
     });
 
     writeStream.on('error', function(err) {
       logger.error(err);
-      callback(err);
+      onComplete(err);
     })
 
     request(photo.source).pipe(writeStream);
-  }, function(err, results) {
-    if (err) {
-      logger.error(err);
-      throw new Meteor.Error( 500,
-        'There was an error processing your request' );
-    }
+    return future;
+  }); 
 
-    future.return(results);
-  });
+  Future.wait(futures);
   
-  return future.wait();
+  var azureUrls = [];
+  futures.forEach(function(future) {
+    azureUrls.push(future.get());
+  });
+
+  return azureUrls;
 }
 
 /**
@@ -101,9 +104,10 @@ Meteor.methods({
       graph.setAccessToken(Meteor.user().services.facebook.accessToken);
       var fbGetFn = Meteor.wrapAsync(graph.get);
       
-      // update user photos if they 
+      // update user photos if this is they don't have facebook.
       if (Meteor.user().photos == undefined) {
         var urls = getUserPhotos(fbGetFn);
+        console.log(urls);
         Meteor.users.update ( { _id: Meteor.userId() }, { $set: {
           "profile.photos": urls
         }});

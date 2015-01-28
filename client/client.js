@@ -18,7 +18,9 @@ Template.body.events({
           return console.log(error);
         }
 
-        Meteor.call("loginWithFacebook", function(err, urls) {});
+        Meteor.call("loginWithFacebook", function(err, urls) {
+          console.log("done");  
+        });
       });
   }
 })
