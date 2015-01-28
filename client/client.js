@@ -1,20 +1,24 @@
+var permissions = ['email', 'user_photos', 'user_birthday', 'user_education_history',
+  'user_about_me', 'user_work_history'];
+
 Template.body.helpers({
   photos: function() {
-    return Session.get("photos") || "";
+    if (Meteor.user()) {
+      return Meteor.user().profile.photos;
+    } else {
+      return [];
+    }
   }
 });
 
 Template.body.events({
   'click button': function(event) {
-      Meteor.loginWithFacebook({
-        requestPermissions: ['email', 'user_photos']}, function (error) {
-          if (error) {
-            return console.log(error);
-          }
+      Meteor.loginWithFacebook({ requestPermissions: permissions}, function (error) {
+        if (error) {
+          return console.log(error);
+        }
 
-          Meteor.call("getPicturesFromFacebook", function(err, urls) {
-            Session.set('photos', urls);
-          });
+        Meteor.call("loginWithFacebook", function(err, urls) {});
       });
   }
 })
