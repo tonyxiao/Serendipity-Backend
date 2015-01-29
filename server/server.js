@@ -32,7 +32,7 @@ Meteor.startup(function () {
 
     // gather the right number of photos.
     var imagesToDownload = [];
-    for (var i = 0; i < photos.length && i <= PHOTO_COUNT; i++) {
+    for (var i = 0; i < photos.length && i < PHOTO_COUNT; i++) {
       var photo = photos[i];
 
       // out of all images bigger than IMAGE_SIZE x IMAGE_SIZE, pick the
@@ -128,7 +128,10 @@ Meteor.startup(function () {
 
   // RPC methods clients can call.
   Meteor.methods({
-
+    // TODO(qimingfang): remove this method. it is for debugging.
+    clearAllUsers : function() {
+      Meteor.users.remove({});
+    }
   });
 });
 
