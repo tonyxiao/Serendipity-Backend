@@ -11,19 +11,6 @@ var async = Meteor.npmRequire('async'),
 var logger = bunyan.createLogger({ name : "s10-server" });
 
 Meteor.startup(function () {
-  Accounts.registerLoginHandler("fb-ios", function(serviceData) {
-    console.log("in login handler");
-    return Accounts.updateOrCreateUserFromExternalService("facebook",
-      serviceData["fb-ios"], { profile: { name: 'Tony Xiao' } });
-  });
-
-  // can update their own profile
-  Meteor.users.allow({
-    update: function(userId, doc){
-      return doc._id === userId;
-    }
-  });
-
 
   var client = Meteor.npmRequire('pkgcloud').storage.createClient({
     provider: 'azure',
@@ -31,78 +18,84 @@ Meteor.startup(function () {
     storageAccessKey: process.env.AZURE_ACCESSKEY || ''
   });
 
-  var DEFAULT_PHOTO_COUNT = process.env.DEFAULT_PHOTO_COUNT || 4;
-  var DEFAULT_SIZE = process.env.DEFAULT_SIZE || 640;
+  var PHOTO_COUNT = process.env.DEFAULT_PHOTO_COUNT || 4;
+  var IMAGE_SIZE = process.env.DEFAULT_IMAGE_SIZE || 640;
 
   /**
    * Fetches user photos from facebook and pipes them to Azure.
-   * 
-   * @param _fbGetFn function that issues a GET against FB graph. 
+   *
+   * @param _fbGetFn function that issues a GET against FB graph.
    * @return a String[] of Azure photo URLs.
    */
-  function getUserPhotos(_fbGetFn) {
-    var photos = _fbGetFn('/me/photos').data.slice(0, DEFAULT_PHOTO_COUNT);
+  function getUserPhotos(_fbGetFn, currentUser) {
+    var photos = _fbGetFn('/me/photos').data;
 
-    var futures = _.map(photos, function(photo) {
-      var future = new Future();
-      var onComplete = future.resolver();
+    // gather the right number of photos.
+    var imagesToDownload = [];
+    for (var i = 0; i < photos.length && i <= PHOTO_COUNT; i++) {
+      var photo = photos[i];
 
-      // out of all images bigger than DEFAULT_SIZE x DEFAULT_SIZE, pick the one that has the
-      // least number of pixels (to improve download).
+      // out of all images bigger than IMAGE_SIZE x IMAGE_SIZE, pick the
+      // one that has the least number of pixels (to improve download).
       var imageToCrop = null;
       var _totalPixels = 0;
       photo.images.forEach(function(image) {
-        if (image.height >= DEFAULT_SIZE && image.width >= DEFAULT_SIZE &&
+        if (image.height >= IMAGE_SIZE && image.width >= IMAGE_SIZE &&
           image.height * image.width > _totalPixels) {
-          imageToCrop = image; 
+          imageToCrop = image;
           _totalPixels = image.height * image.width;
         }
       });
-     
-      if (imageToCrop == null) {
-        logger.error("could not find any images bigger than " + DEFAULT_SIZE + "x" +
-          DEFAULT_SIZE + " for result: " + photo);
-        onComplete(null, null); 
-      } else {
-        var writeStream = client.upload({
-          container: process.env.AZURE_CONTAINER || 's10-dev',
-          remote: util.format("%s/%s", Meteor.user()._id, photo.id)
-        });
 
-        writeStream.on('success', function(file) {
-          var url = util.format("%s%s.%s/%s/%s", client.protocol,
-            client.config.storageAccount,
-            client.serversUrl,
-            file.container,
-            file.name);
-          onComplete(null, url);
-        });
-
-        writeStream.on('error', function(err) {
-          logger.error(err);
-          onComplete(err);
-        })
-       
-        var startX = (imageToCrop.width - DEFAULT_SIZE) / 2;
-        var startY = (imageToCrop.height - DEFAULT_SIZE) / 2;
-        
-        // get the facebook photo and then crop it.
-        gm(request.get(imageToCrop.source))
-          .crop(DEFAULT_SIZE, DEFAULT_SIZE, startX, startY)
-          .stream()
-          .pipe(writeStream);
+      if (imageToCrop != null) {
+        imageToCrop.id = photo.id;
+        imagesToDownload.push(imageToCrop);
       }
+    }
+
+    var futures = _.map(imagesToDownload, function(image) {
+      var future = new Future();
+      var onComplete = future.resolver();
+
+      var writeStream = client.upload({
+        container: process.env.AZURE_CONTAINER || 's10-dev',
+        remote: util.format("%s/%s", currentUser._id, image.id)
+      });
+
+      writeStream.on('success', function(file) {
+        var url = util.format("%s%s.%s/%s/%s", client.protocol,
+          client.config.storageAccount,
+          client.serversUrl,
+          file.container,
+          file.name);
+        onComplete(null, url);
+      });
+
+      writeStream.on('error', function(err) {
+        logger.error(err);
+        onComplete(err);
+      })
+
+      var startX = (image.width - IMAGE_SIZE) / 2;
+      var startY = (image.height - IMAGE_SIZE) / 2;
+
+      // get the facebook photo and then crop it.
+      gm(request.get(image.source))
+        .crop(IMAGE_SIZE, IMAGE_SIZE, startX, startY)
+        .stream()
+        .pipe(writeStream);
 
       return future;
-    }); 
+    });
 
     Future.wait(futures);
-    
+
     var azureUrls = [];
     futures.forEach(function(future) {
       var result = future.get();
-      
-      // in the case that facebook did not have a large enough image, result will be null
+
+      // in the case that facebook did not have a large enough image,
+      // result will be null
       if (result != null) {
         azureUrls.push(result);
       }
@@ -111,46 +104,30 @@ Meteor.startup(function () {
     return azureUrls;
   }
 
-  /**
-   * Populates fields from the '/me' graph api call.
-   */
-  function updateBasicFbInfo(_fbGetFn) {
-    var profile = _fbGetFn('/me');
+  // Login handler for FB
+  Accounts.registerLoginHandler("fb-ios", function(serviceData) {
+    var meteorid = Accounts.updateOrCreateUserFromExternalService("facebook",
+      serviceData["fb-ios"], { profile: { name: serviceData["fb-ios"].name } });
 
-    Meteor.users.update({ _id: Meteor.userId() }, { $set: {
-      "profile.first_name": profile.first_name,
-      "profile.last_name": profile.last_name,
-      "profile.gender": profile.gender,
-      "profile.work": profile.work,
-      "profile.education":  profile.education
-    }});
-  }
+    var currentUser = Meteor.users.findOne(meteorid.userId);
 
-  Meteor.methods({
-   /**
-    * When given the FB token, fetches user photos to store on
-    * Azure, and saves user in DB
-    */
-    loginWithFacebook: function(serviceName, serviceData, options) {
-      if (Meteor.user().services.facebook.accessToken) {
-        graph.setAccessToken(Meteor.user().services.facebook.accessToken);
-        var fbGetFn = Meteor.wrapAsync(graph.get);
-        
-        // update user photos if this is they don't have facebook.
-        //if (Meteor.user().photos == undefined) {
-          var urls = getUserPhotos(fbGetFn);
-          Meteor.users.update ( { _id: Meteor.userId() }, { $set: {
-            "profile.photos": urls
-          }});
-        //}
-       
-        // update basic info of the user on every login. 
-        updateBasicFbInfo(fbGetFn);
-      } else {
-        throw new Meteor.Error(401,
-          'Error 401: Not found', 'Unauthorized');
-      }
+    graph.setAccessToken(currentUser.services.facebook.accessToken);
+    var fbGetFn = Meteor.wrapAsync(graph.get);
+
+    // update user photos if this is they don't have facebook.
+    if (currentUser.photos == undefined) {
+      var urls = getUserPhotos(fbGetFn, currentUser);
+      Meteor.users.update ( { _id: currentUser._id }, { $set: {
+        "profile.photos": urls
+      }});
     }
+
+    return meteorid;
+  });
+
+  // RPC methods clients can call.
+  Meteor.methods({
+
   });
 });
 
