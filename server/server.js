@@ -131,6 +131,11 @@ Meteor.startup(function () {
     // TODO(qimingfang): remove this method. it is for debugging.
     clearAllUsers : function() {
       Meteor.users.remove({});
+    },
+
+    // TODO(qimingfang): remove this method. it is for debugging.
+    getEnv : function() {
+      return process.env;
     }
   });
 });

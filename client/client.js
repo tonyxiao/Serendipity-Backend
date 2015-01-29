@@ -11,19 +11,25 @@ var accessToken = null;
      ref.parentNode.insertBefore(js, ref);
    }(document, /*debug*/ false));
 
+
+
 // get the access token at start of page.
 window.fbAsyncInit = function() {
-  // init the FB JS SDK
-  FB.init({
-    appId      : '788565417863885', // App ID from the App Dashboard
-    channelUrl : '//localhost:3000/channel.html', // Channel File for x-domain communication for localhost debug
-    // channelUrl : '//yoururl.com/channel.html', // Channel File for x-domain communication
-    status     : true, // check the login status upon init?
-    cookie     : true, // set sessions cookies to allow your server to access the session?
-    xfbml      : true  // parse XFBML tags on this page?
-  });
+  Meteor.call('getEnv', function(err, env) {
+    // init the FB JS SDK
+    FB.init({
+      appId      : env.FB_APPID, // App ID from the App Dashboard
+      channelUrl : env.ROOT_URL + '/channel.html', // Channel File for x-domain communication for localhost debug
+      // channelUrl : '//yoururl.com/channel.html', // Channel File for x-domain communication
+      status     : true, // check the login status upon init?
+      cookie     : true, // set sessions cookies to allow your server to access the session?
+      xfbml      : true  // parse XFBML tags on this page?
+    });
 
-  FB.getLoginStatus(checkLoginStatus);
+    FB.getLoginStatus(checkLoginStatus);
+  })
+
+
 
   function call_facebook_login(response){
     FB.api('/me', function(fb_user){
