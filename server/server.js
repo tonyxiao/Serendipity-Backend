@@ -105,7 +105,7 @@ Meteor.startup(function () {
   }
 
   // Login handler for FB
-  Accounts.registerLoginHandler("fb-ios", function(serviceData) {
+  Accounts.registerLoginHandler("fb-access", function(serviceData) {
     var meteorid = Accounts.updateOrCreateUserFromExternalService("facebook",
       serviceData["fb-access"],
       { profile: { name: serviceData["fb-access"].name } });
