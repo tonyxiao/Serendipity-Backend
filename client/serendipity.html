@@ -19,16 +19,11 @@
     <a href="/add">Add Users</a>
   </div>
 
-  <div id="users">
-
-    {{#each users}}
-      <div class="userView">
-        <h1>{{profile.name}}</h1>
-        {{#each profile.photos}}
-          <img src="{{this}}" style="width:240px;" />
-        {{/each}}
-      </div>
-    {{/each}}
+  <div class="operation">
+    <div id="match">
+      <h1>{{match.first_name}}</h1>
+      <img src="" />
+    </div>
   </div>
 </template>
 
@@ -44,9 +39,20 @@
 
 <template name="add">
   <h1>Paste your JSON here</h1>
-  <textarea id="newUsers"></textarea>
-  <div class="operation">
-  <button>Add</button>
+    <textarea id="newUsers"></textarea>
+    <div class="operation">
+    <button>Add</button>
+  </div>
+
+  <div id="users">
+    {{#each users}}
+      <div class="userView">
+        <h1>{{profile.first_name}}</h1>
+        {{#each profile.photos}}
+          <img src="{{this}}" style="width:240px;" />
+        {{/each}}
+      </div>
+    {{/each}}
   </div>
 </template>
 

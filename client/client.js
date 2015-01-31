@@ -28,16 +28,16 @@ window.fbAsyncInit = function() {
     });
 
     FB.getLoginStatus(checkLoginStatus);
-  })
+  });
 
   function call_facebook_login(response){
-    FB.api('/me', function(fb_user){
-      fb_user.accessToken = response.authResponse.accessToken;
-      fb_user.expireAt = new Date() + 1000 * response.expiresIn;
+    loginRequest = {
+      access_token: response.authResponse.accessToken,
+      expire_at: new Date() + 1000 * response.expiresIn
+    }
 
-      Accounts.callLoginMethod({
-        methodArguments: [{ "fb-access": fb_user }]
-      });
+    Accounts.callLoginMethod({
+      methodArguments: [{ "fb-access": loginRequest }]
     });
   }
 
@@ -72,19 +72,22 @@ Template.home.events({
   }
 })
 
-Meteor.subscribe("allUsers");
+Meteor.call('newMatch', function(err, res) {
+  if (err) {
+    console.log(err);
+  }
+});
 
 Template.home.helpers({
-  users: function() {
-    var allUsers = Meteor.users.find().fetch();
-    allUsers.forEach(function(user) {
-      if (user.profile.photos.length > 0) {
-        user.profile.photos = [user.profile.photos[0]];
-      }
-    });
-    return allUsers;
+  match: function() {
+
+    if (Meteor.user()) {
+      return Meteor.user().current_match;
+    } else {
+      return null;
+    }
   }
-})
+});
 
 Template.photos.helpers({
   photos: function() {
@@ -95,6 +98,20 @@ Template.photos.helpers({
     }
   }
 });
+
+Meteor.subscribe("allUsers");
+
+Template.add.helpers({
+  users: function() {
+    var allUsers = Meteor.users.find().fetch();
+    allUsers.forEach(function(user) {
+      if (user.profile.photos.length > 0) {
+        user.profile.photos = [user.profile.photos[0]];
+      }
+    });
+    return allUsers;
+  }
+})
 
 Template.add.events({
   'click button': function(event) {
