@@ -33,9 +33,7 @@ window.fbAsyncInit = function() {
   function call_facebook_login(response){
     FB.api('/me', function(fb_user){
       fb_user.accessToken = response.authResponse.accessToken;
-      fb_user.expireAt = new Date() + 1000 * response.expiresIn
-
-      console.log(fb_user);
+      fb_user.expireAt = new Date() + 1000 * response.expiresIn;
 
       Accounts.callLoginMethod({
         methodArguments: [{ "fb-access": fb_user }]

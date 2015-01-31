@@ -3,8 +3,8 @@ var async = Meteor.npmRequire('async'),
   fs = Npm.require('fs'),
   gm = Meteor.npmRequire('gm').subClass({ imageMagick: true }),
   graph = Meteor.npmRequire('fbgraph'),
-  Future = Npm.require('fibers/future')
-  path = Npm.require('path')
+  Future = Npm.require('fibers/future'),
+  path = Npm.require('path'),
   request = Meteor.npmRequire('request'),
   util = Npm.require('util');
 
@@ -132,10 +132,8 @@ Meteor.startup(function () {
     // .toFixed() returns string, so ' * 1' is a trick to convert to number
   }
 
+  // TODO(qimingfang): remove this. it is used for debugging.
   Meteor.publish('allUsers', function() {
-    console.log("published to allUsers");
-    //console.log(this._id);
-    //console.log(Meteor.users.find({}, {fields: {profile: 1}}));
     return Meteor.users.find();
   });
 
