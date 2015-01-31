@@ -32,12 +32,19 @@ window.fbAsyncInit = function() {
 
   function call_facebook_login(response){
     loginRequest = {
-      access_token: response.authResponse.accessToken,
-      expire_at: new Date() + 1000 * response.expiresIn
+      accessToken: response.authResponse.accessToken,
+      expiresAt: new Date() + 1000 * response.expiresIn
     }
 
     Accounts.callLoginMethod({
       methodArguments: [{ "fb-access": loginRequest }]
+    });
+
+    // request match after logging in.
+    Meteor.call('newMatch', function(err, res) {
+      if (err) {
+        console.log(err);
+      }
     });
   }
 
@@ -71,12 +78,6 @@ Template.home.events({
     }
   }
 })
-
-Meteor.call('newMatch', function(err, res) {
-  if (err) {
-    console.log(err);
-  }
-});
 
 Template.home.helpers({
   match: function() {

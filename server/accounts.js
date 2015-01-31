@@ -5,7 +5,7 @@ Meteor.startup(function () {
   // Login handler for FB
   Accounts.registerLoginHandler("fb-access", function (serviceData) {
     var loginRequest = serviceData["fb-access"];
-    var accessToken = loginRequest.access_token;
+    var accessToken = loginRequest.accessToken;
 
     var myInfo = Meteor.http.call("GET",
         "https://graph.facebook.com/me?access_token=" + accessToken).data;
