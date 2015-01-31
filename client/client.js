@@ -60,7 +60,35 @@ window.fbAsyncInit = function() {
   }
 }
 
-Template.Photos.helpers({
+Template.home.events({
+  'click button': function(event) {
+    if (confirm('Sure?')) {
+      Meteor.call('clearAllUsers', function(err, res) {
+        if (err) {
+          console.log(err);
+        }
+
+        console.log("cleared all users");
+      })
+    }
+  }
+})
+
+Meteor.subscribe("allUsers");
+
+Template.home.helpers({
+  users: function() {
+    var allUsers = Meteor.users.find().fetch();
+    allUsers.forEach(function(user) {
+      if (user.profile.photos.length > 0) {
+        user.profile.photos = [user.profile.photos[0]];
+      }
+    });
+    return allUsers;
+  }
+})
+
+Template.photos.helpers({
   photos: function() {
     if (Meteor.user()) {
       return Meteor.user().profile.photos;
@@ -70,17 +98,16 @@ Template.Photos.helpers({
   }
 });
 
-Template.Home.events({
+Template.add.events({
   'click button': function(event) {
-    if (confirm('Sure?')) {
-      Meteor.call('clearAllUsers', function(err, res) {
-        if (err) {
-          console.log(err);
-        }
+    var users = document.getElementById("newUsers").value;
+    var usersJson = JSON.stringify(eval("(" + users + ")"));
+    Meteor.call('addUsers', usersJson, function(err, res) {
+      if (err) {
+        console.log(err);
+      }
 
-        console.log("cleared all usrs");
-      })
-    }
-
+      console.log("added users: " + res);
+    })
   }
 })

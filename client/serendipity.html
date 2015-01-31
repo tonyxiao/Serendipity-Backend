@@ -5,7 +5,7 @@
 <body>
 </body>
 
-<template name="Home">
+<template name="home">
   <h1>Welcome to Qiming's super awesome Meteor Website</h1>
   <div class="operation">
     <button>Clear All Users</button>
@@ -15,10 +15,25 @@
     <a href="/photos">View Photos</a>
   </div>
 
+  <div class="operation">
+    <a href="/add">Add Users</a>
+  </div>
+
+  <div id="users">
+
+    {{#each users}}
+      <div class="userView">
+        <h1>{{profile.name}}</h1>
+        {{#each profile.photos}}
+          <img src="{{this}}" style="width:240px;" />
+        {{/each}}
+      </div>
+    {{/each}}
+  </div>
 </template>
 
 
-<template name="Photos">
+<template name="photos">
   <h1>My awesome photos</h1>
   <div id="images">
       {{#each photos}}
@@ -26,3 +41,12 @@
       {{/each}}
   </div>
 </template>
+
+<template name="add">
+  <h1>Paste your JSON here</h1>
+  <textarea id="newUsers"></textarea>
+  <div class="operation">
+  <button>Add</button>
+  </div>
+</template>
+
