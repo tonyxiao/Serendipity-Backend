@@ -3,13 +3,26 @@
 </head>
 
 <body>
-  <h1>Welcome to Qiming's super awesome Meteor Website</h1>
-
-  <button>Clear All Users</button>
-
-  <div id="images">
-    {{#each photos}}
-      <img src="{{this}}" />
-    {{/each}}
-  </div>
 </body>
+
+<template name="Home">
+  <h1>Welcome to Qiming's super awesome Meteor Website</h1>
+  <div class="operation">
+    <button>Clear All Users</button>
+  </div>
+
+  <div class="operation">
+    <a href="/photos">View Photos</a>
+  </div>
+
+</template>
+
+
+<template name="Photos">
+  <h1>My awesome photos</h1>
+  <div id="images">
+      {{#each photos}}
+          <img src="{{this}}" />
+      {{/each}}
+  </div>
+</template>

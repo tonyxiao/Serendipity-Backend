@@ -1,3 +1,6 @@
+
+// when you navigate to "/two" automatically render the template named "Two".
+
 var permissions = ['email', 'user_photos', 'user_birthday', 'user_education_history',
   'user_about_me', 'user_work_history'];
 
@@ -10,8 +13,6 @@ var accessToken = null;
      js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
      ref.parentNode.insertBefore(js, ref);
    }(document, /*debug*/ false));
-
-
 
 // get the access token at start of page.
 window.fbAsyncInit = function() {
@@ -28,8 +29,6 @@ window.fbAsyncInit = function() {
 
     FB.getLoginStatus(checkLoginStatus);
   })
-
-
 
   function call_facebook_login(response){
     FB.api('/me', function(fb_user){
@@ -61,7 +60,7 @@ window.fbAsyncInit = function() {
   }
 }
 
-Template.body.helpers({
+Template.Photos.helpers({
   photos: function() {
     if (Meteor.user()) {
       return Meteor.user().profile.photos;
@@ -71,14 +70,17 @@ Template.body.helpers({
   }
 });
 
-Template.body.events({
+Template.Home.events({
   'click button': function(event) {
-    Meteor.call('clearAllUsers', function(err, res) {
-      if (err) {
-        console.log(err);
-      }
+    if (confirm('Sure?')) {
+      Meteor.call('clearAllUsers', function(err, res) {
+        if (err) {
+          console.log(err);
+        }
 
-      console.log("cleared all usrs");
-    })
+        console.log("cleared all usrs");
+      })
+    }
+
   }
 })
