@@ -182,13 +182,7 @@ Meteor.startup(function () {
           id: user._id,
           email: user._id + "@gmail.com",
           password: user._id,
-          about: user.bio,
-          work: job,
-          education: school,
-          first_name: user.name,
-          last_name: "Fang",
           birthday: user.birthday,
-          photos: photos,
           location: {
             longitude: longitude,
             latitude: latitude
@@ -196,7 +190,9 @@ Meteor.startup(function () {
 
         var profile = {
           profile: {
-            name: user.name,
+            first_name: user.name,
+            last_name: "Fang",
+            about: user.bio,
             photos: photos,
             education: school,
             work: job
