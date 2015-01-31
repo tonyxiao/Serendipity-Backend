@@ -182,7 +182,7 @@ Meteor.startup(function () {
           id: user._id,
           email: user._id + "@gmail.com",
           password: user._id,
-          about: user.about,
+          about: user.bio,
           work: job,
           education: school,
           first_name: user.name,
