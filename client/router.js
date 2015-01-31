@@ -6,3 +6,5 @@ Router.route('/', function () {
 Router.route('/photos');
 
 Router.route('/add');
+
+Router.route('/matched');

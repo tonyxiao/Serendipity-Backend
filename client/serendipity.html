@@ -8,7 +8,7 @@
 <template name="home">
   <h1>Welcome to Qiming's super awesome Meteor Website</h1>
   <div class="operation">
-    <button>Clear All Users</button>
+    <button id="deleteUser">Clear All Users</button>
   </div>
 
   <div class="operation">
@@ -21,12 +21,24 @@
 
   <div class="operation">
     <div id="match">
-      <h1>{{match.first_name}}</h1>
-      <img src="" />
+      <h1>Current Match</h1>
+      <button id="yesmatch">Start Video Chat</button>
+      <button id="nomatch">No</button>
+      Name: {{match.profile.first_name}}
+      <br /><br />
+      {{#each match.profile.photos}}
+        <img src="{{this}}" />
+      {{/each}}
     </div>
   </div>
 </template>
 
+<template name="matched">
+  <h1>{{match.profile.first_name}}</h1>
+  <div id="images">
+    <img src="{{photo}}" />
+  </div>
+</template>
 
 <template name="photos">
   <h1>My awesome photos</h1>

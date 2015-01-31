@@ -25,12 +25,14 @@ Meteor.startup(function () {
       var urls = getUserPhotos(fbGetFn, currentUser);
       Meteor.users.update({_id: currentUser._id}, {
         $set: {
-          "current_match": null,
-          "previous_matches": [],
-          "connections": [],
           "profile.photos": urls
         }
       });
+    }
+
+    // assign a new match to the user if there is no existing next match.
+    if (currentUser.current_match == undefined) {
+      updateNextMatch(currentUser);
     }
 
     return meteorid;

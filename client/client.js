@@ -39,13 +39,6 @@ window.fbAsyncInit = function() {
     Accounts.callLoginMethod({
       methodArguments: [{ "fb-access": loginRequest }]
     });
-
-    // request match after logging in.
-    Meteor.call('newMatch', function(err, res) {
-      if (err) {
-        console.log(err);
-      }
-    });
   }
 
   function checkLoginStatus(response) {
@@ -66,7 +59,7 @@ window.fbAsyncInit = function() {
 }
 
 Template.home.events({
-  'click button': function(event) {
+  'click #deleteUser': function(event) {
     if (confirm('Sure?')) {
       Meteor.call('clearAllUsers', function(err, res) {
         if (err) {
@@ -76,19 +69,29 @@ Template.home.events({
         console.log("cleared all users");
       })
     }
+  },
+  'click #yesmatch': function(event) {
+    Router.go('/matched');
+  },
+  'click #nomatch': function(event) {
+    Meteor.call("nextMatch");
   }
 })
 
 Template.home.helpers({
-  match: function() {
+  match: getCurrentMatch
+});
 
+Template.matched.helpers({
+  match: getCurrentMatch,
+  photo: function() {
     if (Meteor.user()) {
-      return Meteor.user().current_match;
+      return Meteor.user().current_match.profile.photos[0];
     } else {
       return null;
     }
   }
-});
+})
 
 Template.photos.helpers({
   photos: function() {
@@ -127,3 +130,11 @@ Template.add.events({
     })
   }
 })
+
+function getCurrentMatch() {
+  if (Meteor.user()) {
+    return Meteor.user().current_match;
+  } else {
+    return null;
+  }
+}
