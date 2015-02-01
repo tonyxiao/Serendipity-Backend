@@ -31,7 +31,7 @@ Meteor.startup(function () {
     }
 
     // assign a new match to the user if there is no existing next match.
-    if (currentUser.current_match == undefined) {
+    if (currentUser.currentMatch == undefined) {
       updateNextMatch(currentUser);
     }
 

@@ -86,7 +86,7 @@ Template.matched.helpers({
   match: getCurrentMatch,
   photo: function() {
     if (Meteor.user()) {
-      return Meteor.user().current_match.profile.photos[0];
+      return Meteor.user().currentMatch.profile.photos[0];
     } else {
       return null;
     }
@@ -133,7 +133,7 @@ Template.add.events({
 
 function getCurrentMatch() {
   if (Meteor.user()) {
-    return Meteor.user().current_match;
+    return Meteor.user().currentMatch;
   } else {
     return null;
   }

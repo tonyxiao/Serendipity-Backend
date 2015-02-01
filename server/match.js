@@ -29,7 +29,7 @@ updateNextMatch = function(currentUser) {
   var match = _nextMatch(currentUser);
   Meteor.users.update({_id: currentUser._id}, {
     $set: {
-      "current_match": match
+      "currentMatch": match
     }
   })
 }
