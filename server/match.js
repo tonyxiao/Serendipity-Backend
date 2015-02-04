@@ -28,7 +28,7 @@ nextMatches = function(currentUser, currentMatchId, numMatches) {
     var match = nextMatch(currentUser, currentMatchId);
 
     if (match != undefined) {
-      toReturn.push(match);
+      toReturn.push(match._id);
     }
   }
 
