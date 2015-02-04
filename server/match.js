@@ -25,7 +25,11 @@ nextMatch = function(currentUser, currentMatchId) {
 nextMatches = function(currentUser, currentMatchId, numMatches) {
   toReturn = [];
   for (var i = 0; i < numMatches; i++) {
-    toReturn.push(nextMatch(currentUser, currentMatchId)._id);
+    var match = nextMatch(currentUser, currentMatchId);
+
+    if (match != undefined) {
+      toReturn.push(match);
+    }
   }
 
   return toReturn;
