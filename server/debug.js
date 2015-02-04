@@ -1,6 +1,6 @@
 var bunyan = Meteor.npmRequire('bunyan');
 
-var logger = bunyan.createLogger({ name : "s10-server" });
+var logger = bunyan.createLogger({ name : "debug" });
 
 // TODO(qimingfang): remove this. it is used for debugging.
 function getRandomInRange(from, to, fixed) {
@@ -13,6 +13,17 @@ Meteor.publish('allUsers', function() {
   return Meteor.users.find();
 });
 
+Meteor.users.allow({
+  insert: function(){
+    return true;
+  },
+  update: function(){
+    return true;
+  },
+  remove: function(){
+    return true;
+  }
+});
 // RPC methods clients can call.
 Meteor.methods({
   // TODO(qimingfang): remove this method. it is for debugging.
@@ -23,6 +34,11 @@ Meteor.methods({
   // TODO(qimingfang): remove this method. it is for debugging.
   getEnv : function() {
     return process.env;
+  },
+
+  // TODO(qimingfang): remove this method. it is for debugging.
+  clearCurrentUser: function() {
+    Meteor.users.remove({_id : Meteor.user()._id})
   },
 
   // TODO(qimingfang): remove this method. it is for debugging.

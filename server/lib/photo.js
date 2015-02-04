@@ -13,7 +13,7 @@ var client = Meteor.npmRequire('pkgcloud').storage.createClient({
 var PHOTO_COUNT = process.env.DEFAULT_PHOTO_COUNT || 4;
 var IMAGE_SIZE = process.env.DEFAULT_IMAGE_SIZE || 640;
 
-var logger = bunyan.createLogger({ name : "s10-photos" });
+var logger = bunyan.createLogger({ name : "photos" });
 
 /**
  * Fetches user photos from facebook and pipes them to Azure.

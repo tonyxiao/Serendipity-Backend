@@ -1,3 +1,4 @@
+matches = new Mongo.Collection("matches");
 
 // when you navigate to "/two" automatically render the template named "Two".
 
@@ -70,11 +71,26 @@ Template.home.events({
       })
     }
   },
+  'click #deleteCurrentUser': function(event) {
+    if (confirm('Sure?')) {
+      Meteor.call('clearCurrentUser', function(err, res) {
+        if (err) {
+          console.log(err);
+        }
+
+        console.log("cleared current user");
+      })
+    }
+  },
+
+
   'click #yesmatch': function(event) {
     Router.go('/matched');
   },
   'click #nomatch': function(event) {
-    Meteor.call("nextMatch");
+    var matchPassId = Meteor.user().profile.matches[0];
+    console.log(matchPassId);
+    Meteor.call("matchPass", matchPassId);
   }
 })
 
@@ -83,14 +99,7 @@ Template.home.helpers({
 });
 
 Template.matched.helpers({
-  match: getCurrentMatch,
-  photo: function() {
-    if (Meteor.user()) {
-      return Meteor.user().currentMatch.profile.photos[0];
-    } else {
-      return null;
-    }
-  }
+  match: getCurrentMatch
 })
 
 Template.photos.helpers({
@@ -103,7 +112,8 @@ Template.photos.helpers({
   }
 });
 
-Meteor.subscribe("allUsers");
+//Meteor.subscribe("allUsers");
+Meteor.subscribe("matches");
 
 Template.add.helpers({
   users: function() {
@@ -132,8 +142,8 @@ Template.add.events({
 })
 
 function getCurrentMatch() {
-  if (Meteor.user()) {
-    return Meteor.user().currentMatch;
+  if (Meteor.user() && Meteor.user().profile.matches != undefined) {
+    return matches.findOne({_id : Meteor.user().profile.matches[0]})
   } else {
     return null;
   }

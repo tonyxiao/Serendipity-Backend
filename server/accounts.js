@@ -1,4 +1,7 @@
-var graph = Meteor.npmRequire('fbgraph');
+var bunyan = Meteor.npmRequire('bunyan');
+  graph = Meteor.npmRequire('fbgraph');
+
+var logger = bunyan.createLogger({ name : "accounts" });
 
 Meteor.startup(function () {
 
@@ -12,10 +15,10 @@ Meteor.startup(function () {
     myInfo.accessToken = accessToken;
     myInfo.expireAt = loginRequest.expire_at;
 
-    var meteorid = Accounts.updateOrCreateUserFromExternalService("facebook", myInfo,
+    var meteorId = Accounts.updateOrCreateUserFromExternalService("facebook", myInfo,
         {profile: {first_name: myInfo.first_name}});
 
-    var currentUser = Meteor.users.findOne(meteorid.userId);
+    var currentUser = Meteor.users.findOne(meteorId.userId);
 
     graph.setAccessToken(currentUser.services.facebook.accessToken);
     var fbGetFn = Meteor.wrapAsync(graph.get);
@@ -30,11 +33,22 @@ Meteor.startup(function () {
       });
     }
 
-    // assign a new match to the user if there is no existing next match.
-    if (currentUser.currentMatch == undefined) {
-      updateNextMatch(currentUser);
+    // new user has no matches yet.
+    if (currentUser.profile.matches == undefined || currentUser.profile.matches.length == 0) {
+      var matches = nextMatches(currentUser, 0, 5);
+      console.log(matches);
+
+      if (matches != undefined) {
+        Meteor.users.update({_id: currentUser._id}, {
+          $set: {
+            "profile.matches" : matches
+          }
+        });
+      } else {
+        logger.error("No eligible matches found for user %s", currentUser._id);
+      }
     }
 
-    return meteorid;
+    return meteorId;
   });
 });
