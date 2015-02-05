@@ -7,6 +7,16 @@ Meteor.publish("userData", function() {
   }
 })
 
+Meteor.publish("connections", function() {
+  if (this.userId) {
+    return connections.find({
+      users: {
+        $in: [this.userId]
+      }
+    })
+  }
+})
+
 Meteor.publish("matches", function() {
   if (this.userId) {
     var self = this

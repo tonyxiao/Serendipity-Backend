@@ -41,6 +41,33 @@ Meteor.methods({
     Meteor.users.remove({_id : Meteor.user()._id})
   },
 
+  addConnection: function(id) {
+    var connectedUser = Meteor.users.findOne({_id : id})
+
+    connections.insert({
+      users: [Meteor.user()._id, connectedUser._id],
+      messages: []
+    })
+
+    console.log(connections.find().fetch())
+  },
+
+  clearCurrentUserConnections: function() {
+    connections.remove({
+      users: {
+        $in: [this.userId]
+      }
+    });
+  },
+
+  validConnections: function() {
+    console.log(connections.find({
+      users: {
+        $in: [this.userId]
+      }
+    }).fetch());
+  },
+
   // TODO(qimingfang): remove this method. it is for debugging.
   addUsers: function(usersString) {
     var schools = ["Harvard", "Yale", "Princeton", "Columbia", "Cornell", "Dartmouth",

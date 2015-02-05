@@ -1,4 +1,6 @@
 matches = new Mongo.Collection("matches");
+connections = new Mongo.Collection("connections");
+messages = new Mongo.Collection("messages");
 
 // when you navigate to "/two" automatically render the template named "Two".
 
@@ -83,10 +85,28 @@ Template.home.events({
     }
   },
 
+  'click #deleteCurrentUserConnections': function(event) {
+    if (confirm('Sure?')) {
+      Meteor.call('clearCurrentUserConnections', function(err, res) {
+        if (err) {
+          console.log(err);
+        }
+
+        console.log("cleared current user connections");
+      })
+    }
+  },
 
   'click #yesmatch': function(event) {
-    Router.go('/matched');
+    Meteor.call('addConnection', getCurrentMatch()._id, function(err, res) {
+      if (err) {
+        console.log(err);
+      }
+
+      console.log("added a connection to " + getCurrentMatch().profile.first_name);
+    })
   },
+
   'click #nomatch': function(event) {
     var matchPassId = Meteor.user().profile.matches[0];
     console.log(matchPassId);
@@ -114,6 +134,7 @@ Template.photos.helpers({
 
 //Meteor.subscribe("allUsers");
 Meteor.subscribe("matches");
+Meteor.subscribe("connections");
 
 Template.add.helpers({
   users: function() {
