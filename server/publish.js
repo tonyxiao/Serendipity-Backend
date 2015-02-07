@@ -18,7 +18,7 @@ Meteor.publish("currentUser", function() {
  * 'connectedUsers' with {@code Meteor.user} instances for all of the current user's
  * connections.
  */
-Meteor.publish("connectedUsers", function() {
+Meteor.publish("connections", function() {
   if (this.userId) {
     var self = this
 
@@ -84,7 +84,7 @@ Meteor.publish("connectedUsers", function() {
  * 'matchedUsers' with {@code Meteor.user} instances for all of the current user's
  * connections.
  */
-Meteor.publish("matchedUsers", function() {
+Meteor.publish("matches", function() {
   if (this.userId) {
     var self = this
 
