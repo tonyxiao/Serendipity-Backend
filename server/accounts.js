@@ -21,10 +21,10 @@ Meteor.startup(function () {
         "firstName" : myInfo.first_name,
         "about" : myInfo.bio,
         "education" : "Harvard", // TODO
-        "createdAt" : new Date().getTime(),
         "age" : 23, // TODO
         "location" : "mountain view, ca",
-        "work" : "google"
+        "work" : "google",
+        "createdAt" : new Date()
       }
     })
 

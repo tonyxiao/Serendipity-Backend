@@ -4,8 +4,8 @@ var _newConnection = function(senderId, recipientId) {
   var connectionId = connections.insert({
     users: [senderId, recipientId],
     messages: [], // OPTIONAL
-    dateUpdated : new Date().getTime(),
-    dateCreated: new Date().getTime()
+    dateUpdated : new Date(),
+    dateCreated: new Date()
   })
 
   return connectionId;
@@ -17,7 +17,7 @@ var _appendMessageIdToConnection = function(connectionId, messageId) {
       messages : messageId
     },
     $set : {
-      dateUpdated : new Date().getTime()
+      dateUpdated : new Date()
     }
   })
 }

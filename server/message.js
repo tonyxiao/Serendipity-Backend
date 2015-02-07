@@ -13,7 +13,7 @@ newMessage = function(senderId, recipientId, videoUrl) {
     senderId: senderId,
     recipientId: recipientId,
     videoUrl: videoUrl,
-    timestamp: new Date().getTime()
+    timestamp: new Date()
   })
 }
 

@@ -14,7 +14,7 @@ newMatch= function(currentUserId) {
     matches.insert({
       matcherId: currentUserId,
       matchedUserId: matchedUser._id,
-      dateMatched: new Date().getTime()
+      dateMatched: new Date()
     })
   }
 }
