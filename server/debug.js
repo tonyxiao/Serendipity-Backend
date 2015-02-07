@@ -58,6 +58,12 @@ Meteor.methods({
     });
   },
 
+  clearCurrentUserMatches: function() {
+    matches.remove({
+      matcherId: this.userId
+    })
+  },
+
   validConnections: function() {
     console.log(connections.find({
       users: {

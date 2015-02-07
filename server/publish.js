@@ -1,16 +1,6 @@
 var bunyan = Meteor.npmRequire('bunyan');
 var logger = bunyan.createLogger({ name : "publications" });
 
-Meteor.publish("connections", function() {
-  if (this.userId) {
-    return connections.find({
-      users: {
-        $in: [this.userId]
-      }
-    })
-  }
-})
-
 Meteor.publish("messages", function() {
   if (this.userId) {
     return myMessages(this.userId);
@@ -31,7 +21,9 @@ Meteor.publish("currentUser", function() {
 Meteor.publish("connectedUsers", function() {
   if (this.userId) {
     var self = this
-    var connectedUsers = [];
+
+    // a dictionary of connection_id to connected user
+    var connectedUsers = {};
 
     var initializing = true;
     var handle = connections.find({
@@ -44,7 +36,10 @@ Meteor.publish("connectedUsers", function() {
           var connectedUserId = _getConnectedUserFromConnection(
               connectionId, self.userId);
 
-          self.added("connectedUsers", connectedUserId,
+          connectedUsers[connectionId] = connectedUserId;
+
+          self.added("connections", connectionId, connections.findOne(connectionId));
+          self.added("users", connectedUserId,
               Meteor.users.findOne({_id : connectedUserId}));
         }
       },
@@ -54,8 +49,10 @@ Meteor.publish("connectedUsers", function() {
           var connectedUserId = _getConnectedUserFromConnection(
               connectionId, self.userId);
 
-          self.removed("connectedUsers", connectedUserId,
-              Meteor.users.findOne({_id: connectedUserId}));
+          self.removed("connections", connectionId)
+          self.removed("users", connectedUsers[connectionId]);
+
+          delete connectedUsers[connectionId];
         }
       }
     })
@@ -69,7 +66,9 @@ Meteor.publish("connectedUsers", function() {
 
     currentUserConnections.forEach(function(connection) {
       var connectedUserId = _getConnectedUserFromConnection(connection._id, self.userId);
-      self.added("connectedUsers", connectedUserId, Meteor.users.findOne(connectedUserId))
+      connectedUsers[connection._id] = connectedUserId;
+      self.added("connections", connection._id, connection)
+      self.added("users", connectedUserId, Meteor.users.findOne(connectedUserId))
     })
 
     self.ready()
@@ -88,51 +87,44 @@ Meteor.publish("connectedUsers", function() {
 Meteor.publish("matchedUsers", function() {
   if (this.userId) {
     var self = this
-    var matchedUsers = [];
+
+    // a dictionary of match_id to matched user
+    var matchedUsers = {};
 
     var initializing = true;
-    var handle = Meteor.users.find({_id : self.userId}).observeChanges({
-      changed: function(id) {
+    var handle = matches.find({
+      matcherId: self.userId
+    }).observeChanges({
+      added: function(matchId) {
         if (!initializing) {
-          var matches = Meteor.users.findOne({_id : self.userId}, {}).profile.matches;
+          var match = matches.findOne(matchId);
+          matchedUsers[matchId] = match.matchedUserId;
 
-          if (matches == undefined) {
-            logger.error("could not publish matches because user %s " +
-              "does not have matches field set", self.userId);
-            return;
-          }
+          self.added("matches", matchId, match);
+          self.added("users",
+              match.matchedUserId, Meteor.users.findOne(match.matchedUserId));
+        }
+      },
 
-          // add new matches to client users collection that were not cached
-          var newMatches = matches.filter(function (e) {
-            return matchedUsers.indexOf(e) < 0;
-          });
-          newMatches.forEach(function(matchId) {
-            self.added("matchedUsers", matchId, Meteor.users.findOne({_id : matchId}));
-          });
+      removed: function(matchId) {
+        if (!initializing) {
+          var matchedUserId = matchedUsers[matchId];
+          self.removed("matches", matchId);
+          self.removed("users", matchedUserId, Meteor.users.findOne(matchedUserId))
 
-          // remove old matches from client users collection that are no longer relevant
-          var oldMatches = matchedUsers.filter(function (e) {
-            return matches.indexOf(e) < 0;
-          });
-          oldMatches.forEach(function(matchId) {
-            self.removed("matchedUsers", matchId);
-          })
-
-          matchedUsers = matches;
+          delete matchedUsers[matchId];
         }
       }
     })
 
     initializing = false;
-    var matches = Meteor.users.findOne({_id : self.userId}, {}).profile.matches;
+    var currentMatches = matches.find({ matcherId: self.userId }).fetch()
 
-    if (matches != undefined) {
-      matches.forEach(function (matchId) {
-        self.added("matchedUsers", matchId, Meteor.users.findOne({_id: matchId}));
-      })
-
-      matchedUsers = matches;
-    }
+    currentMatches.forEach(function(match) {
+      matchedUsers[match._id] = match.matchedUserId;
+      self.added("matches", match._id, match);
+      self.added("users", match.matchedUserId, Meteor.users.findOne(match.matchedUserId));
+    })
 
     self.ready()
 

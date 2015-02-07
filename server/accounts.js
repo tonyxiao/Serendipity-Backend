@@ -34,21 +34,12 @@ Meteor.startup(function () {
     }
 
     // new user has no matches yet.
-    if (currentUser.profile.matches == undefined || currentUser.profile.matches.length == 0) {
-      var matches = nextMatches(currentUser, 0, 5);
-      console.log(matches);
-
-      if (matches != undefined) {
-        Meteor.users.update({_id: currentUser._id}, {
-          $set: {
-            "profile.matches" : matches
-          }
-        });
-      } else {
-        logger.error("No eligible matches found for user %s", currentUser._id);
+    var currentMatches = getCurrentMatches(currentUser._id);
+    if (currentMatches.length == 0) {
+      for (var i = 0; i < 5; i++) {
+        newMatch(currentUser._id);
       }
     }
-
     return meteorId;
   });
 });

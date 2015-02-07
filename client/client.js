@@ -1,5 +1,4 @@
-matches = new Mongo.Collection("matchedUsers");
-connectedUsers = new Mongo.Collection("connectedUsers");
+matches = new Mongo.Collection("matches");
 connections = new Mongo.Collection("connections");
 messages = new Mongo.Collection("messages");
 
@@ -8,6 +7,7 @@ Meteor.subscribe("connectedUsers");
 Meteor.subscribe("currentUser");
 Meteor.subscribe("connections");
 Meteor.subscribe("messages");
+Meteor.subscribe("matches");
 
 // when you navigate to "/two" automatically render the template named "Two".
 
@@ -116,6 +116,18 @@ Template.home.events({
     }
   },
 
+  'click #clearCurrentUserMatches': function(event) {
+    if (confirm('Sure?')) {
+      Meteor.call('clearCurrentUserMatches', function(err, res) {
+        if (err) {
+          console.log(err);
+        }
+
+        console.log("cleared current user matches");
+      })
+    }
+  },
+
   'click #yesmatch': function(event) {
     Meteor.call('sendMessage', getCurrentMatch()._id, "http://videourl", function(err, res) {
       if (err) {
@@ -127,7 +139,7 @@ Template.home.events({
   },
 
   'click #nomatch': function(event) {
-    var matchPassId = Meteor.user().profile.matches[0];
+    var matchPassId = getCurrentMatch()._id;
     console.log(matchPassId);
     Meteor.call("matchPass", matchPassId);
   }
@@ -178,9 +190,13 @@ Template.add.events({
 })
 
 function getCurrentMatch() {
-  if (Meteor.user() && Meteor.user().profile.matches != undefined) {
-    return matches.findOne({_id : Meteor.user().profile.matches[0]})
-  } else {
-    return null;
+  if (Meteor.user()) {
+    var currentMatches = matches.find().fetch();
+
+    if (currentMatches.length > 0) {
+      return Meteor.users.findOne(currentMatches[0].matchedUserId)
+    }
   }
+
+  return null;
 }

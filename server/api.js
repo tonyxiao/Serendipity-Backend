@@ -1,19 +1,8 @@
 Meteor.methods({
   matchPass: function(matchedUserId) {
     // TODO(qimingfang): push matchedUserId into user's previous matches.
-
-    Meteor.users.update({_id : this.userId}, {
-      $pull: {
-        "profile.matches": matchedUserId
-      }
-    });
-
-    var match = nextMatch(Meteor.user(), matchedUserId);
-    Meteor.users.update({_id : this.userId}, {
-      $push : {
-        "profile.matches" : match._id
-      }
-    })
+    passMatch(this.userId, matchedUserId);
+    newMatch(this.userId);
   },
 
   /**
