@@ -9,7 +9,7 @@ Meteor.publish("messages", function() {
 
 Meteor.publish("currentUser", function() {
   if (this.userId) {
-    return Meteor.users.find({_id: this.userId});
+    return buildUser(Meteor.users.find({_id: this.userId}));
   }
 })
 
@@ -42,7 +42,7 @@ Meteor.publish("connections", function() {
           connectedUsers[connectionId] = recipientId;
 
           self.added("connections", clientConnection._id, clientConnection);
-          self.added("users",  recipientId, Meteor.users.findOne(recipientId));
+          self.added("users",  recipientId, buildUser(Meteor.users.findOne(recipientId)));
         }
       },
 
@@ -64,13 +64,13 @@ Meteor.publish("connections", function() {
     }).fetch();
 
     currentUserConnections.forEach(function(connection) {
-      var clientConnection = buildConnection(self.userId, connection)
+      var clientConnection = buildConnection(self.userId, connection);
       var recipientId = clientConnection.recipient;
 
       connectedUsers[connection._id] = recipientId;
 
-      self.added("connections", connection._id, connection)
-      self.added("users", recipientId, Meteor.users.findOne(recipientId))
+      self.added("connections", connection._id, connection);
+      self.added("users", recipientId, buildUser(Meteor.users.findOne(recipientId)));
     })
 
     self.ready()
@@ -125,7 +125,8 @@ Meteor.publish("matches", function() {
     currentMatches.forEach(function(match) {
       matchedUsers[match._id] = match.matchedUserId;
       self.added("matches", match._id, match);
-      self.added("users", match.matchedUserId, Meteor.users.findOne(match.matchedUserId));
+      self.added("users", match.matchedUserId,
+          buildUser(Meteor.users.findOne(match.matchedUserId)));
     })
 
     self.ready()

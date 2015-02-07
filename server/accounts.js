@@ -4,7 +4,6 @@ var bunyan = Meteor.npmRequire('bunyan');
 var logger = bunyan.createLogger({ name : "accounts" });
 
 Meteor.startup(function () {
-
   // Login handler for FB
   Accounts.registerLoginHandler("fb-access", function (serviceData) {
     var loginRequest = serviceData["fb-access"];
@@ -19,14 +18,17 @@ Meteor.startup(function () {
 
     Meteor.users.update({_id : meteorId.userId}, {
       $set: {
-        "firstName" : myInfo.first_name
+        "firstName" : myInfo.first_name,
+        "about" : myInfo.bio,
+        "education" : "Harvard", // TODO
+        "createdAt" : new Date().getTime(),
+        "age" : 23, // TODO
+        "location" : "mountain view, ca",
+        "work" : "google"
       }
     })
 
     var currentUser = Meteor.users.findOne(meteorId.userId);
-
-    console.log("currentUser");
-    console.log(currentUser)
 
     graph.setAccessToken(currentUser.services.facebook.accessToken);
     var fbGetFn = Meteor.wrapAsync(graph.get);
@@ -51,3 +53,14 @@ Meteor.startup(function () {
     return meteorId;
   });
 });
+
+/**
+ * Returns info about the user, given the userId. Fields that are not relevant will be
+ * destroyed.
+ *
+ * @param userId
+ */
+buildUser = function(user) {
+  delete user.services
+  return user;
+}
