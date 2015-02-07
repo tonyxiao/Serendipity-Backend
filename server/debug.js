@@ -48,8 +48,7 @@ Meteor.methods({
         { recipientId: Meteor.user()._id }
       ]
     });
-  }
-  ,
+  },
 
   clearCurrentUserConnections: function() {
     connections.remove({
@@ -65,6 +64,10 @@ Meteor.methods({
         $in: [this.userId]
       }
     }).fetch());
+  },
+
+  findUser: function(id) {
+    return Meteor.users.find(id).fetch()
   },
 
   // TODO(qimingfang): remove this method. it is for debugging.
