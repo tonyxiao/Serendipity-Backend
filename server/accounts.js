@@ -15,10 +15,18 @@ Meteor.startup(function () {
     myInfo.accessToken = accessToken;
     myInfo.expireAt = loginRequest.expire_at;
 
-    var meteorId = Accounts.updateOrCreateUserFromExternalService("facebook", myInfo,
-        {profile: {first_name: myInfo.first_name}});
+    var meteorId = Accounts.updateOrCreateUserFromExternalService("facebook", myInfo, {});
+
+    Meteor.users.update({_id : meteorId.userId}, {
+      $set: {
+        "firstName" : myInfo.first_name
+      }
+    })
 
     var currentUser = Meteor.users.findOne(meteorId.userId);
+
+    console.log("currentUser");
+    console.log(currentUser)
 
     graph.setAccessToken(currentUser.services.facebook.accessToken);
     var fbGetFn = Meteor.wrapAsync(graph.get);
@@ -28,7 +36,7 @@ Meteor.startup(function () {
       var urls = getUserPhotos(fbGetFn, currentUser);
       Meteor.users.update({_id: currentUser._id}, {
         $set: {
-          "profile.photos": urls
+          "photos": urls
         }
       });
     }
