@@ -102,9 +102,9 @@ Meteor.publish("matches", function() {
           var match = matches.findOne(matchId);
           matchedUsers[matchId] = match.matchedUserId;
 
-          self.added("matches", matchId, match);
+          self.added("matches", matchId, buildMatch(match));
           self.added("users",
-              match.matchedUserId, Meteor.users.findOne(match.matchedUserId));
+              match.matchedUserId, buildUser(Meteor.users.findOne(match.matchedUserId)));
         }
       },
 
@@ -112,7 +112,7 @@ Meteor.publish("matches", function() {
         if (!initializing) {
           var matchedUserId = matchedUsers[matchId];
           self.removed("matches", matchId);
-          self.removed("users", matchedUserId, Meteor.users.findOne(matchedUserId))
+          self.removed("users", matchedUserId);
 
           delete matchedUsers[matchId];
         }
@@ -124,7 +124,7 @@ Meteor.publish("matches", function() {
 
     currentMatches.forEach(function(match) {
       matchedUsers[match._id] = match.matchedUserId;
-      self.added("matches", match._id, match);
+      self.added("matches", match._id, buildMatch(match));
       self.added("users", match.matchedUserId,
           buildUser(Meteor.users.findOne(match.matchedUserId)));
     })

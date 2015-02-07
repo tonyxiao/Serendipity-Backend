@@ -63,3 +63,14 @@ nextMatches = function(currentUser, currentMatchId, numMatches) {
 
   return toReturn;
 }
+
+/**
+ * Builds a client representation of the match.
+ * @param match a {@code Meteor.match}
+ * @returns an updated {@code Meteor.match}
+ */
+buildMatch = function(match) {
+  delete match.matcherId;
+
+  return match;
+}
