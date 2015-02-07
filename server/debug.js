@@ -41,16 +41,15 @@ Meteor.methods({
     Meteor.users.remove({_id : Meteor.user()._id})
   },
 
-  addConnection: function(id) {
-    var connectedUser = Meteor.users.findOne({_id : id})
-
-    connections.insert({
-      users: [Meteor.user()._id, connectedUser._id],
-      messages: []
-    })
-
-    console.log(connections.find().fetch())
-  },
+  clearCurrentUserMessages: function() {
+    messages.remove({
+      $or: [
+        { senderId: Meteor.user()._id },
+        { recipientId: Meteor.user()._id }
+      ]
+    });
+  }
+  ,
 
   clearCurrentUserConnections: function() {
     connections.remove({

@@ -2,6 +2,10 @@ matches = new Mongo.Collection("matches");
 connections = new Mongo.Collection("connections");
 messages = new Mongo.Collection("messages");
 
+Meteor.subscribe("matches");
+Meteor.subscribe("connections");
+Meteor.subscribe("messages");
+
 // when you navigate to "/two" automatically render the template named "Two".
 
 var permissions = ['email', 'user_photos', 'user_birthday', 'user_education_history',
@@ -85,6 +89,18 @@ Template.home.events({
     }
   },
 
+  'click #deleteCurrentUserMessages': function(event) {
+    if(confirm('Sure?')) {
+      Meteor.call('clearCurrentUserMessages', function(err, res) {
+        if (err) {
+          console.log(err);
+        }
+
+        console.log("cleared current user messages");
+      })
+    }
+  },
+
   'click #deleteCurrentUserConnections': function(event) {
     if (confirm('Sure?')) {
       Meteor.call('clearCurrentUserConnections', function(err, res) {
@@ -98,7 +114,7 @@ Template.home.events({
   },
 
   'click #yesmatch': function(event) {
-    Meteor.call('addConnection', getCurrentMatch()._id, function(err, res) {
+    Meteor.call('matchAccept', getCurrentMatch()._id, "http://videourl", function(err, res) {
       if (err) {
         console.log(err);
       }
@@ -131,10 +147,6 @@ Template.photos.helpers({
     }
   }
 });
-
-//Meteor.subscribe("allUsers");
-Meteor.subscribe("matches");
-Meteor.subscribe("connections");
 
 Template.add.helpers({
   users: function() {

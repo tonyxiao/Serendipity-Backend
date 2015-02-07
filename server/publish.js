@@ -17,6 +17,12 @@ Meteor.publish("connections", function() {
   }
 })
 
+Meteor.publish("messages", function() {
+  if (this.userId) {
+    return myMessages(this.userId);
+  }
+})
+
 Meteor.publish("matches", function() {
   if (this.userId) {
     var self = this
@@ -73,22 +79,3 @@ Meteor.publish("matches", function() {
     })
   }
 })
-
-Meteor.methods({
-  matchPass: function(matchedUserId) {
-    // TODO(qimingfang): push matchedUserId into user's previous matches.
-
-    Meteor.users.update({_id : this.userId}, {
-      $pull: {
-        "profile.matches": matchedUserId
-      }
-    });
-
-    var match = nextMatch(Meteor.user(), matchedUserId);
-    Meteor.users.update({_id : this.userId}, {
-      $push : {
-        "profile.matches" : match._id
-      }
-    })
-  }
-});
