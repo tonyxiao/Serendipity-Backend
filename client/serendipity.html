@@ -40,9 +40,9 @@
       <h1>Current Match</h1>
       <button id="yesmatch">Start Video Chat</button>
       <button id="nomatch">No</button>
-      Name: {{match.profile.first_name}}
+      Name: {{match.firstName}}
       <br /><br />
-      {{#each match.profile.photos}}
+      {{#each match.photos}}
         <img src="{{this}}" />
       {{/each}}
     </div>
@@ -50,7 +50,7 @@
 </template>
 
 <template name="matched">
-  <h1>{{match.profile.first_name}}</h1>
+  <h1>{{match.first_name}}</h1>
   <div id="images">
     <img src="{{photo}}" />
   </div>

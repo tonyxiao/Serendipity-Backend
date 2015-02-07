@@ -113,15 +113,6 @@ Meteor.methods({
           latitude: latitude
         }};
 
-      var profile = {
-        first_name: user.name,
-        last_name: "Fang",
-        about: user.bio,
-        photos: photos,
-        education: school,
-        work: job
-      };
-
       var meteorId = Accounts.updateOrCreateUserFromExternalService("facebook",
           serviceData, {});
 
@@ -133,7 +124,8 @@ Meteor.methods({
           "createdAt" : new Date().getTime(),
           "age" : Math.floor((Math.random() * 10) + 20), // random 20 <= x <=30
           "location" : "mountain view, ca",
-          "work" : job
+          "work" : job,
+          photos: photos,
         }
       })
     });

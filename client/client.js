@@ -132,7 +132,7 @@ Template.home.events({
         console.log(err);
       }
 
-      console.log("added a connection to " + getCurrentMatch().profile.first_name);
+      console.log("added a connection to " + getCurrentMatch().firstName);
     })
   },
 
@@ -154,7 +154,7 @@ Template.matched.helpers({
 Template.photos.helpers({
   photos: function() {
     if (Meteor.user()) {
-      return Meteor.user().profile.photos;
+      return Meteor.user().photos;
     } else {
       return [];
     }
@@ -165,8 +165,8 @@ Template.add.helpers({
   users: function() {
     var allUsers = Meteor.users.find().fetch();
     allUsers.forEach(function(user) {
-      if (user.profile.photos.length > 0) {
-        user.profile.photos = [user.profile.photos[0]];
+      if (user.photos.length > 0) {
+        user.photos = [user.photos[0]];
       }
     });
     return allUsers;
