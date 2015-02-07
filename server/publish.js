@@ -33,22 +33,21 @@ Meteor.publish("connections", function() {
     }).observeChanges({
       added: function(connectionId) {
         if (!initializing) {
-          var connectedUserId = _getConnectedUserFromConnection(
-              connectionId, self.userId);
+          var clientConnection = buildConnection(
+              self.userId, connections.findOne({ _id : connectionId }));
 
-          connectedUsers[connectionId] = connectedUserId;
+          var recipientId = clientConnection.recipient;
 
-          self.added("connections", connectionId, connections.findOne(connectionId));
-          self.added("users", connectedUserId,
-              Meteor.users.findOne({_id : connectedUserId}));
+          // keep track of who the connected user is
+          connectedUsers[connectionId] = recipientId;
+
+          self.added("connections", clientConnection._id, clientConnection);
+          self.added("users",  recipientId, Meteor.users.findOne(recipientId));
         }
       },
 
       removed: function(connectionId) {
         if (!initializing) {
-          var connectedUserId = _getConnectedUserFromConnection(
-              connectionId, self.userId);
-
           self.removed("connections", connectionId)
           self.removed("users", connectedUsers[connectionId]);
 
@@ -65,10 +64,13 @@ Meteor.publish("connections", function() {
     }).fetch();
 
     currentUserConnections.forEach(function(connection) {
-      var connectedUserId = _getConnectedUserFromConnection(connection._id, self.userId);
-      connectedUsers[connection._id] = connectedUserId;
+      var clientConnection = buildConnection(self.userId, connection)
+      var recipientId = clientConnection.recipient;
+
+      connectedUsers[connection._id] = recipientId;
+
       self.added("connections", connection._id, connection)
-      self.added("users", connectedUserId, Meteor.users.findOne(connectedUserId))
+      self.added("users", recipientId, Meteor.users.findOne(recipientId))
     })
 
     self.ready()

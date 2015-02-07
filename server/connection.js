@@ -3,8 +3,9 @@ connections = new Mongo.Collection("connections");
 var _newConnection = function(senderId, recipientId) {
   var connectionId = connections.insert({
     users: [senderId, recipientId],
-    messages: [],
-    created_on: new Date().getTime()
+    messages: [], // OPTIONAL
+    dateUpdated : new Date().getTime(),
+    dateCreated: new Date().getTime()
   })
 
   return connectionId;
@@ -14,9 +15,16 @@ var _appendMessageIdToConnection = function(connectionId, messageId) {
   return connections.update({ _id : connectionId}, {
     $push : {
       messages : messageId
+    },
+    $set : {
+      dateUpdated : new Date().getTime()
     }
   })
 }
+
+/*
+ add recipient field
+ */
 
 /**
  * Adds a new message. If a connection exists, append to it. Otherwise, create a new
@@ -45,4 +53,28 @@ addOrModifyConnectionWithNewMessage = function(senderId, recipientId, videoUrl) 
   _appendMessageIdToConnection(connectionId, messageId);
 
   return updateMessageWithConnectionId(messageId, connectionId);
+}
+
+/**
+ * Builds a connection to send to the client.
+ *
+ * @param userId
+ * @param connection; a {@code Meteor.collection}
+ */
+buildConnection = function(userId, connection) {
+  var recipient = _getConnectedUserFromConnection(connection, userId);
+  delete connection["users"]
+  delete connection["messages"]
+
+  connection.recipient = recipient;
+
+  return connection;
+}
+
+
+var _getConnectedUserFromConnection = function(connection, currentUserId) {
+  var connectedUserId = connection.users[0] == currentUserId
+      ? connection.users[1] : connection.users[0];
+
+  return connectedUserId;
 }
