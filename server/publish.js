@@ -136,11 +136,3 @@ Meteor.publish("matches", function() {
     })
   }
 })
-
-var _getConnectedUserFromConnection = function(connectionId, currentUserId) {
-  var connection = connections.findOne({ _id : connectionId });
-  var connectedUserId = connection.users[0] == currentUserId
-      ? connection.users[1] : connection.users[0];
-
-  return connectedUserId;
-}
