@@ -1,12 +1,6 @@
 var bunyan = Meteor.npmRequire('bunyan');
 var logger = bunyan.createLogger({ name : "publications" });
 
-Meteor.publish("userData", function() {
-  if (this.userId) {
-    return Meteor.users.find({_id: this.userId});
-  }
-})
-
 Meteor.publish("connections", function() {
   if (this.userId) {
     return connections.find({
@@ -23,7 +17,75 @@ Meteor.publish("messages", function() {
   }
 })
 
-Meteor.publish("matches", function() {
+Meteor.publish("currentUser", function() {
+  if (this.userId) {
+    return Meteor.users.find({_id: this.userId});
+  }
+})
+
+/**
+ * Publishes topic called 'connectedUsers' which populates a client side collection called
+ * 'connectedUsers' with {@code Meteor.user} instances for all of the current user's
+ * connections.
+ */
+Meteor.publish("connectedUsers", function() {
+  if (this.userId) {
+    var self = this
+    var connectedUsers = [];
+
+    var initializing = true;
+    var handle = connections.find({
+      users : {
+        $in : [self.userId]
+      }
+    }).observeChanges({
+      added: function(connectionId) {
+        if (!initializing) {
+          var connectedUserId = _getConnectedUserFromConnection(
+              connectionId, self.userId);
+
+          self.added("connectedUsers", connectedUserId,
+              Meteor.users.findOne({_id : connectedUserId}));
+        }
+      },
+
+      removed: function(connectionId) {
+        if (!initializing) {
+          var connectedUserId = _getConnectedUserFromConnection(
+              connectionId, self.userId);
+
+          self.removed("connectedUsers", connectedUserId,
+              Meteor.users.findOne({_id: connectedUserId}));
+        }
+      }
+    })
+
+    initializing = false;
+    var currentUserConnections = connections.find({
+      users : {
+        $in : [self.userId]
+      }
+    }).fetch();
+
+    currentUserConnections.forEach(function(connection) {
+      var connectedUserId = _getConnectedUserFromConnection(connection._id, self.userId);
+      self.added("connectedUsers", connectedUserId, Meteor.users.findOne(connectedUserId))
+    })
+
+    self.ready()
+
+    this.onStop(function() {
+      handle.stop();
+    })
+  }
+})
+
+/**
+ * Publishes topic called 'matchedUsers' which populates a client side collection called
+ * 'matchedUsers' with {@code Meteor.user} instances for all of the current user's
+ * connections.
+ */
+Meteor.publish("matchedUsers", function() {
   if (this.userId) {
     var self = this
     var matchedUsers = [];
@@ -45,7 +107,7 @@ Meteor.publish("matches", function() {
             return matchedUsers.indexOf(e) < 0;
           });
           newMatches.forEach(function(matchId) {
-            self.added("matches", matchId, Meteor.users.findOne({_id : matchId}));
+            self.added("matchedUsers", matchId, Meteor.users.findOne({_id : matchId}));
           });
 
           // remove old matches from client users collection that are no longer relevant
@@ -53,7 +115,7 @@ Meteor.publish("matches", function() {
             return matches.indexOf(e) < 0;
           });
           oldMatches.forEach(function(matchId) {
-            self.removed("matches", matchId);
+            self.removed("matchedUsers", matchId);
           })
 
           matchedUsers = matches;
@@ -66,7 +128,7 @@ Meteor.publish("matches", function() {
 
     if (matches != undefined) {
       matches.forEach(function (matchId) {
-        self.added("matches", matchId, Meteor.users.findOne({_id: matchId}));
+        self.added("matchedUsers", matchId, Meteor.users.findOne({_id: matchId}));
       })
 
       matchedUsers = matches;
@@ -79,3 +141,11 @@ Meteor.publish("matches", function() {
     })
   }
 })
+
+var _getConnectedUserFromConnection = function(connectionId, currentUserId) {
+  var connection = connections.findOne({ _id : connectionId });
+  var connectedUserId = connection.users[0] == currentUserId
+      ? connection.users[1] : connection.users[0];
+
+  return connectedUserId;
+}

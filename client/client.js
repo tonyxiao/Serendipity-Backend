@@ -1,8 +1,11 @@
-matches = new Mongo.Collection("matches");
+matches = new Mongo.Collection("matchedUsers");
+connectedUsers = new Mongo.Collection("connectedUsers");
 connections = new Mongo.Collection("connections");
 messages = new Mongo.Collection("messages");
 
-Meteor.subscribe("matches");
+Meteor.subscribe("matchedUsers");
+Meteor.subscribe("connectedUsers");
+Meteor.subscribe("currentUser");
 Meteor.subscribe("connections");
 Meteor.subscribe("messages");
 
