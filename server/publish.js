@@ -9,7 +9,7 @@ Meteor.publish("messages", function() {
 
 Meteor.publish("currentUser", function() {
   if (this.userId) {
-    return buildUser(Meteor.users.find({_id: this.userId}));
+    return buildUser(Meteor.users.find(this.userId));
   }
 })
 
