@@ -56,10 +56,12 @@ addOrModifyConnectionWithNewMessage = function(senderId, recipientId, videoUrl) 
 }
 
 /**
- * Builds a connection to send to the client.
+ * Builds a client representation of the connection.
  *
- * @param userId
- * @param connection; a {@code Meteor.collection}
+ * @param userId: string;
+ * @param connection; a {@code Meteor.connection}
+ *
+ * @return an (updated) {@code Meteor.connection}.
  */
 buildConnection = function(userId, connection) {
   var recipient = _getConnectedUserFromConnection(connection, userId);
