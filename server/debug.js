@@ -103,7 +103,7 @@ Meteor.methods({
 
       var school = schools[Math.floor(Math.random() * schools.length)];
       var location = locations[Math.floor(Math.random() * locations.length)];
-      var job = jobs[Math.floor(Math.random()) * jobs.length];
+      var job = jobs[Math.floor(Math.random() * jobs.length)];
 
       var photos = [];
       user.photos.forEach(function(photo) {
