@@ -31,8 +31,8 @@ addOrModifyConnectionWithNewMessage = function(senderId, recipientId, videoUrl) 
 
   var connection = connections.findOne({
     $and: [
-      { $users : { $in : [senderId] }},
-      { $users : { $in : [recipientId] }}
+      { users : { $in : [senderId] }},
+      { users : { $in : [recipientId] }}
     ]
   });
 
