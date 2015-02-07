@@ -114,7 +114,7 @@ Template.home.events({
   },
 
   'click #yesmatch': function(event) {
-    Meteor.call('matchAccept', getCurrentMatch()._id, "http://videourl", function(err, res) {
+    Meteor.call('sendMessage', getCurrentMatch()._id, "http://videourl", function(err, res) {
       if (err) {
         console.log(err);
       }

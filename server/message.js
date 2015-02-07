@@ -24,7 +24,7 @@ newMessage = function(senderId, recipientId, videoUrl) {
  *
  * @returns the messageId
  */
-addConnection = function(messageId, connectionId) {
+updateMessageWithConnectionId = function(messageId, connectionId) {
   return messages.update({ _id : messageId}, {
     $set : {
       "connectionId" : connectionId
