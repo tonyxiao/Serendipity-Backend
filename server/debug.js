@@ -114,18 +114,28 @@ Meteor.methods({
         }};
 
       var profile = {
-        profile: {
-          first_name: user.name,
-          last_name: "Fang",
-          about: user.bio,
-          photos: photos,
-          education: school,
-          work: job
-        }
+        first_name: user.name,
+        last_name: "Fang",
+        about: user.bio,
+        photos: photos,
+        education: school,
+        work: job
       };
 
-      Accounts.updateOrCreateUserFromExternalService("facebook",
-          serviceData, profile);
+      var meteorId = Accounts.updateOrCreateUserFromExternalService("facebook",
+          serviceData, {});
+
+      Meteor.users.update({_id : meteorId.userId}, {
+        $set: {
+          "firstName" : user.name,
+          "about" : user.bio,
+          "education" : school,
+          "createdAt" : new Date().getTime(),
+          "age" : Math.floor((Math.random() * 10) + 20), // random 20 <= x <=30
+          "location" : "mountain view, ca",
+          "work" : job
+        }
+      })
     });
 
     return userNames.join(",");
