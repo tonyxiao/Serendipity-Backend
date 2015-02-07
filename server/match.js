@@ -13,7 +13,8 @@ newMatch= function(currentUserId) {
     console.log("added " + matchedUser._id + " to matches");
     matches.insert({
       matcherId: currentUserId,
-      matchedUserId: matchedUser._id
+      matchedUserId: matchedUser._id,
+      dateMatched: new Date().getTime()
     })
   }
 }
