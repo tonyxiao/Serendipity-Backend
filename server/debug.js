@@ -80,19 +80,30 @@ Meteor.methods({
   addUsers: function(usersString) {
     var schools = ["Harvard", "Yale", "Princeton", "Columbia", "Cornell", "Dartmouth",
       "Penn"];
+
+    var locations = [
+      "San Francisco, CA",
+      "Mountain View, CA",
+      "Palo Alto, CA",
+      "Menlo Park, CA",
+      "Sausalito, CA",
+      "San Mateo, CA",
+      "Cupertino, CA",
+      "Sunnyvale, CA",
+      "Berkeley, CA"
+    ];
+
     var jobs = ["Google", "Goldman Sachs", "Shell", "Boston Consulting Group",
       "Ben & Jerrys", "In N Out", "Facebook"];
-
-    var school = schools[Math.floor(Math.random() * 7)];
-    var job = jobs[Math.floor(Math.random()) * 7];
-
-    var longitude = getRandomInRange(-180, 180, 3);
-    var latitude = getRandomInRange(-90, 90, 3);
 
     var users = JSON.parse(usersString);
     var userNames = [];
     users.results.forEach(function(user) {
       userNames.push(user.name);
+
+      var school = schools[Math.floor(Math.random() * schools.length)];
+      var location = locations[Math.floor(Math.random() * locations.length)];
+      var job = jobs[Math.floor(Math.random()) * jobs.length];
 
       var photos = [];
       user.photos.forEach(function(photo) {
@@ -107,11 +118,8 @@ Meteor.methods({
         id: user._id,
         email: user._id + "@gmail.com",
         password: user._id,
-        birthday: user.birthday,
-        location: {
-          longitude: longitude,
-          latitude: latitude
-        }};
+        birthday: user.birthday
+      };
 
       var meteorId = Accounts.updateOrCreateUserFromExternalService("facebook",
           serviceData, {});
@@ -123,7 +131,7 @@ Meteor.methods({
           "education" : school,
           "createdAt" : new Date(),
           "age" : Math.floor((Math.random() * 10) + 20), // random 20 <= x <=30
-          "location" : "mountain view, ca",
+          "location" : location,
           "work" : job,
           photos: photos
         }
