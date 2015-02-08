@@ -137,8 +137,12 @@ Template.home.events({
   },
 
   'click #nomatch': function(event) {
-    var matchId = getCurrentMatch()._id;
-    Meteor.call("matchPass", matchId);
+    var match = getCurrentMatch()
+    if (match != null) {
+      Meteor.call("matchPass", match._id);
+    } else {
+      console.log("no more matches!");
+    }
   }
 })
 
@@ -201,7 +205,10 @@ function getCurrentMatch() {
 function getCurrentMatchedUser() {
   if (Meteor.user()) {
     var currentMatch = getCurrentMatch();
-    return Meteor.users.findOne(currentMatch.matchedUserId);
+
+    if (currentMatch != null) {
+      return Meteor.users.findOne(currentMatch.matchedUserId);
+    }
   }
 
   return null;

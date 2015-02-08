@@ -8,14 +8,22 @@ getCurrentMatches = function(currentUserid) {
 }
 
 newMatch= function(currentUserId) {
-  var matchedUser = nextMatch(currentUserId, 0 /* userId that doesn't exist */);
+  var matchedUser = nextMatch(currentUserId);
   if (matchedUser != undefined) {
-    console.log("added " + matchedUser._id + " to matches");
     matches.insert({
       matcherId: currentUserId,
       matchedUserId: matchedUser._id,
       dateMatched: new Date()
     })
+
+    // push currently matched user to the current user's previous matches.
+    Meteor.users.update(currentUserId, {
+      $push : {
+        previousMatches : matchedUser._id
+      }
+    })
+
+    console.log("added " + matchedUser._id + " to matches");
   }
 }
 
@@ -33,12 +41,14 @@ passMatch = function(matchId, currentUserid) {
  * @returns a function to generate a random user whose id is not equal to @id
  */
 var _randomFromCollection = function(C) {
-  return function (id, currentMatchedId) {
-    // just 1 = current user for now. Will include previous matches in the future.
-    var numUsersToExclude = 2;
+  /**
+   * @param ineligibleUserIds array of userIds this user cannot be matched with
+   */
+  return function (ineligibleUserIds) {
+    var numUsersToExclude = ineligibleUserIds.length;
 
     c = C.find({
-      _id: {$nin : [id, currentMatchedId]}
+      _id: {$nin : ineligibleUserIds}
     }).fetch();
 
     i = randomInRange(0, C.find().count() - numUsersToExclude - 1)
@@ -49,21 +59,16 @@ var _randomFromCollection = function(C) {
 /**
  * @returns a match {@link Meteor.user} for the current user.
  */
-nextMatch = function(currentUser, currentMatchId) {
-  return _randomFromCollection(Meteor.users)(currentUser._id, currentMatchId);
-}
+nextMatch = function(currentUserId) {
+  var currentUser = Meteor.users.findOne(currentUserId);
 
-nextMatches = function(currentUser, currentMatchId, numMatches) {
-  toReturn = [];
-  for (var i = 0; i < numMatches; i++) {
-    var match = nextMatch(currentUser, currentMatchId);
+  // a user should not match to a previous match
+  var ineligibleUserIds = currentUser.previousMatches;
 
-    if (match != undefined) {
-      toReturn.push(match._id);
-    }
-  }
+  // a user cannot match to themselves.
+  ineligibleUserIds.push(currentUserId);
 
-  return toReturn;
+  return _randomFromCollection(Meteor.users)(ineligibleUserIds);
 }
 
 /**

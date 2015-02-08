@@ -14,19 +14,17 @@ Meteor.startup(function () {
     myInfo.accessToken = accessToken;
     myInfo.expireAt = loginRequest.expire_at;
 
-    console.log(myInfo);
-
     var meteorId = Accounts.updateOrCreateUserFromExternalService("facebook", myInfo, {});
 
     Meteor.users.update({_id : meteorId.userId}, {
       $set: {
-        "firstName" : myInfo.first_name,
-        "about" : myInfo.first_name,
-        "education" : "Harvard", // TODO
-        "age" : 23, // TODO
-        "location" : "mountain view, ca",
-        "work" : "google",
-        "createdAt" : new Date()
+        firstName : myInfo.first_name,
+        about : myInfo.bio,
+        education : "Harvard", // TODO
+        age : 23, // TODO
+        location : "mountain view, ca",
+        work : "google",
+        createdAt : new Date()
       }
     })
 
@@ -40,9 +38,18 @@ Meteor.startup(function () {
       var urls = getUserPhotos(fbGetFn, currentUser);
       Meteor.users.update({_id: currentUser._id}, {
         $set: {
-          "photos": urls
+          photos: urls
         }
       });
+    }
+
+    // a newly registered user will have an empty previous matches array.
+    if (currentUser.previousMatches == undefined) {
+      Meteor.users.update({_id: currentUser._id}, {
+        $set: {
+          previousMatches : []
+        }
+      })
     }
 
     // new user has no matches yet.

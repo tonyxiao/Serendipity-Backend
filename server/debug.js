@@ -62,6 +62,12 @@ Meteor.methods({
     matches.remove({
       matcherId: this.userId
     })
+
+    Meteor.users.update(this.userId, {
+      $set : {
+        previousMatches : []
+      }
+    })
   },
 
   validConnections: function() {
