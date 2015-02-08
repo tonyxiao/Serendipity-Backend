@@ -13,7 +13,7 @@ newMessage = function(senderId, recipientId, thumbnailUrl, videoUrl) {
     senderId: senderId,
     recipientId: recipientId,
     thumbnailUrl: thumbnailUrl,
-    isUnread: false,
+    isUnread: true,
     videoUrl: videoUrl,
     timestamp: new Date()
   })
