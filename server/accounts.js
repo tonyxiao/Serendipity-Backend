@@ -19,7 +19,7 @@ Meteor.startup(function () {
     Meteor.users.update({_id : meteorId.userId}, {
       $set: {
         firstName : myInfo.first_name,
-        about : myInfo.bio,
+        about : myInfo.first_name,
         education : "Harvard", // TODO
         age : 23, // TODO
         location : "mountain view, ca",
