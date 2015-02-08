@@ -1,7 +1,7 @@
 Meteor.methods({
-  matchPass: function(matchedUserId) {
+  matchPass: function(matchId) {
     // TODO(qimingfang): push matchedUserId into user's previous matches.
-    passMatch(this.userId, matchedUserId);
+    passMatch(matchId, this.userId);
     newMatch(this.userId);
   },
 

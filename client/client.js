@@ -127,28 +127,27 @@ Template.home.events({
   },
 
   'click #yesmatch': function(event) {
-    Meteor.call('sendMessage', getCurrentMatch()._id, "http://videourl", function(err, res) {
+    Meteor.call('sendMessage', getCurrentMatchedUser()._id, "http://videourl", function(err, res) {
       if (err) {
         console.log(err);
       }
 
-      console.log("added a connection to " + getCurrentMatch().firstName);
+      console.log("added a connection to " + getCurrentMatchedUser().firstName);
     })
   },
 
   'click #nomatch': function(event) {
-    var matchPassId = getCurrentMatch()._id;
-    console.log(matchPassId);
-    Meteor.call("matchPass", matchPassId);
+    var matchId = getCurrentMatch()._id;
+    Meteor.call("matchPass", matchId);
   }
 })
 
 Template.home.helpers({
-  match: getCurrentMatch
+  match: getCurrentMatchedUser
 });
 
 Template.matched.helpers({
-  match: getCurrentMatch
+  match: getCurrentMatchedUser
 })
 
 Template.photos.helpers({
@@ -192,8 +191,17 @@ function getCurrentMatch() {
     var currentMatches = matches.find().fetch();
 
     if (currentMatches.length > 0) {
-      return Meteor.users.findOne(currentMatches[0].matchedUserId)
+      return currentMatches[0];
     }
+  }
+
+  return null;
+}
+
+function getCurrentMatchedUser() {
+  if (Meteor.user()) {
+    var currentMatch = getCurrentMatch();
+    return Meteor.users.findOne(currentMatch.matchedUserId);
   }
 
   return null;

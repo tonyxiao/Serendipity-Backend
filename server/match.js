@@ -19,12 +19,14 @@ newMatch= function(currentUserId) {
   }
 }
 
-passMatch = function(currentUserId, previousMatchUserId) {
-  console.log("Passing " + previousMatchUserId);
-  matches.remove({
-    matcherId: currentUserId,
-    matchedUserId: previousMatchUserId
-  })
+passMatch = function(matchId, currentUserid) {
+  var match = matches.findOne(matchId);
+  if (match == undefined || match.matcherId != currentUserid) {
+    console.log("User " + currentUserId + " cannot remove match " + matchId);
+    return;
+  }
+
+  return matches.remove(matchId);
 }
 
 /**
