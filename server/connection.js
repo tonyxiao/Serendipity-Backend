@@ -22,10 +22,6 @@ var _appendMessageIdToConnection = function(connectionId, messageId) {
   })
 }
 
-/*
- add recipient field
- */
-
 /**
  * Adds a new message. If a connection exists, append to it. Otherwise, create a new
  * connection.
