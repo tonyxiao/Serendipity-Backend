@@ -14,7 +14,8 @@ Meteor.methods({
    *
    * @return the id of the new connection.
    */
-  sendMessage: function(matchedUserId, videoUrl) {
-    return addOrModifyConnectionWithNewMessage(this.userId, matchedUserId, videoUrl);
+  sendMessage: function(matchedUserId, thumbnailUrl, videoUrl) {
+    return addOrModifyConnectionWithNewMessage(
+        this.userId, matchedUserId, thumbnailUrl, videoUrl);
   }
 });

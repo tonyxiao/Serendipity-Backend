@@ -34,8 +34,9 @@ var _appendMessageIdToConnection = function(connectionId, messageId) {
  * @param recipientId: string; the recipient user's id
  * @param videoUrl: string; the url of the first message
  */
-addOrModifyConnectionWithNewMessage = function(senderId, recipientId, videoUrl) {
-  var messageId = newMessage(senderId, recipientId, videoUrl);
+addOrModifyConnectionWithNewMessage = function(
+    senderId, recipientId, thumbnailUrl, videoUrl) {
+  var messageId = newMessage(senderId, recipientId, thumbnailUrl, videoUrl);
 
   var connection = connections.findOne({
     $and: [

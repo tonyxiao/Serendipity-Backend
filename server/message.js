@@ -8,10 +8,11 @@ messages = new Mongo.Collection("messages");
  *
  * @return the messageId
  */
-newMessage = function(senderId, recipientId, videoUrl) {
+newMessage = function(senderId, recipientId, thumbnailUrl, videoUrl) {
   return messages.insert({
     senderId: senderId,
     recipientId: recipientId,
+    thumbnailUrl: thumbnailUrl,
     videoUrl: videoUrl,
     timestamp: new Date()
   })
