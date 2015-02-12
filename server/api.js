@@ -1,6 +1,12 @@
 Meteor.methods({
+
+  /**
+   * The current user in session passes on the user with id {@code matchId}. Requests a
+   * new match for the current user.
+   *
+   * @param matchId the id of the user to pass
+   */
   matchPass: function(matchId) {
-    // TODO(qimingfang): push matchedUserId into user's previous matches.
     passMatch(matchId, this.userId);
     newMatch(this.userId);
   },

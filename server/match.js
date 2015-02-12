@@ -27,6 +27,10 @@ newMatch= function(currentUserId) {
   }
 }
 
+/**
+ * Called when a user with {@code currentUserId} wants to pass on a user with
+ * {@code matchId}.
+ */
 passMatch = function(matchId, currentUserid) {
   var match = matches.findOne(matchId);
   if (match == undefined || match.matcherId != currentUserid) {
@@ -35,25 +39,6 @@ passMatch = function(matchId, currentUserid) {
   }
 
   return matches.remove(matchId);
-}
-
-/**
- * @returns a function to generate a random user whose id is not equal to @id
- */
-var _randomFromCollection = function(C) {
-  /**
-   * @param ineligibleUserIds array of userIds this user cannot be matched with
-   */
-  return function (ineligibleUserIds) {
-    var numUsersToExclude = ineligibleUserIds.length;
-
-    c = C.find({
-      _id: {$nin : ineligibleUserIds}
-    }).fetch();
-
-    i = randomInRange(0, C.find().count() - numUsersToExclude - 1)
-    return c[i]
-  }
 }
 
 /**
@@ -73,6 +58,7 @@ nextMatch = function(currentUserId) {
 
 /**
  * Builds a client representation of the match.
+ *
  * @param match a {@code Meteor.match}
  * @returns an updated {@code Meteor.match}
  */
@@ -80,4 +66,23 @@ buildMatch = function(match) {
   delete match.matcherId;
 
   return match;
+}
+
+/**
+ * @returns a function to generate a random user whose id is not equal to @id
+ */
+var _randomFromCollection = function(C) {
+  /**
+   * @param ineligibleUserIds array of userIds this user cannot be matched with
+   */
+  return function (ineligibleUserIds) {
+    var numUsersToExclude = ineligibleUserIds.length;
+
+    c = C.find({
+      _id: {$nin : ineligibleUserIds}
+    }).fetch();
+
+    i = randomInRange(0, C.find().count() - numUsersToExclude - 1)
+    return c[i]
+  }
 }
