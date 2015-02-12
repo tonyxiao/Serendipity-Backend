@@ -1,12 +1,18 @@
 var bunyan = Meteor.npmRequire('bunyan');
 var logger = bunyan.createLogger({ name : "publications" });
 
+/**
+ * Messages for the current user.
+ */
 Meteor.publish("messages", function() {
   if (this.userId) {
     return myMessages(this.userId);
   }
 })
 
+/**
+ * User data on the current user.
+ */
 Meteor.publish("currentUser", function() {
   if (this.userId) {
     return buildUser(Meteor.users.find(this.userId));
@@ -14,9 +20,10 @@ Meteor.publish("currentUser", function() {
 })
 
 /**
- * Publishes topic called 'connectedUsers' which populates a client side collection called
- * 'connectedUsers' with {@code Meteor.user} instances for all of the current user's
- * connections.
+ * Publishes topic called 'connections' which populates a client side collection called
+ * 'connections' with {@code Meteor.connection} instances for all of the current user's
+ * connections. Simultaneously, publishes to the "users" collection with the
+ * {@code Meteor.user} corresponding to those connections.
  */
 Meteor.publish("connections", function() {
   if (this.userId) {
@@ -82,9 +89,10 @@ Meteor.publish("connections", function() {
 })
 
 /**
- * Publishes topic called 'matchedUsers' which populates a client side collection called
- * 'matchedUsers' with {@code Meteor.user} instances for all of the current user's
- * connections.
+ * Publishes topic called 'matches' which populates a client side collection called
+ * 'matches' with {@code Meteor.matches} instances for all of the current user's
+ * connections. Simultaneously, publishes to the "users" collection with the
+ * {@code Meteor.user} corresponding to those matches.
  */
 Meteor.publish("matches", function() {
   if (this.userId) {

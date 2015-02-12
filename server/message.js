@@ -21,6 +21,7 @@ newMessage = function(senderId, recipientId, thumbnailUrl, videoUrl) {
 
 /**
  * Adds a new connection to the message
+ *
  * @param messageId: string; the id of the message.
  * @param connectionId: string; the id of the connection
  *
@@ -36,6 +37,7 @@ updateMessageWithConnectionId = function(messageId, connectionId) {
 
 /**
  * Returns the messages that are part of connections that userid is part of
+ *
  * @param userId: string; the id of the user we want to look for messages.
  * @returns {Mongo.Cursor} for the return set of messages.
  */
