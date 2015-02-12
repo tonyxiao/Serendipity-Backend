@@ -67,6 +67,17 @@ window.fbAsyncInit = function() {
 }
 
 Template.home.events({
+  'click #testUser': function(event) {
+    Accounts.createUser({
+      username: "username",
+      email: "email@gmail.com",
+      password: "password",
+      profile: {}
+    }, function(error, res) {
+      Meteor.call("matchMe");
+    })
+  },
+
   'click #deleteUser': function(event) {
     if (confirm('Sure?')) {
       Meteor.call('clearAllUsers', function(err, res) {

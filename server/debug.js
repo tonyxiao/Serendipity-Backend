@@ -26,6 +26,27 @@ Meteor.users.allow({
 });
 // RPC methods clients can call.
 Meteor.methods({
+  matchMe: function() {
+    var currentUser = Meteor.user();
+
+    // a newly registered user will have an empty previous matches array.
+    if (currentUser.previousMatches == undefined) {
+      Meteor.users.update({_id: currentUser._id}, {
+        $set: {
+          previousMatches : []
+        }
+      })
+    }
+
+    // new user has no matches yet.
+    var currentMatches = getCurrentMatches(currentUser._id);
+    if (currentMatches.length == 0) {
+      for (var i = 0; i < 5; i++) {
+        newMatch(currentUser._id);
+      }
+    }
+  },
+
   // TODO(qimingfang): remove this method. it is for debugging.
   clearAllUsers : function() {
     Meteor.users.remove({});
