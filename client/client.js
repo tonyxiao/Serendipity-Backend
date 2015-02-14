@@ -6,6 +6,7 @@ Meteor.subscribe("currentUser");
 Meteor.subscribe("connections");
 Meteor.subscribe("messages");
 Meteor.subscribe("matches");
+Meteor.subscribe("allMatches");
 
 // when you navigate to "/two" automatically render the template named "Two".
 
@@ -137,25 +138,40 @@ Template.home.events({
     }
   },
 
-  'click #yesmatch': function(event) {
-    Meteor.call('sendMessage', getCurrentMatchedUser()._id, "http://videourl", function(err, res) {
+  'click .yesmatch': function(event) {
+    var matchedUserId = $(event.target).parent().data('userid');
+    Meteor.call('chooseForMatchedUser', matchedUserId, 'yes', function(err, res) {
       if (err) {
         console.log(err);
+      } else {
+        console.log("made user " + matchedUserId + " choose yes");
       }
+    });
 
-      console.log("added a connection to " + getCurrentMatchedUser().firstName);
-    })
   },
 
-  'click #nomatch': function(event) {
-    var match = getCurrentMatch()
-    if (match != null) {
-      Meteor.call("matchPass", match._id);
-    } else {
-      console.log("no more matches!");
-    }
+  'click .nomatch': function(event) {
+    var matchedUserId = $(event.target).parent().data('userid');
+    Meteor.call('chooseForMatchedUser', matchedUserId, 'no', function(err, res) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("made user " + matchedUserId + " choose no");
+      }
+    });
+  },
+
+  'click .maybematch': function(event) {
+    var matchedUserId = $(event.target).parent().data('userid');
+    Meteor.call('chooseForMatchedUser', matchedUserId, 'maybe', function(err, res) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("made user " + matchedUserId + " choose maybe");
+      }
+    });
   }
-})
+});
 
 Template.home.helpers({
   matches: getCurrentMatchedUser
@@ -203,7 +219,10 @@ Template.add.events({
 
 function getCurrentMatches() {
   if (Meteor.user()) {
-    var currentMatches = matches.find({}, {sort: {dateMatched: 1}}).fetch();
+    var currentMatches = matches.find({
+      matcherId: Meteor.user()._id,
+      choice: null
+    }, {sort: {dateMatched: 1}}).fetch();
     //var currentMatches = matches.find().fetch();
 
     if (currentMatches.length >= 3) {
@@ -223,7 +242,17 @@ function getCurrentMatchedUser() {
       currentMatches.forEach(function(match) {
         var user = Meteor.users.findOne(match.matchedUserId);
         user.profilePhoto = user.photos[0];
+        var inverseMatch = matches.findOne({
+          matcherId: match.matchedUserId,
+          matchedUserId: match.matcherId
+        });
+        if (inverseMatch != null) {
+          user.theirChoice = inverseMatch.choice;
+        } else {
+          user.theirChoice = "tbd";
+        }
         users.push(user);
+
       });
 
       return users

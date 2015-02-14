@@ -41,13 +41,17 @@
   <div class="operation">
     <div id="match">
       <h1>Current Game</h1>
-      <!--<button id="yesmatch">Start Video Chat</button>-->
-      <!--<button id="nomatch">No</button>-->
+
       <br /><br />
         {{#each matches}}
-            <div>
+            <div data-userid="{{this._id}}">
                 <span>{{this.firstName}}</span>
                 <img src="{{this.profilePhoto}}" alt="" height="100" width="100"/>
+                <span>Their Choice: {{this.theirChoice}}</span>
+                <span>Make it -> </span>
+                <button class="yesmatch">yes</button>
+                <button class="nomatch">no</button>
+                <button class="maybematch">maybe</button>
             </div>
         {{/each}}
     </div>

@@ -13,6 +13,10 @@ Meteor.publish('allUsers', function() {
   return Meteor.users.find();
 });
 
+Meteor.publish('allMatches', function() {
+  return matches.find();
+});
+
 Meteor.users.allow({
   insert: function(){
     return true;
@@ -26,6 +30,22 @@ Meteor.users.allow({
 });
 // RPC methods clients can call.
 Meteor.methods({
+  chooseForMatchedUser: function(matchedUserId, choice) {
+    var currentUserId = Meteor.user()._id;
+    var inverseMatch = matches.update({
+      matcherId: matchedUserId,
+      matchedUserId: currentUserId
+    }, {
+      $set: {
+        choice: choice,
+        dateMatched: new Date()
+      }
+    }, {
+      upsert: true
+    });
+    console.log('Chose ' + choice + ' for ' + matchedUserId);
+    return inverseMatch
+  },
   matchMe: function() {
     var currentUser = Meteor.user();
 
