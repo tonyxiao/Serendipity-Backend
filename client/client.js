@@ -158,12 +158,12 @@ Template.home.events({
 })
 
 Template.home.helpers({
-  match: getCurrentMatchedUser
+  matches: getCurrentMatchedUser
 });
 
 Template.matched.helpers({
-  match: getCurrentMatchedUser
-})
+  matches: getCurrentMatchedUser
+});
 
 Template.photos.helpers({
   photos: function() {
@@ -201,12 +201,13 @@ Template.add.events({
   }
 })
 
-function getCurrentMatch() {
+function getCurrentMatches() {
   if (Meteor.user()) {
-    var currentMatches = matches.find().fetch();
+    var currentMatches = matches.find({}, {sort: {dateMatched: 1}}).fetch();
+    //var currentMatches = matches.find().fetch();
 
-    if (currentMatches.length > 0) {
-      return currentMatches[0];
+    if (currentMatches.length >= 3) {
+      return currentMatches.slice(0, 3);
     }
   }
 
@@ -215,12 +216,20 @@ function getCurrentMatch() {
 
 function getCurrentMatchedUser() {
   if (Meteor.user()) {
-    var currentMatch = getCurrentMatch();
+    var currentMatches = getCurrentMatches();
 
-    if (currentMatch != null) {
-      return Meteor.users.findOne(currentMatch.matchedUserId);
+    if (currentMatches != null) {
+      var users = [];
+      currentMatches.forEach(function(match) {
+        var user = Meteor.users.findOne(match.matchedUserId);
+        user.profilePhoto = user.photos[0];
+        users.push(user);
+      });
+
+      return users
     }
   }
 
   return null;
 }
+window.getCurrentMatchedUser = getCurrentMatchedUser

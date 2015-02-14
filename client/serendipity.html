@@ -40,14 +40,16 @@
 
   <div class="operation">
     <div id="match">
-      <h1>Current Match</h1>
-      <button id="yesmatch">Start Video Chat</button>
-      <button id="nomatch">No</button>
-      Name: {{match.firstName}}
+      <h1>Current Game</h1>
+      <!--<button id="yesmatch">Start Video Chat</button>-->
+      <!--<button id="nomatch">No</button>-->
       <br /><br />
-      {{#each match.photos}}
-        <img src="{{this}}" />
-      {{/each}}
+        {{#each matches}}
+            <div>
+                <span>{{this.firstName}}</span>
+                <img src="{{this.profilePhoto}}" alt="" height="100" width="100"/>
+            </div>
+        {{/each}}
     </div>
   </div>
 </template>
