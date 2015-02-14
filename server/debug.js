@@ -125,8 +125,12 @@ Meteor.methods({
 
     var users = JSON.parse(usersString);
     var userNames = [];
+
+    console.log("Will add users");
+
     users.results.forEach(function(user) {
       userNames.push(user.name);
+      console.log("Will add user with name " + user.name);
 
       var school = schools[Math.floor(Math.random() * schools.length)];
       var location = locations[Math.floor(Math.random() * locations.length)];
