@@ -12,10 +12,6 @@ Meteor.methods({
   },
 
   chooseYesNoMaybe: function(yesMatchId, noMatchId, maybeMatchId) {
-      var yesMatch = matches.findOne(yesMatchId);
-      var noMatch = matches.findOne(noMatchId);
-      var maybeMatch = matches.findOne(maybeMatchId);
-
       matches.update(yesMatchId, {
           $set: { choice: 'yes' }
       });
@@ -25,11 +21,15 @@ Meteor.methods({
       matches.update(maybeMatchId, {
           $set: { choice: 'maybe' }
       });
-      // TODO: Remove irrelevant matches (no's and not-matched) from matches subscription
+      var yesMatch = matches.findOne(yesMatchId);
+      var noMatch = matches.findOne(noMatchId);
+      var maybeMatch = matches.findOne(maybeMatchId);
+
+    // TODO: Remove irrelevant matches (no's and not-matched) from matches subscription
 
 
       var result = [];
-      for (match in [yesMatch, maybeMatch]) {
+      [yesMatch, maybeMatch].forEach(function (match) {
           var inverseMatch = matches.findOne({
               matcherId: match.matchedUserId,
               matchedUserId: match.matcherId,
@@ -37,7 +37,7 @@ Meteor.methods({
           });
           if (inverseMatch) {
               var connectionId = connections.insert({
-                  users: [senderId, recipientId],
+                  users: [match.matchedUserId, match.matcherId],
                   messages: [],
                   dateUpdated : new Date(),
                   dateCreated: new Date(),
@@ -45,7 +45,7 @@ Meteor.methods({
               });
               result.push(connectionId);
           }
-      }
+      });
       return result
   },
 
