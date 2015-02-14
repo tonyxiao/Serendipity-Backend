@@ -46,6 +46,10 @@ Meteor.methods({
               result.push(connectionId);
           }
       });
+      for (var i = 0; i < 3; i++) {
+          newMatch(this.userId);
+      }
+
       return result
   },
 
