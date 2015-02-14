@@ -11,6 +11,7 @@ Meteor.methods({
     newMatch(this.userId);
   },
 
+    // TODO: make params be a dictionary, too hard to understand otherwise
   chooseYesNoMaybe: function(yesMatchId, noMatchId, maybeMatchId) {
       matches.update(yesMatchId, {
           $set: { choice: 'yes' }
@@ -28,7 +29,7 @@ Meteor.methods({
     // TODO: Remove irrelevant matches (no's and not-matched) from matches subscription
 
 
-      var result = [];
+      var result = {};
       [yesMatch, maybeMatch].forEach(function (match) {
           var inverseMatch = matches.findOne({
               matcherId: match.matchedUserId,
@@ -43,7 +44,7 @@ Meteor.methods({
                   dateCreated: new Date(),
                   type: match.choice
               });
-              result.push(connectionId);
+              result[match.choice] = connectionId;
           }
       });
       for (var i = 0; i < 3; i++) {

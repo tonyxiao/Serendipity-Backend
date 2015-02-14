@@ -219,19 +219,20 @@ Template.add.events({
 
 function getCurrentMatches() {
   if (Meteor.user()) {
-    var currentMatches = matches.find({
-      matcherId: Meteor.user()._id,
-      choice: null
-    }, {sort: {dateMatched: 1}}).fetch();
-    //var currentMatches = matches.find().fetch();
+      var currentMatches = matches.find({
+          matcherId: Meteor.user()._id,
+          choice: null
+      }, {sort: {dateMatched: 1}}).fetch();
+      return currentMatches
+      //if (currentMatches.length >= 3) {
+      //  return currentMatches.slice(0, 3);
+      //}
 
-    if (currentMatches.length >= 3) {
-      return currentMatches.slice(0, 3);
-    }
   }
 
   return null;
 }
+window.getCurrentMatches = getCurrentMatches
 
 function getCurrentMatchedUser() {
   if (Meteor.user()) {
