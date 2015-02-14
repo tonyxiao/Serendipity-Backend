@@ -11,6 +11,44 @@ Meteor.methods({
     newMatch(this.userId);
   },
 
+  chooseYesNoMaybe: function(yesMatchId, noMatchId, maybeMatchId) {
+      var yesMatch = matches.findOne(yesMatchId);
+      var noMatch = matches.findOne(noMatchId);
+      var maybeMatch = matches.findOne(maybeMatchId);
+
+      matches.update(yesMatchId, {
+          $set: { choice: 'yes' }
+      });
+      matches.update(noMatchId, {
+          $set: { choice: 'no' }
+      });
+      matches.update(maybeMatchId, {
+          $set: { choice: 'maybe' }
+      });
+      // TODO: Remove irrelevant matches (no's and not-matched) from matches subscription
+
+
+      var result = [];
+      for (match in [yesMatch, maybeMatch]) {
+          var inverseMatch = matches.findOne({
+              matcherId: match.matchedUserId,
+              matchedUserId: match.matcherId,
+              choice: match.choice
+          });
+          if (inverseMatch) {
+              var connectionId = connections.insert({
+                  users: [senderId, recipientId],
+                  messages: [],
+                  dateUpdated : new Date(),
+                  dateCreated: new Date(),
+                  type: match.choice
+              });
+              result.push(connectionId);
+          }
+      }
+      return result
+  },
+
   /**
    * Creates a message, and adds it to an existing connection, if one exists. If one does
    * not exist, it will be created.
@@ -24,4 +62,6 @@ Meteor.methods({
     return addOrModifyConnectionWithNewMessage(
         this.userId, matchedUserId, thumbnailUrl, videoUrl);
   }
+
+
 });
