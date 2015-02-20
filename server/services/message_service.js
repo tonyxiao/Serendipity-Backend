@@ -1,4 +1,6 @@
-messages = new Mongo.Collection("messages");
+/**
+ * Created by Tony on 2/20/15.
+ */
 
 /**
  * Inserts a new message into the messages collections.
@@ -9,14 +11,14 @@ messages = new Mongo.Collection("messages");
  * @return the messageId
  */
 newMessage = function(senderId, recipientId, thumbnailUrl, videoUrl) {
-  return messages.insert({
-    senderId: senderId,
-    recipientId: recipientId,
-    thumbnailUrl: thumbnailUrl,
-    isUnread: true,
-    videoUrl: videoUrl,
-    timestamp: new Date()
-  })
+    return messages.insert({
+        senderId: senderId,
+        recipientId: recipientId,
+        thumbnailUrl: thumbnailUrl,
+        isUnread: true,
+        videoUrl: videoUrl,
+        timestamp: new Date()
+    })
 }
 
 /**
@@ -28,11 +30,11 @@ newMessage = function(senderId, recipientId, thumbnailUrl, videoUrl) {
  * @returns the messageId
  */
 updateMessageWithConnectionId = function(messageId, connectionId) {
-  return messages.update({ _id : messageId}, {
-    $set : {
-      "connectionId" : connectionId
-    }
-  })
+    return messages.update({ _id : messageId}, {
+        $set : {
+            "connectionId" : connectionId
+        }
+    })
 }
 
 /**
@@ -42,13 +44,13 @@ updateMessageWithConnectionId = function(messageId, connectionId) {
  * @returns {Mongo.Cursor} for the return set of messages.
  */
 myMessages = function(userId) {
-  return messages.find({
-    $and: [
-      { connectionId: { $exists: true }},
-      { $or: [
-        { senderId: userId },
-        { recipientId: userId }
-      ]}
-    ]
-  })
+    return messages.find({
+        $and: [
+            { connectionId: { $exists: true }},
+            { $or: [
+                { senderId: userId },
+                { recipientId: userId }
+            ]}
+        ]
+    })
 }

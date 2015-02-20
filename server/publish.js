@@ -1,6 +1,17 @@
 var bunyan = Meteor.npmRequire('bunyan');
 var logger = bunyan.createLogger({ name : "publications" });
 
+// *** Subscriptions ***
+// connections
+// messages
+// collectionMessages
+// candidates
+// currentUser
+// ----- Debug Only -----
+// previousCandidates
+// allUsers
+
+
 /**
  * Messages for the current user.
  */

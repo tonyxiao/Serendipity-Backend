@@ -1,6 +1,3 @@
-matches = new Mongo.Collection("matches");
-connections = new Mongo.Collection("connections");
-messages = new Mongo.Collection("messages");
 
 Meteor.subscribe("currentUser");
 Meteor.subscribe("connections");

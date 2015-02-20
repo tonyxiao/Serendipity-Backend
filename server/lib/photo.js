@@ -96,4 +96,4 @@ getUserPhotos = function(_fbGetFn, currentUser) {
   });
 
   return azureUrls;
-}
+};
