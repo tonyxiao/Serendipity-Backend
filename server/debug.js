@@ -32,7 +32,7 @@ Meteor.users.allow({
 Meteor.methods({
   chooseForMatchedUser: function(matchedUserId, choice) {
     var currentUserId = Meteor.user()._id;
-    var inverseMatch = matches.update({
+    var inverseMatch = candidates.update({
       matcherId: matchedUserId,
       matchedUserId: currentUserId
     }, {

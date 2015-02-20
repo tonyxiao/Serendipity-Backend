@@ -121,7 +121,7 @@ Meteor.publish("candidates", function() {
           var match = candidates.findOne(matchId);
           matchedUsers[matchId] = match.matchedUserId;
 
-          self.added("matches", matchId, buildMatch(match));
+          self.added("candidates", matchId, buildMatch(match));
           self.added("users",
               match.matchedUserId, buildUser(Meteor.users.findOne(match.matchedUserId)));
         }
@@ -130,7 +130,7 @@ Meteor.publish("candidates", function() {
       removed: function(matchId) {
         if (!initializing) {
           var matchedUserId = matchedUsers[matchId];
-          self.removed("matches", matchId);
+          self.removed("candidates", matchId);
           self.removed("users", matchedUserId);
 
           delete matchedUsers[matchId];
@@ -143,7 +143,7 @@ Meteor.publish("candidates", function() {
 
     currentMatches.forEach(function(match) {
       matchedUsers[match._id] = match.matchedUserId;
-      self.added("matches", match._id, buildMatch(match));
+      self.added("candidates", match._id, buildMatch(match));
       self.added("users", match.matchedUserId,
           buildUser(Meteor.users.findOne(match.matchedUserId)));
     })

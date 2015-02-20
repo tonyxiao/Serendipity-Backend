@@ -1,13 +1,13 @@
 Meteor.methods({
     // TODO: make params be a dictionary, too hard to understand otherwise
   chooseYesNoMaybe: function(yesMatchId, noMatchId, maybeMatchId) {
-      matches.update(yesMatchId, {
+      candidates.update(yesMatchId, {
           $set: { choice: 'yes' }
       });
-      matches.update(noMatchId, {
+      candidates.update(noMatchId, {
           $set: { choice: 'no' }
       });
-      matches.update(maybeMatchId, {
+      candidates.update(maybeMatchId, {
           $set: { choice: 'maybe' }
       });
       var yesMatch = candidates.findOne(yesMatchId);
