@@ -2,7 +2,7 @@
 Meteor.subscribe("currentUser");
 Meteor.subscribe("connections");
 Meteor.subscribe("messages");
-Meteor.subscribe("matches");
+Meteor.subscribe("candidates");
 Meteor.subscribe("allMatches");
 
 // when you navigate to "/two" automatically render the template named "Two".
@@ -216,11 +216,11 @@ Template.add.events({
 
 function getCurrentMatches() {
   if (Meteor.user()) {
-      var currentMatches = matches.find({
+      var currentMatches = candidates.find({
           matcherId: Meteor.user()._id,
           choice: null
       }, {sort: {dateMatched: 1}}).fetch();
-      return currentMatches
+      return currentMatches;
       //if (currentMatches.length >= 3) {
       //  return currentMatches.slice(0, 3);
       //}
@@ -240,7 +240,7 @@ function getCurrentMatchedUser() {
       currentMatches.forEach(function(match) {
         var user = Meteor.users.findOne(match.matchedUserId);
         user.profilePhoto = user.photos[0];
-        var inverseMatch = matches.findOne({
+        var inverseMatch = candidates.findOne({
           matcherId: match.matchedUserId,
           matchedUserId: match.matcherId
         });

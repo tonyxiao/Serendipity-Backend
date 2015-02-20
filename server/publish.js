@@ -105,7 +105,7 @@ Meteor.publish("connections", function() {
  * connections. Simultaneously, publishes to the "users" collection with the
  * {@code Meteor.user} corresponding to those matches.
  */
-Meteor.publish("matches", function() {
+Meteor.publish("candidates", function() {
   if (this.userId) {
     var self = this
 
@@ -113,12 +113,12 @@ Meteor.publish("matches", function() {
     var matchedUsers = {};
 
     var initializing = true;
-    var handle = matches.find({
+    var handle = candidates.find({
       matcherId: self.userId
     }).observeChanges({
       added: function(matchId) {
         if (!initializing) {
-          var match = matches.findOne(matchId);
+          var match = candidates.findOne(matchId);
           matchedUsers[matchId] = match.matchedUserId;
 
           self.added("matches", matchId, buildMatch(match));
@@ -139,7 +139,7 @@ Meteor.publish("matches", function() {
     })
 
     initializing = false;
-    var currentMatches = matches.find({ matcherId: self.userId }).fetch()
+    var currentMatches = candidates.find({ matcherId: self.userId }).fetch();
 
     currentMatches.forEach(function(match) {
       matchedUsers[match._id] = match.matchedUserId;

@@ -14,7 +14,7 @@ Meteor.publish('allUsers', function() {
 });
 
 Meteor.publish('allMatches', function() {
-  return matches.find();
+  return candidates.find();
 });
 
 Meteor.users.allow({
@@ -100,7 +100,7 @@ Meteor.methods({
   },
 
   clearCurrentUserMatches: function() {
-    matches.remove({
+    candidates.remove({
       matcherId: this.userId
     })
 

@@ -1,16 +1,4 @@
 Meteor.methods({
-
-  /**
-   * The current user in session passes on the user with id {@code matchId}. Requests a
-   * new match for the current user.
-   *
-   * @param matchId the id of the user to pass
-   */
-  matchPass: function(matchId) {
-    passMatch(matchId, this.userId);
-    newMatch(this.userId);
-  },
-
     // TODO: make params be a dictionary, too hard to understand otherwise
   chooseYesNoMaybe: function(yesMatchId, noMatchId, maybeMatchId) {
       matches.update(yesMatchId, {
@@ -22,29 +10,27 @@ Meteor.methods({
       matches.update(maybeMatchId, {
           $set: { choice: 'maybe' }
       });
-      var yesMatch = matches.findOne(yesMatchId);
-      var noMatch = matches.findOne(noMatchId);
-      var maybeMatch = matches.findOne(maybeMatchId);
+      var yesMatch = candidates.findOne(yesMatchId);
+      var noMatch = candidates.findOne(noMatchId);
+      var maybeMatch = candidates.findOne(maybeMatchId);
 
-    // TODO: Remove irrelevant matches (no's and not-matched) from matches subscription
-
-
+    // TODO: Remove irrelevant matches (no's and not-matched) from candidateQueue subscription
       var result = {};
-      [yesMatch, maybeMatch].forEach(function (match) {
-          var inverseMatch = matches.findOne({
-              matcherId: match.matchedUserId,
-              matchedUserId: match.matcherId,
-              choice: match.choice
+      [yesMatch, maybeMatch].forEach(function (candidate) {
+          var inverseMatch = candidates.findOne({
+              matcherId: candidate.matchedUserId,
+              matchedUserId: candidate.matcherId,
+              choice: candidate.choice
           });
           if (inverseMatch) {
               var connectionId = connections.insert({
-                  users: [match.matchedUserId, match.matcherId],
+                  users: [candidate.matchedUserId, candidate.matcherId],
                   messages: [],
                   dateUpdated : new Date(),
                   dateCreated: new Date(),
-                  type: match.choice
+                  type: candidate.choice
               });
-              result[match.choice] = connectionId;
+              result[candidate.choice] = connectionId;
           }
       });
       for (var i = 0; i < 3; i++) {

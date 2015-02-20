@@ -1,1 +1,1 @@
-matches = new Mongo.Collection("matches");
+candidates = new Mongo.Collection("candidates");
