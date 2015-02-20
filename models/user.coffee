@@ -10,6 +10,16 @@ CollectionBehaviours.extendCollectionInstance(Meteor.users)
 @Users = Meteor.users
 Users.timestampable()
 
+
+# MARK - Instance Methods
 Users.helpers
-  test: ->
-    return "test name"
+  candidateQueue: ->
+    candidates.find({
+      matcherId: @_id
+      choice: null
+    }, {sort: {dateMatched: 1}})
+
+
+# MARK: - Class Methods
+Users.current = ->
+  Meteor.user()

@@ -216,20 +216,11 @@ Template.add.events({
 
 function getCurrentMatches() {
   if (Meteor.user()) {
-      var currentMatches = candidates.find({
-          matcherId: Meteor.user()._id,
-          choice: null
-      }, {sort: {dateMatched: 1}}).fetch();
-      return currentMatches;
-      //if (currentMatches.length >= 3) {
-      //  return currentMatches.slice(0, 3);
-      //}
-
+      return Users.current().candidateQueue().fetch()
   }
-
   return null;
 }
-window.getCurrentMatches = getCurrentMatches
+window.getCurrentMatches = getCurrentMatches;
 
 function getCurrentMatchedUser() {
   if (Meteor.user()) {
