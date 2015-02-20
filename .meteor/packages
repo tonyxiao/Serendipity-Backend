@@ -18,3 +18,5 @@ meteorhacks:async
 accounts-password
 iron:router
 coffeescript
+sewdn:collection-behaviours
+dburles:collection-helpers

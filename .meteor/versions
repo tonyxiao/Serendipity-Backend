@@ -14,6 +14,7 @@ boilerplate-generator@1.0.2
 callback-hook@1.0.2
 check@1.0.4
 coffeescript@1.0.5
+dburles:collection-helpers@1.0.2
 ddp@1.0.14
 deps@1.0.6
 ejson@1.0.5
@@ -42,6 +43,7 @@ less@1.0.12
 livedata@1.0.12
 localstorage@1.0.2
 logging@1.0.6
+matb33:collection-hooks@0.7.6
 meteor@1.1.4
 meteor-platform@1.2.1
 meteorhacks:async@1.0.0
@@ -65,6 +67,7 @@ retry@1.0.2
 routepolicy@1.0.4
 service-configuration@1.0.3
 session@1.0.5
+sewdn:collection-behaviours@0.2.0
 sha@1.0.2
 spacebars@1.0.5
 spacebars-compiler@1.0.4
