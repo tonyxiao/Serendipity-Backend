@@ -81,9 +81,21 @@ template(name='userConnections')
       h2 Actions
       button.clear-connections Clear Connections
 
-    section.connection-list
+    // Refactor this to be share code with maybe-connections
+    section.connection-list.yes-connections
+      h3 Marry
       ol
-        each allConnections
+        each yesConnections
+          li
+            a(href='/users/{{ otherUser._id }}')
+              img.avatar(src=otherUser.profilePhotoUrl)
+            span {{ otherUser.firstName }} [{{ readableType }}]
+            button.remove-connection Remove Connection
+
+    section.connection-list.maybe-connections
+      h3 Keep
+      ol
+        each maybeConnections
           li
             a(href='/users/{{ otherUser._id }}')
               img.avatar(src=otherUser.profilePhotoUrl)

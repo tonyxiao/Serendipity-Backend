@@ -15,7 +15,7 @@ Users.timestampable()
 Users.helpers
 
   profilePhotoUrl: ->
-    return _.first @photoUrls # TODO: Rename photos to photoUrls, or make them embedded dictionaries
+    return _.first @photoUrls
 
   previousCandidates: ->
     Candidates.find
@@ -27,6 +27,19 @@ Users.helpers
       forUserId: @_id
       choice: null
     }, {sort: dateMatched: 1}
+
+  # TODO: Refactor yes, maybe and all connections to be more generic
+  yesConnections: ->
+    Connections.find
+      userIds:
+        $in: [@_id]
+      type: 'yes'
+
+  maybeConnections: ->
+    Connections.find
+      userIds:
+        $in: [@_id]
+      type: 'maybe'
 
   allConnections: ->
     Connections.find
