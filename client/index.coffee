@@ -11,17 +11,17 @@ Template.userList.helpers
 Template.userCandidates.events
   'click .populate-queue': ->
     if confirm('sure?')
-      alert 'Not Implemented'
+      Meteor.call 'user/populateCandidateQueue', @_id
 
   'click .clear-queue': ->
     if confirm('sure?')
-      alert 'Not Implemented'
+      Meteor.call 'user/clearCandidateQueue', @_id
 
   'click .say-yes': ->
-    Meteor.call 'forceInverseCandidateChoice', @_id, 'yes'
+    Meteor.call 'candidate/forceInverseCandidateChoice', @_id, 'yes'
 
   'click .say-no': ->
-    Meteor.call 'forceInverseCandidateChoice', @_id, 'no'
+    Meteor.call 'candidate/forceInverseCandidateChoice', @_id, 'no'
 
   'click .say-maybe': ->
-    Meteor.call 'forceInverseCandidateChoice', @_id, 'maybe'
+    Meteor.call 'candidate/forceInverseCandidateChoice', @_id, 'maybe'
