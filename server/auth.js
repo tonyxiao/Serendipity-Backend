@@ -52,13 +52,13 @@ Meteor.startup(function () {
       })
     }
 
-    // new user has no matches yet.
-    var currentMatches = getCurrentMatches(currentUser._id);
-    if (currentMatches.length == 0) {
-      for (var i = 0; i < 12; i++) {
-        newMatch(currentUser._id);
-      }
-    }
+    //// new user has no matches yet.
+    //var currentMatches = getCurrentMatches(currentUser._id);
+    //if (currentMatches.length == 0) {
+    //  for (var i = 0; i < 12; i++) {
+    //    newMatch(currentUser._id);
+    //  }
+    //}
     return meteorId;
   });
 });

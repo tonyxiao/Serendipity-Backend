@@ -13,6 +13,11 @@ Users.timestampable()
 
 # MARK: - Instance Methods
 Users.helpers
+  previousCandidates: ->
+    Candidates.find
+      forUserId: @_id
+      choice: $ne: null
+
   candidateQueue: ->
     Candidates.find {
       forUserId: @_id
@@ -32,10 +37,13 @@ Users.helpers
       ]
 
   addUserAsCandidate: (user) ->
-    # TODO: Handle error
+    # TODO: Handle error, make more efficient
     Candidates.insert
       forUserId: @_id
       userId: user._id
+    Users.update @_id,
+      $push:
+        previousCandidateUserIds: user._id
 
   connectWithUser: (user) ->
     Connections.insert
@@ -44,7 +52,8 @@ Users.helpers
 
   populateCandidateQueue: (maxCount) ->
     # TODO: When logic is more fancy make this into a service
-    ineligibleUserIds = @previousCandidateIds
+    maxCount ?= 12 # Default to 12 max
+    ineligibleUserIds = _.map @previousCandidates().fetch(), (candidate) -> candidate.userId
     ineligibleUserIds.push @_id
 
     nextUsers = Users.find({

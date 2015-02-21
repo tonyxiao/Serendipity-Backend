@@ -110,6 +110,11 @@ Template.home.events({
       })
     }
   },
+  'click #populateCandidateQueue': function (event) {
+      if (confirm('sure?')) {
+          Meteor.call('populateCandidateQueue', Meteor.userId());
+      }
+  },
 
   'click #deleteCurrentUserConnections': function(event) {
     if (confirm('Sure?')) {
