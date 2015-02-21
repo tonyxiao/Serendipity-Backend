@@ -25,3 +25,6 @@ Template.userCandidates.events
 
   'click .say-maybe': ->
     Meteor.call 'candidate/forceInverseCandidateChoice', @_id, 'maybe'
+
+  'click .make-connection': ->
+    Meteor.call 'candidate/makeConnection', @_id
