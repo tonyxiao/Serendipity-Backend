@@ -6,8 +6,9 @@ head
 body
 
 template(name="userlist")
-  ul
-    each users
-      li
-        img.avatar(src=profilePhotoUrl)
-        span {{ firstName }}
+  .userlist
+    ul
+      each users
+        li
+          img.avatar(src=profilePhotoUrl)
+          span {{ firstName }}
