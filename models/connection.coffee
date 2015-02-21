@@ -2,6 +2,14 @@
 @Connections = new Mongo.Collection 'connections'
 Connections.timestampable()
 
+# MARK: - Schema Validation
+Connections.attachSchema new SimpleSchema
+  userIds: type: [String]
+  messageIds:
+    type: [String]
+    optional: true
+
+
 # MARK - Instance Methods
 Connections.helpers
   messages: ->
@@ -32,12 +40,6 @@ Connections.helpers
     # TODO: Update expiry, send push notification
 
 
-# MARK: - Schema Validation
-Connections.attachSchema new SimpleSchema
-  userIds: type: [String]
-  messageIds:
-    type: [String]
-    optional: true
 
 # TODO: Remove once outdated references are refactored
 @connections = Connections

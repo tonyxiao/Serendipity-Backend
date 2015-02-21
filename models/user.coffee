@@ -15,7 +15,7 @@ Users.timestampable()
 Users.helpers
 
   profilePhotoUrl: ->
-    return @photos[0] # TODO: Rename photos to photoUrls, or make them embedded dictionaries
+    return _.first @photoUrls # TODO: Rename photos to photoUrls, or make them embedded dictionaries
 
   previousCandidates: ->
     Candidates.find

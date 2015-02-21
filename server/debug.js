@@ -125,71 +125,8 @@ Meteor.methods({
 
   // TODO(qimingfang): remove this method. it is for debugging.
   addUsers: function(usersString) {
-    var schools = ["Harvard", "Yale", "Princeton", "Columbia", "Cornell", "Dartmouth",
-      "Penn"];
-
-    var locations = [
-      "San Francisco, CA",
-      "Mountain View, CA",
-      "Palo Alto, CA",
-      "Menlo Park, CA",
-      "Sausalito, CA",
-      "San Mateo, CA",
-      "Cupertino, CA",
-      "Sunnyvale, CA",
-      "Berkeley, CA"
-    ];
-
-    var jobs = ["Google", "Goldman Sachs", "Shell", "Boston Consulting Group",
-      "Ben & Jerrys", "In N Out", "Facebook"];
-
-    var users = JSON.parse(usersString);
-    var userNames = [];
-
-    console.log("Will add users");
-
-    users.results.forEach(function(user) {
-      userNames.push(user.name);
-      console.log("Will add user with name " + user.name);
-
-      var school = schools[Math.floor(Math.random() * schools.length)];
-      var location = locations[Math.floor(Math.random() * locations.length)];
-      var job = jobs[Math.floor(Math.random() * jobs.length)];
-
-      var photos = [];
-      user.photos.forEach(function(photo) {
-        photo.processedFiles.forEach(function(processedPhoto){
-          if (processedPhoto.height == 640 && processedPhoto.width == 640) {
-            photos.push(processedPhoto.url);
-          }
-        })
-      });
-
-      var serviceData = {
-        id: user._id,
-        email: user._id + "@gmail.com",
-        password: user._id,
-        birthday: user.birthday
-      };
-
-      var meteorId = Accounts.updateOrCreateUserFromExternalService("facebook",
-          serviceData, {});
-
-      Meteor.users.update({_id : meteorId.userId}, {
-        $set: {
-          "firstName" : user.name,
-          "about" : user.bio,
-          "education" : school,
-          "createdAt" : new Date(),
-          "age" : Math.floor((Math.random() * 10) + 20), // random 20 <= x <=30
-          "location" : location,
-          "work" : job,
-          photos: photos
-        }
-      })
-    });
-
-    return userNames.join(",");
+      var data = JSON.parse(usersString);
+      return FixtureService.importFromTinder(data);
   }
 });
 

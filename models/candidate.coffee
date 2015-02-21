@@ -2,6 +2,15 @@
 @Candidates = new Mongo.Collection 'candidates'
 Candidates.timestampable()
 
+# MARK: - Schema Validation
+Candidates.attachSchema new SimpleSchema
+  forUserId: type: String
+  userId: type: String
+  choice:
+    type: String
+    allowedValues: ['yes', 'no', 'maybe']
+    optional: true
+
 
 # MARK: - Instance Methods
 Candidates.helpers
@@ -34,15 +43,6 @@ Candidates.helpers
         createdAt: new Date()
         updatedAt: new Date()
     }
-
-# MARK: - Schema Validation
-Candidates.attachSchema new SimpleSchema
-  forUserId: type: String
-  userId: type: String
-  choice:
-    type: String
-    allowedValues: ['yes', 'no', 'maybe']
-    optional: true
 
 
 # TODO: Remove once outdated references are refactored
