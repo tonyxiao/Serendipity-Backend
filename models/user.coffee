@@ -66,9 +66,7 @@ Users.helpers
       type: connectionType
 
   populateCandidateQueue: (maxCount) ->
-    nextUsers = MatchService.generateMatchesForUser(this, maxCount)
-    for user in nextUsers
-      @addUserAsCandidate(user)
+    MatchService.generateMatchesForUser this, maxCount
 
   clearCandidateQueue: ->
     Candidates.remove
