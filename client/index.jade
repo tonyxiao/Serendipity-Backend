@@ -16,9 +16,8 @@ template(name='userList')
 
 template(name='userNav')
   section.user-nav
-    h1 {{ firstName }}
     button
-      a(href='/users') Back to list
+      a(href='/users') Back to user list
     button
       a(href='/users/{{ _id }}') Show Profile
     button
@@ -28,6 +27,7 @@ template(name='userNav')
 
 template(name='userDetails')
   .user-details
+    h1 {{ firstName }} Profile
     +userNav
 
     section.info
@@ -50,10 +50,14 @@ template(name='userDetails')
 
 template(name='userCandidates')
   .user-candidates
+    h1 {{ firstName }} Candidates
     +userNav
 
+
     section.actions
-      button Populate Candidate Queue
+      h2 Actions
+      button.populate-queue Populate Candidate Queue
+      button.clear-queue Clear Candidate Queue
 
     section.candidate-queue
       ol
@@ -61,11 +65,15 @@ template(name='userCandidates')
           li
             a(href='/users/{{ user._id }}')
               img.avatar(src=user.profilePhotoUrl)
-              span {{ user.firstName }}
-
-
-
+            span {{ user.firstName }}
+            span Their Choice:
+              b {{ findInverse.choice }}
+            button.say-yes Say YES!
+            button.say-maybe Say Maybe...
+            button.say-no Say no :(
+            button.make-connection Make Connection
 
 template(name='userConnections')
   .user-connections
+    h1 {{ firstName }} Connections
     +userNav

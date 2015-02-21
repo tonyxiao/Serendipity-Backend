@@ -56,6 +56,11 @@ Users.helpers
     for user in nextUsers
       @addUserAsCandidate(user)
 
+  clearCandidateQueue: ->
+    Candidates.remove
+      forUserId: @_id
+      choice: null
+
   clearAllCandidates: ->
     Candidates.remove forUserId: @_id
 
