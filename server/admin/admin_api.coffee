@@ -16,10 +16,11 @@ Meteor.methods
       candidate.forceChoiceForInverse(choice)
 
   'candidate/makeConnection': (candidateId) ->
+    # TODO: Replace makeConnection with the actual game mechanic
     candidate = Candidates.findOne(candidateId)
     if candidate
       console.log "Connecting #{candidate.forUser().firstName} with #{candidate.user().firstName}"
-      candidate.forUser().connectWithUser(candidate.user())
+      candidate.forUser().connectWithUser(candidate.user(), 'yes')
 
   'connection/remove': (connectionId) ->
     connection = Connections.findOne(connectionId)

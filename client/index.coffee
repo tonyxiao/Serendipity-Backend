@@ -29,6 +29,15 @@ Template.userCandidates.events
   'click .make-connection': ->
     Meteor.call 'candidate/makeConnection', @_id
 
+
+Template.userConnections.helpers
+  readableType: ->
+    if @type == 'yes'
+      return 'marry'
+    if @type == 'maybe'
+      return 'keep'
+    return ''
+
 Template.userConnections.events
   'click .remove-connection': ->
     Meteor.call 'connection/remove', @_id

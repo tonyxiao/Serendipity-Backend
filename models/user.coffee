@@ -46,10 +46,11 @@ Users.helpers
       forUserId: @_id
       userId: user._id
 
-  connectWithUser: (user) ->
+  connectWithUser: (user, connectionType) ->
     Connections.insert
       userIds: [@_id, user._id]
       messageIds: []
+      type: connectionType
 
   populateCandidateQueue: (maxCount) ->
     nextUsers = MatchService.generateMatchesForUser(this, maxCount)

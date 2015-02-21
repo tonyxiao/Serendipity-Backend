@@ -5,6 +5,9 @@ Connections.timestampable()
 # MARK: - Schema Validation
 Connections.attachSchema new SimpleSchema
   userIds: type: [String]
+  type:
+    type: String
+    allowedValues: ['yes', 'maybe']
   messageIds:
     type: [String]
     optional: true
