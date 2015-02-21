@@ -45,30 +45,16 @@ Users.helpers
     Candidates.insert
       forUserId: @_id
       userId: user._id
-      
+
   connectWithUser: (user) ->
     Connections.insert
       userIds: [@_id, user._id]
       messageIds: []
 
   populateCandidateQueue: (maxCount) ->
-    # TODO: When logic is more fancy make this into a service
-    maxCount ?= 12 # Default to 12 max
-    ineligibleUserIds = _.map @previousCandidates().fetch(), (candidate) -> candidate.userId
-    ineligibleUserIds.push @_id
-
-    # TODO: Randomize & take into account gender
-    nextUsers = Users.find({
-      _id: $nin: ineligibleUserIds
-    }, {
-      limit: maxCount
-      fields: _id: 1
-    }).fetch()
-
+    nextUsers = MatchService.generateMatchesForUser(this, maxCount)
     for user in nextUsers
-      @addUserAsCandidate user
-
-    return nextUsers.length
+      @addUserAsCandidate(user)
 
 
 # MARK: - Class Methods
