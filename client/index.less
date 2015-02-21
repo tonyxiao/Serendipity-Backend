@@ -1,3 +1,8 @@
+// Global Stuff
+li {
+  list-style: none;
+}
+
 
 .user-list {
   a {
@@ -5,7 +10,6 @@
     text-decoration: none;
   }
   li {
-    list-style: none;
     text-align: center;
     margin: 15px;
     width: 100px;
@@ -24,4 +28,23 @@
 
 .user-details {
   margin: 10px;
+  .info {
+    li {
+      margin-bottom: 5px;
+    }
+    p {
+      font-size: 15px;
+    }
+  }
+  .photos {
+    li {
+      display: inline;
+      float: left;
+      margin: 5px;
+    }
+    img {
+      width: 320px;
+      height: 320px;
+    }
+  }
 }

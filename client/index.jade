@@ -14,6 +14,24 @@ template(name="userList")
             img.avatar(src=profilePhotoUrl)
             span {{ firstName }}
 
+
 template(name="userDetails")
   .user-details
     h1 {{ firstName }}
+    section.info
+      h2 Info
+      ul
+        li Work: {{ work }}
+        li Education: {{ education }}
+        li Age: {{ age }}
+        li Created At: {{ createdAt }}
+        li Updated At: {{ updatedAt }}
+        li About:
+          p {{ about }}
+    section.photos
+      h2 Photos
+      ul
+        each photoUrls
+          li
+            img(src=this)
+
