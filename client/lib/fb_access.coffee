@@ -1,28 +1,31 @@
-permissions = [
-  'email'
-  'user_photos'
-  'user_birthday'
-  'user_education_history'
-  'user_about_me'
-  'user_work_history'
-]
-accessToken = null
-((d, debug) ->
-  js = undefined
-  id = 'facebook-jssdk'
-  ref = d.getElementsByTagName('script')[0]
-  if d.getElementById(id)
-    return
-  js = d.createElement('script')
-  js.id = id
-  js.async = true
-  js.src = '//connect.facebook.net/en_US/all' + (if debug then '/debug' else '') + '.js'
-  ref.parentNode.insertBefore js, ref
-  return
-) document, false
 
 # get the access token at start of page.
 @loginWithFacebookAccess = ->
+  permissions = [
+    'email'
+    'user_photos'
+    'user_birthday'
+    'user_education_history'
+    'user_about_me'
+    'user_work_history'
+  ]
+
+  accessToken = null
+
+  ((d, debug) ->
+    js = undefined
+    id = 'facebook-jssdk'
+    ref = d.getElementsByTagName('script')[0]
+    if d.getElementById(id)
+      return
+    js = d.createElement('script')
+    js.id = id
+    js.async = true
+    js.src = '//connect.facebook.net/en_US/all' + (if debug then '/debug' else '') + '.js'
+    ref.parentNode.insertBefore js, ref
+    return
+  ) document, false
+
   window.fbAsyncInit = ->
   call_facebook_login = (response) ->
     loginRequest =
