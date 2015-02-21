@@ -39,6 +39,11 @@ Connections.helpers
         lastMessageText: text
     # TODO: Update expiry, send push notification
 
+  clientView: (refUser) ->
+    view = _.clone this
+    view.otherUserId = @otherUser(refUser)._id
+    delete view.messageIds
+    return view
 
 
 # TODO: Remove once outdated references are refactored

@@ -70,6 +70,10 @@ Users.helpers
         { recipientId: @_id }
       ]
 
+  clientView: ->
+    view = _.clone this
+    delete view.services
+    return view
 
 # MARK: - Class Methods
 # TODO: This is really not that helpful, consider removing
