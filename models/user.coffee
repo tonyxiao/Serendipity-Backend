@@ -96,8 +96,3 @@ Users.helpers
     view = _.clone this
     delete view.services
     return view
-
-# MARK: - Class Methods
-# TODO: This is really not that helpful, consider removing
-Users.current = ->
-  Meteor.user()

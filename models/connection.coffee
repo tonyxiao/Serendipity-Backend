@@ -21,14 +21,12 @@ Connections.helpers
 
   # Relative to current user
   otherUser: (thisUser) ->
-    thisUser ?= Users.current()
     if _.contains(@userIds, thisUser._id)
       recipientId = _.without(@userIds, thisUser._id)[0]
       return Users.findOne recipientId
 
   createNewMessage: (text, sender) ->
     # TODO: error handling if text is null
-    sender ?= Users.current()
     recipient = @otherUser(sender)
     messageId = Messages.insert
       senderId: sender._id,
