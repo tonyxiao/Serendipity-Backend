@@ -13,24 +13,6 @@ var logger = bunyan.createLogger({ name : "publications" });
 
 
 /**
- * Messages for the current user.
- */
-Meteor.publish("messages", function() {
-  if (this.userId) {
-    return myMessages(this.userId);
-  }
-})
-
-/**
- * User data on the current user.
- */
-Meteor.publish("currentUser", function() {
-  if (this.userId) {
-    return buildUser(Meteor.users.find(this.userId));
-  }
-})
-
-/**
  * Publishes topic called 'connections' which populates a client side collection called
  * 'connections' with {@code Meteor.connection} instances for all of the current user's
  * connections. Simultaneously, publishes to the "users" collection with the

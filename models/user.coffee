@@ -36,8 +36,8 @@ Users.helpers
   allMessages: ->
     Messages.find
       $or: [
-        { senderId: userId }
-        { recipientId: userId }
+        { senderId: @_id }
+        { recipientId: @_id }
       ]
 
   addUserAsCandidate: (user) ->
