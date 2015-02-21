@@ -8,3 +8,5 @@ Router.route('/photos');
 Router.route('/add');
 
 Router.route('/matched');
+
+Router.route('/users');
