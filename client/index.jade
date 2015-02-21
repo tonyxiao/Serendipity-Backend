@@ -52,6 +52,19 @@ template(name='userCandidates')
   .user-candidates
     +userNav
 
+    section.actions
+      button Populate Candidate Queue
+
+    section.candidate-queue
+      ol
+        each candidateQueue
+          li
+            a(href='/users/{{ user._id }}')
+              img.avatar(src=user.profilePhotoUrl)
+              span {{ user.firstName }}
+
+
+
 
 template(name='userConnections')
   .user-connections
