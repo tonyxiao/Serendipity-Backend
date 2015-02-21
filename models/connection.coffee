@@ -19,8 +19,8 @@ Connections.helpers
   # Relative to current user
   otherUser: (thisUser) ->
     thisUser ?= Users.current()
-    if _.contains(@users, thisUser._id)
-      recipientId = _.without(@users, thisUser._id)[0]
+    if _.contains(@userIds, thisUser._id)
+      recipientId = _.without(@userIds, thisUser._id)[0]
       return Users.findOne recipientId
 
   createNewMessage: (text, sender) ->

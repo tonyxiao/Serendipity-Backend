@@ -53,7 +53,6 @@ template(name='userCandidates')
     h1 {{ firstName }} Candidates
     +userNav
 
-
     section.actions
       h2 Actions
       button.populate-queue Populate Candidate Queue
@@ -77,3 +76,16 @@ template(name='userConnections')
   .user-connections
     h1 {{ firstName }} Connections
     +userNav
+
+    section.actions
+      h2 Actions
+      button.clear-connections Clear Connections
+
+    section.connection-list
+      ol
+        each allConnections
+          li
+            a(href='/users/{{ otherUser._id }}')
+              img.avatar(src=otherUser.profilePhotoUrl)
+            span {{ otherUser.firstName }}
+            button.remove-connection Remove Connection

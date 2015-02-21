@@ -30,7 +30,7 @@ Users.helpers
 
   allConnections: ->
     Connections.find
-      users:
+      userIds:
         $in: [@_id]
 
   allMessages: ->

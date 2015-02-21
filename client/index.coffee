@@ -28,3 +28,7 @@ Template.userCandidates.events
 
   'click .make-connection': ->
     Meteor.call 'candidate/makeConnection', @_id
+
+Template.userConnections.events
+  'click .remove-connection': ->
+    Connections.remove @_id
