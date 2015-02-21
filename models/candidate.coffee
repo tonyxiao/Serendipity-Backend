@@ -35,6 +35,15 @@ Candidates.helpers
         updatedAt: new Date()
     }
 
+# MARK: - Schema Validation
+Candidates.attachSchema new SimpleSchema
+  forUserId: type: String
+  userId: type: String
+  choice:
+    type: String
+    allowedValues: ['yes', 'no', 'maybe']
+    optional: true
+
 
 # TODO: Remove once outdated references are refactored
 @candidates = Candidates

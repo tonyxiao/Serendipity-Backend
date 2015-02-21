@@ -29,9 +29,15 @@ Connections.helpers
         messageIds: messageId
       $set:
         lastMessageText: text
-
-
     # TODO: Update expiry, send push notification
+
+
+# MARK: - Schema Validation
+Connections.attachSchema new SimpleSchema
+  userIds: type: [String]
+  messageIds:
+    type: [String]
+    optional: true
 
 # TODO: Remove once outdated references are refactored
 @connections = Connections

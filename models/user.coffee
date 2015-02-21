@@ -72,5 +72,6 @@ Users.helpers
 
 
 # MARK: - Class Methods
+# TODO: This is really not that helpful, consider removing
 Users.current = ->
   Meteor.user()

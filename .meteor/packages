@@ -20,3 +20,4 @@ iron:router
 coffeescript
 sewdn:collection-behaviours
 dburles:collection-helpers
+aldeed:collection2
