@@ -6,10 +6,10 @@ Candidates.timestampable()
 # MARK: - Instance Methods
 Candidates.helpers
   user: ->
-    Users.findOne(@matchedUserId)
+    Users.findOne(@userId)
 
   forUser: ->
-    Users.findOne(@matcherId)
+    Users.findOne(@forUserId)
 
   makeChoice: (choice) ->
     Candidates.update @_id,
@@ -25,11 +25,14 @@ Candidates.helpers
 
   forceChoiceForInverse: (choice) ->
     Candidates.update {
-      forUserId: @userId,
+      forUserId: @userId
       userId: @forUserId
     }, {
       $set:
-        choice: choice,
+        choice: choice
+        # Collection-behavior doesn't seem to work here, need to explicitly set timestamp
+        createdAt: new Date()
+        updatedAt: new Date()
     }, {
       upsert: true
     }

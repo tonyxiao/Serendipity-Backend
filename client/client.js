@@ -4,6 +4,7 @@ Meteor.subscribe("connections");
 Meteor.subscribe("messages");
 Meteor.subscribe("candidates");
 Meteor.subscribe("allMatches");
+Meteor.subscribe('allUsers');
 
 // when you navigate to "/two" automatically render the template named "Two".
 
@@ -141,8 +142,8 @@ Template.home.events({
   },
 
   'click .yesmatch': function(event) {
-    var matchedUserId = $(event.target).parent().data('userid');
-    Meteor.call('chooseForMatchedUser', matchedUserId, 'yes', function(err, res) {
+    var matchedUserId = $(event.target).parent().data('candidateid');
+    Meteor.call('forceInverseCandidateChoice', matchedUserId, 'yes', function(err, res) {
       if (err) {
         console.log(err);
       } else {
@@ -153,8 +154,8 @@ Template.home.events({
   },
 
   'click .nomatch': function(event) {
-    var matchedUserId = $(event.target).parent().data('userid');
-    Meteor.call('chooseForMatchedUser', matchedUserId, 'no', function(err, res) {
+    var matchedUserId = $(event.target).parent().data('candidateid');
+    Meteor.call('forceInverseCandidateChoice', matchedUserId, 'no', function(err, res) {
       if (err) {
         console.log(err);
       } else {
@@ -164,8 +165,8 @@ Template.home.events({
   },
 
   'click .maybematch': function(event) {
-    var matchedUserId = $(event.target).parent().data('userid');
-    Meteor.call('chooseForMatchedUser', matchedUserId, 'maybe', function(err, res) {
+    var matchedUserId = $(event.target).parent().data('candidateid');
+    Meteor.call('forceInverseCandidateChoice', matchedUserId, 'maybe', function(err, res) {
       if (err) {
         console.log(err);
       } else {
@@ -177,6 +178,7 @@ Template.home.events({
 
 Template.home.helpers({
   matches: getCurrentMatchedUser
+
 });
 
 Template.matched.helpers({
