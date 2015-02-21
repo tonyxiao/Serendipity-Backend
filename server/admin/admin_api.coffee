@@ -9,4 +9,3 @@ Meteor.methods
     candidate = Candidates.findOne(candidateId)
     if candidate
       candidate.forceChoiceForInverse(choice)
-

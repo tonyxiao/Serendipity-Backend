@@ -1,7 +1,9 @@
-Router.route '/', ->
-  # render the Home template with a custom data context
-  @render 'home'
+# TODO: Remove DEBUG ONLY subscription
+Meteor.subscribe 'allUsers'
+Meteor.subscribe 'allCandidates'
+Meteor.subscribe 'allConnections'
+Meteor.subscribe 'allMessages'
 
-Router.route 'users', ->
-  @render 'userlist'
-
+Template.userlist.helpers
+  users: ->
+    Users.find()

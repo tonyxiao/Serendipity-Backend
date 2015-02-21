@@ -1,16 +1,19 @@
 // Created by Tony on 2/21/15.
 
 head
-    title Ketchy Ketch
+  title Ketchy Ketch
 
 body
 
 template(name="home")
-    div#home
-        div.logo
-            img(src="images/xketchLogo.png")
-        img.ketchIcon(src="images/ketchIcon.png")
-        div.sea
+  div#home
+    div.logo
+      img(src="images/xketchLogo.png")
+    img.ketchIcon(src="images/ketchIcon.png")
+    div.sea
 
 template(name="userlist")
-    span List of Users
+  ul
+    each users
+      li {{ firstName }}
+        img(src=profilePhotoUrl)
