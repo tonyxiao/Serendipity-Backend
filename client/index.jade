@@ -5,19 +5,25 @@ head
 
 body
 
-template(name="userList")
+template(name='userList')
   .user-list
     ul
       each users
         li
-          a(href="/users/{{ _id }}")
+          a(href='/users/{{ _id }}')
             img.avatar(src=profilePhotoUrl)
             span {{ firstName }}
 
 
-template(name="userDetails")
+template(name='userDetails')
   .user-details
     h1 {{ firstName }}
+    button
+      a(href='/users') Back to list
+    button Show Candidates
+      
+    button Show Connections
+
     section.info
       h2 Info
       ul
