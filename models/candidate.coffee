@@ -1,7 +1,14 @@
 
-@candidates = new Mongo.Collection 'candidates'
-candidates.timestampable()
+@Candidates = new Mongo.Collection 'candidates'
+Candidates.timestampable()
 
-candidates.helpers
-  test: ->
-    return "test name"
+Candidates.helpers
+  user: ->
+    Users.findOne(@matchedUserId)
+  
+  forUser: ->
+    Users.findOne(@matcherId)
+
+
+# TODO: Remove once outdated references are refactored
+@candidates = Candidates

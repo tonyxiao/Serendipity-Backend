@@ -64,7 +64,7 @@ addOrModifyConnectionWithNewMessage = function(
  */
 buildConnection = function(userId, connection) {
     var recipient = _getConnectedUserFromConnection(connection, userId);
-    delete connection["users"]
+    //delete connection["users"]
     delete connection["messages"]
 
     connection.recipient = recipient;

@@ -19,6 +19,17 @@ Users.helpers
       choice: null
     }, {sort: {dateMatched: 1}})
 
+  activeConnections: ->
+    connections.find
+      users:
+        $in: [@_id]
+
+  allMessages: ->
+    return messages.find
+      $or: [
+        { senderId: userId }
+        { recipientId: userId }
+      ]
 
 # MARK: - Class Methods
 Users.current = ->
