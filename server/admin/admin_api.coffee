@@ -10,6 +10,3 @@ Meteor.methods
     if candidate
       candidate.forceChoiceForInverse(choice)
 
-# Houston Admin setup
-Houston.add_collection Meteor.users
-Houston.add_collection Houston._admins
