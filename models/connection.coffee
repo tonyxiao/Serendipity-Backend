@@ -10,10 +10,28 @@ Connections.helpers
 
   # Relative to current user
   otherUser: (thisUser) ->
-    thisUser ?= Meteor.user()
+    thisUser ?= Users.current()
     if _.contains(@users, thisUser._id)
       recipientId = _.without(@users, thisUser._id)[0]
-      return Users.findOne(recipientId)
+      return Users.findOne recipientId
+
+  createNewMessage: (text, sender) ->
+    # TODO: error handling if text is null
+    sender ?= Users.current()
+    recipient = @otherUser(sender)
+    messageId = Messages.insert
+      senderId: sender._id,
+      recipientId: recipient._id,
+      isUnread: true
+
+    Connections.update {_id: @_id},
+      $push:
+        messageIds: messageId
+      $set:
+        lastMessageText: text
+
+
+    # TODO: Update expiry, send push notification
 
 # TODO: Remove once outdated references are refactored
 @connections = Connections

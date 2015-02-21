@@ -11,25 +11,54 @@ CollectionBehaviours.extendCollectionInstance(Meteor.users)
 Users.timestampable()
 
 
-# MARK - Instance Methods
+# MARK: - Instance Methods
 Users.helpers
   candidateQueue: ->
-    candidates.find({
-      matcherId: @_id
+    Candidates.find {
+      forUserId: @_id
       choice: null
-    }, {sort: {dateMatched: 1}})
+    }, {sort: dateMatched: 1}
 
   activeConnections: ->
-    connections.find
+    Connections.find
       users:
         $in: [@_id]
 
   allMessages: ->
-    return messages.find
+    Messages.find
       $or: [
         { senderId: userId }
         { recipientId: userId }
       ]
+
+  addUserAsCandidate: (user) ->
+    # TODO: Handle error
+    Candidates.insert
+      forUserId: @_id
+      userId: user._id
+
+  connectWithUser: (user) ->
+    Connections.insert
+      userIds: [@_id, user._id]
+      messageIds: []
+
+  populateCandidateQueue: (maxCount) ->
+    # TODO: When logic is more fancy make this into a service
+    ineligibleUserIds = @previousCandidateIds
+    ineligibleUserIds.push @_id
+
+    nextUsers = Users.find({
+      _id: $nin: ineligibleUserIds
+    }, {
+      limit: maxCount
+      fields: _id: 1
+    }).fetch()
+
+    for user in nextUsers
+      @addUserAsCandidate user
+
+    return nextUsers.length
+
 
 # MARK: - Class Methods
 Users.current = ->
