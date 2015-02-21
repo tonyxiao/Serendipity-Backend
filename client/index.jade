@@ -5,10 +5,15 @@ head
 
 body
 
-template(name="userlist")
-  .userlist
+template(name="userList")
+  .user-list
     ul
       each users
         li
-          img.avatar(src=profilePhotoUrl)
-          span {{ firstName }}
+          a(href="/users/{{ _id }}")
+            img.avatar(src=profilePhotoUrl)
+            span {{ firstName }}
+
+template(name="userDetails")
+  .user-details
+    h1 {{ firstName }}

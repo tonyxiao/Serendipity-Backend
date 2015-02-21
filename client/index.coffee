@@ -4,6 +4,6 @@ Meteor.subscribe 'allCandidates'
 Meteor.subscribe 'allConnections'
 Meteor.subscribe 'allMessages'
 
-Template.userlist.helpers
+Template.userList.helpers
   users: ->
     Users.find()
