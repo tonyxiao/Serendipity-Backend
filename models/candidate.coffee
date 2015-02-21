@@ -5,7 +5,7 @@ Candidates.timestampable()
 Candidates.helpers
   user: ->
     Users.findOne(@matchedUserId)
-  
+
   forUser: ->
     Users.findOne(@matcherId)
 
