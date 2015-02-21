@@ -45,10 +45,7 @@ Users.helpers
     Candidates.insert
       forUserId: @_id
       userId: user._id
-    Users.update @_id,
-      $push:
-        previousCandidateUserIds: user._id
-
+      
   connectWithUser: (user) ->
     Connections.insert
       userIds: [@_id, user._id]
@@ -60,6 +57,7 @@ Users.helpers
     ineligibleUserIds = _.map @previousCandidates().fetch(), (candidate) -> candidate.userId
     ineligibleUserIds.push @_id
 
+    # TODO: Randomize & take into account gender
     nextUsers = Users.find({
       _id: $nin: ineligibleUserIds
     }, {
