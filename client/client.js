@@ -1,10 +1,4 @@
 
-Meteor.subscribe("currentUser");
-Meteor.subscribe("connections");
-Meteor.subscribe("messages");
-Meteor.subscribe("candidates");
-Meteor.subscribe("allMatches");
-Meteor.subscribe('allUsers');
 
 // when you navigate to "/two" automatically render the template named "Two".
 

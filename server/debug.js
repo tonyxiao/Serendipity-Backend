@@ -8,26 +8,6 @@ function getRandomInRange(from, to, fixed) {
   // .toFixed() returns string, so ' * 1' is a trick to convert to number
 }
 
-// TODO(qimingfang): remove this. it is used for debugging.
-Meteor.publish('allUsers', function() {
-  return Meteor.users.find();
-});
-
-Meteor.publish('allMatches', function() {
-  return candidates.find();
-});
-
-Meteor.users.allow({
-  insert: function(){
-    return true;
-  },
-  update: function(){
-    return true;
-  },
-  remove: function(){
-    return true;
-  }
-});
 // RPC methods clients can call.
 Meteor.methods({
   chooseForMatchedUser: function(matchedUserId, choice) {
