@@ -14,15 +14,21 @@ template(name='userList')
             img.avatar(src=profilePhotoUrl)
             span {{ firstName }}
 
-
-template(name='userDetails')
-  .user-details
+template(name='userNav')
+  section.user-nav
     h1 {{ firstName }}
     button
       a(href='/users') Back to list
-    button Show Candidates
-      
-    button Show Connections
+    button
+      a(href='/users/{{ _id }}') Show Profile
+    button
+      a(href='/users/{{ _id }}/candidates') Show Candidates
+    button
+      a(href='/users/{{ _id }}/connections') Show Connections
+
+template(name='userDetails')
+  .user-details
+    +userNav
 
     section.info
       h2 Info
@@ -41,3 +47,12 @@ template(name='userDetails')
           li
             img(src=this)
 
+
+template(name='userCandidates')
+  .user-candidates
+    +userNav
+
+
+template(name='userConnections')
+  .user-connections
+    +userNav
