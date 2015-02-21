@@ -38,6 +38,12 @@ Template.userConnections.helpers
       return 'keep'
     return ''
 
+  currentUser: ->
+    Template.parentData()
+
+  otherUser: ->
+    @otherUser(Template.parentData())
+
 Template.userConnections.events
   'click .remove-connection': ->
     Meteor.call 'connection/remove', @_id
