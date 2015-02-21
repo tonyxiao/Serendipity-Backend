@@ -24,7 +24,7 @@ Candidates.helpers
     return if inverse then inverse.choice == @choice else false
 
   forceChoiceForInverse: (choice) ->
-    Candidates.update {
+    Candidates.upsert {
       forUserId: @userId
       userId: @forUserId
     }, {
@@ -33,8 +33,6 @@ Candidates.helpers
         # Collection-behavior doesn't seem to work here, need to explicitly set timestamp
         createdAt: new Date()
         updatedAt: new Date()
-    }, {
-      upsert: true
     }
 
 

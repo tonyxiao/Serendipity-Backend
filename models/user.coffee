@@ -28,7 +28,7 @@ Users.helpers
       choice: null
     }, {sort: dateMatched: 1}
 
-  activeConnections: ->
+  allConnections: ->
     Connections.find
       users:
         $in: [@_id]
@@ -55,6 +55,20 @@ Users.helpers
     nextUsers = MatchService.generateMatchesForUser(this, maxCount)
     for user in nextUsers
       @addUserAsCandidate(user)
+
+  clearAllCandidates: ->
+    Candidates.remove forUserId: @_id
+
+  clearAllConnections: ->
+    @clearAllMessages()
+    Connections.remove users: $in: [@_id]
+
+  clearAllMessages: ->
+    Messages.remove
+      $or: [
+        { senderId: @_id }
+        { recipientId: @_id }
+      ]
 
 
 # MARK: - Class Methods
