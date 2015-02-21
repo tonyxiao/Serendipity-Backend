@@ -39,6 +39,13 @@ Connections.helpers
         lastMessageText: text
     # TODO: Update expiry, send push notification
 
+  removeAllMessages: ->
+    Messages.remove
+      connectionId: @_id
+
+  remove: ->
+    Connections.remove @_id
+
   clientView: (refUser) ->
     view = _.clone this
     view.otherUserId = @otherUser(refUser)._id

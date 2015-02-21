@@ -31,4 +31,4 @@ Template.userCandidates.events
 
 Template.userConnections.events
   'click .remove-connection': ->
-    Connections.remove @_id
+    Meteor.call 'connection/remove', @_id

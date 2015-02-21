@@ -75,6 +75,9 @@ Users.helpers
         { recipientId: @_id }
       ]
 
+  remove: ->
+    Users.remove @_id
+
   clientView: ->
     view = _.clone this
     delete view.services

@@ -21,6 +21,8 @@ Messages.helpers
   recipient: ->
     Users.findOne(@recipientId)
 
+  remove: ->
+    Messages.remove @_id
 
 # TODO: Remove once outdated references are refactored
 @messages = Messages

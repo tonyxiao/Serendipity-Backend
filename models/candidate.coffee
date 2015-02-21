@@ -44,6 +44,9 @@ Candidates.helpers
         updatedAt: new Date()
     }
 
+  remove: ->
+    Candidates.remove @_id
+
   clientView: ->
     view = _.clone this
     delete view.forUserId

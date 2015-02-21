@@ -20,3 +20,9 @@ Meteor.methods
     if candidate
       console.log "Connecting #{candidate.forUser().firstName} with #{candidate.user().firstName}"
       candidate.forUser().connectWithUser(candidate.user())
+
+  'connection/remove': (connectionId) ->
+    connection = Connections.findOne(connectionId)
+    if connection
+      connection.removeAllMessages()
+      connection.remove()
