@@ -12,9 +12,10 @@ Router.route '/users/:_id/connections', ->
   @render 'userConnections', data: Users.findOne @params._id
 
 Router.route '/users/:_id/connections/:connectionId', ->
-  user = Users.findOne @params._id
   connection = Connections.findOne @params.connectionId
-  @render 'userConnectionDetails', data: {user: user, connection: connection}
+  thisUser = Users.findOne @params._id
+  otherUser = connection.otherUser thisUser
+  @render 'userConnectionDetails', data: {thisUser: thisUser, otherUser: otherUser, connection: connection}
 
 
 # Catch all route to splash screen
