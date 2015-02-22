@@ -50,17 +50,20 @@ class @FacebookPhotoService
     futures = _.map imagesToDownload, (image) ->
       future = new Future
       onComplete = future.resolver()
-      writeStream = client.upload(
+      # TODO: Is it safe to assume jpg image?
+      writeStream = client.upload
         container: process.env.AZURE_CONTAINER or 's10-dev'
-        remote: util.format('%s/%s', user._id, image.id))
+        remote: util.format('%s/%s.jpg', user._id, image.id)
+        contentType: 'image/jpeg'
+
       writeStream.on 'success', (file) ->
         url = util.format('%s%s.%s/%s/%s', client.protocol, client.config.storageAccount, client.serversUrl, file.container, file.name)
         onComplete null, url
-        return
+
       writeStream.on 'error', (err) ->
         logger.error err
         onComplete err
-        return
+
       startX = (image.width - IMAGE_SIZE) / 2
       startY = (image.height - IMAGE_SIZE) / 2
       console.log "Will import photo #{image.source}"

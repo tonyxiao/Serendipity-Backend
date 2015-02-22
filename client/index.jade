@@ -48,13 +48,13 @@ template(name='userDetails')
           li Id:
             a(href="https://facebook.com/#{ id }", target='_blank') #{ id } [Go to Profile]
           li Access Token:
-            input(value=accessToken)
+            input#fb-access-token(value=accessToken)
           li Email: #{ email }
           li Name: #{ name }
           li Gender: #{ gender }
           li TODO: Many other infos to come, location, work, etc.
 
-
+      button.update-fb-access-token Update Access Token
       button.clear-photos Clear Photos
       button.reload-fb-photos Reload Facebook Photos
 
