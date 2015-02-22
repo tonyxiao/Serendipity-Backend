@@ -87,6 +87,7 @@ Users.helpers
         { recipientId: @_id }
       ]
 
+  # TODO: make "superclass" helpers that does create, remove, update, etc
   remove: ->
     Users.remove @_id
 

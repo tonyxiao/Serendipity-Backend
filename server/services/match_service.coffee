@@ -1,6 +1,7 @@
 
 class @MatchService
 
+  # TOOD: Make user part of constructor
   @generateMatchesForUser: (user, maxCount) ->
     maxCount ?= 12 # Default to 12 max
     ineligibleUserIds = _.map user.previousCandidates().fetch(), (candidate) -> candidate.userId

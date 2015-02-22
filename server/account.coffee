@@ -1,5 +1,4 @@
 logger = Meteor.npmRequire('bunyan').createLogger name: 'account'
-graph = Meteor.npmRequire('fbgraph')
 
 # TODO: Do we need Meteor.startup here?
 Meteor.startup ->
@@ -13,7 +12,8 @@ Meteor.startup ->
     userInfo.expireAt = loginRequest.expire_at
     
     accountInfo = Accounts.updateOrCreateUserFromExternalService 'facebook', userInfo, {}
-    Users.update { _id: meteorId.userId },
+    user = Users.findOne(accountInfo.userId)
+    Users.update user._id,
       $set:
         firstName: userInfo.first_name
         about: userInfo.first_name
@@ -22,17 +22,12 @@ Meteor.startup ->
         location: 'mountain view, ca'
         work: 'google'
 
-    user = Users.findOne(accountInfo.userId)
-    graph.setAccessToken currentUser.services.facebook.accessToken
-
-    fbGetFn = Meteor.wrapAsync(graph.get)
-
-    # Update user photos
+    # Update user photos if need be
     if user.photoUrls?
-      photoUrls = getUserPhotos(fbGetFn, user)
-      Users.update user._id, $set: photos: photoUrls
+      FacebookPhotoService.importPhotosForUser user
 
-      # a newly registered user will have no matches, let's give him / her some love
+    # a newly registered user will have no matches, let's give him / her some love
+    if user.candidateQueue().count() < 3
       user.populateCandidateQueue 12
 
     return user._id
