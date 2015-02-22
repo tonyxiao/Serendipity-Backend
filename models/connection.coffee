@@ -8,10 +8,6 @@ Connections.attachSchema new SimpleSchema
   type:
     type: String
     allowedValues: ['yes', 'maybe']
-  messageIds:
-    type: [String]
-    optional: true
-
 
 # MARK - Instance Methods
 Connections.helpers
@@ -29,13 +25,12 @@ Connections.helpers
     # TODO: error handling if text is null
     recipient = @otherUser(sender)
     messageId = Messages.insert
-      senderId: sender._id,
-      recipientId: recipient._id,
+      connectionId: @_id
+      senderId: sender._id
+      recipientId: recipient._id
       isUnread: true
 
     Connections.update {_id: @_id},
-      $push:
-        messageIds: messageId
       $set:
         lastMessageText: text
     # TODO: Update expiry, send push notification
@@ -50,5 +45,4 @@ Connections.helpers
   clientView: (refUser) ->
     view = _.clone this
     view.otherUserId = @otherUser(refUser)._id
-    delete view.messageIds
     return view

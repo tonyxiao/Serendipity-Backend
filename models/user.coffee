@@ -65,7 +65,6 @@ Users.helpers
   connectWithUser: (user, connectionType) ->
     Connections.insert
       userIds: [@_id, user._id]
-      messageIds: []
       type: connectionType
 
   populateCandidateQueue: (maxCount) ->
