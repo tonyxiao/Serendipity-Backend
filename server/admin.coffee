@@ -25,10 +25,10 @@ Meteor.methods
     if candidate?
       candidate.makeChoice choice
 
-  'candidate/forceInverseCandidateChoice': (candidateId, choice) ->
+  'candidate/makeChoiceForInverse': (candidateId, choice) ->
     candidate = Candidates.findOne candidateId
     if candidate?
-      candidate.forceChoiceForInverse(choice)
+      candidate.makeChoiceForInverse choice
 
   'connection/remove': (connectionId) ->
     connection = Connections.findOne connectionId

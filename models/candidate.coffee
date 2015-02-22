@@ -31,11 +31,16 @@ Candidates.helpers
   findInverse: ->
     Candidates.findOne { forUserId: @userId, userId: @forUserId }
 
+  createInverse: ->
+    Candidates.insert
+      forUserId: @userId
+      userId: @forUserId
+
   matchesWithInverse: ->
     inverse = @findInverse()
     return if inverse then inverse.choice == @choice else false
 
-  forceChoiceForInverse: (choice) ->
+  makeChoiceForInverse: (choice) ->
     Candidates.upsert {
       forUserId: @userId
       userId: @forUserId

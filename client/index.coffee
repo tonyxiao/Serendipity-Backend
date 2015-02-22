@@ -39,13 +39,13 @@ Template.userCandidates.events
     Meteor.call 'candidate/makeChoice', @_id, 'maybe'
 
   'click .their-choice .say-yes': ->
-    Meteor.call 'candidate/forceInverseCandidateChoice', @_id, 'yes'
+    Meteor.call 'candidate/makeChoiceForInverse', @_id, 'yes'
 
   'click .their-choice .say-no': ->
-    Meteor.call 'candidate/forceInverseCandidateChoice', @_id, 'no'
+    Meteor.call 'candidate/makeChoiceForInverse', @_id, 'no'
 
   'click .their-choice .say-maybe': ->
-    Meteor.call 'candidate/forceInverseCandidateChoice', @_id, 'maybe'
+    Meteor.call 'candidate/makeChoiceForInverse', @_id, 'maybe'
 
 Template.userConnectionList.helpers
   currentUser: ->
