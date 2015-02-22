@@ -56,6 +56,10 @@ Template.userConnectionList.helpers
 
 
 Template.userConnections.events
+  'click .clear-all-connections': ->
+    console.log this
+    Meteor.call 'user/clearAllConnections', @_id
+
   'click .remove-connection': ->
     Meteor.call 'connection/remove', @_id
 

@@ -20,6 +20,12 @@ Meteor.methods
     if user?
       user.clearCandidateQueue()
 
+  'user/clearAllConnections': (userId) ->
+    user = Users.findOne userId
+    console.log 'Will clear connections for', user
+    if user?
+      user.clearAllConnections()
+
   'candidate/makeChoice': (candidateId, choice) ->
     candidate = Candidates.findOne candidateId
     if candidate?

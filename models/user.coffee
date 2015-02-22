@@ -86,7 +86,7 @@ Users.helpers
 
   clearAllConnections: ->
     @clearAllMessages()
-    Connections.remove users: $in: [@_id]
+    Connections.remove userIds: $in: [@_id]
 
   clearAllMessages: ->
     Messages.remove
