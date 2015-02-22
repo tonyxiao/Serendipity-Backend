@@ -62,3 +62,9 @@ Template.userConnectionDetails.helpers
     if connection.type == 'maybe'
       return 'keep'
     return ''
+
+Template.userConnectionDetails.events
+  'click .send-message': ->
+    text = $('#new-message').val()
+    # TODO: Call explicit meteor method
+    @connection.createNewMessage text, @thisUser

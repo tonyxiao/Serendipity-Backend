@@ -29,6 +29,7 @@ Connections.helpers
       senderId: sender._id
       recipientId: recipient._id
       isUnread: true
+      text: text
 
     Connections.update {_id: @_id},
       $set:
