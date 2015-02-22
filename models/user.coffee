@@ -28,6 +28,9 @@ Users.helpers
       choice: null
     }, {sort: dateMatched: 1}
 
+  allCandidates: ->
+    Candidates.find forUserId: @_id
+
   # TODO: Refactor yes, maybe and all connections to be more generic
   yesConnections: ->
     Connections.find
