@@ -41,16 +41,10 @@ Candidates.helpers
     return if inverse then inverse.choice == @choice else false
 
   makeChoiceForInverse: (choice) ->
-    Candidates.upsert {
-      forUserId: @userId
-      userId: @forUserId
-    }, {
-      $set:
-        choice: choice
-        # Collection-behavior doesn't seem to work here, need to explicitly set timestamp
-        createdAt: new Date()
-        updatedAt: new Date()
-    }
+    inverse = @findInverse()
+    unless inverse?
+      inverse = Candidates.findOne @createInverse()
+    inverse.makeChoice choice
 
   remove: ->
     Candidates.remove @_id

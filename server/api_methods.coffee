@@ -2,17 +2,18 @@
 Meteor.methods
   chooseYesNoMaybe: (yesId, noId, maybeId) ->
     yesCandidate = Candiates.findOne yesId
-    noCandidate = Candiates.findOne noId
     maybeCandidate = Candiates.findOne maybeId
+    noCandidate = Candiates.findOne noId
 
-    yesCandidate .makeChoice 'yes'
+    yesConnectionId = yesCandidate .makeChoice 'yes'
+    maybeConnectionId = maybeCandidate .makeChoice 'maybe'
     noCandidate .makeChoice 'no'
-    maybeCandidate .makeChoice 'maybe'
 
     result = {}
-    for candidate in [yesCandidate , maybeCandidate]
-      if candidate.matchesWithInverse()
-        result[candidate.choice] = candidate.forUser().connectWithUser candidate.user()
+    if yesConnectionId?
+      result['yes'] = yesConnectionId
+    if maybeConnectionId?
+      result['maybe'] = maybeConnectionId
 
     Meteor.user().populateCandidateQueue 3
 
