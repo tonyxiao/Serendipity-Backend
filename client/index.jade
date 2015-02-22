@@ -119,7 +119,8 @@ template(name='userConnectionList')
 
 template(name='userConnectionDetails')
   .user-connection-details
-    h1 Connection Details [{{ readableType connection }}]
+    h1 #{ thisUser.firstName } Connection Details [{{ readableType connection }}]
+    +userNav thisUser
     h2
       span #{ thisUser.firstName }
         img.avatar(src=thisUser.profilePhotoUrl)
@@ -130,6 +131,11 @@ template(name='userConnectionDetails')
         img.avatar(src=otherUser.profilePhotoUrl)
 
     ul
+      li Id: #{ connection._id }
       li Created At: #{ connection.createdAt }
+      li Type: {{ readableType connection }}
+
+    h2 Messages
+
 
 
