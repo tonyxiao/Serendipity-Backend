@@ -68,3 +68,4 @@ Template.userConnectionDetails.events
     text = $('#new-message').val()
     # TODO: Call explicit meteor method
     @connection.createNewMessage text, @thisUser
+    $('#new-message').val('')

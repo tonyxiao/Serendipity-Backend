@@ -136,7 +136,9 @@ template(name='userConnectionDetails')
       li Type: {{ readableType connection }}
 
     h2 Messages
-
+    ol
+      +each connection.messages
+        li #{ sender.firstName }: #{ text }
     textarea#new-message
     button.send-message Send Message
 
