@@ -29,18 +29,23 @@ Template.userCandidates.events
     if confirm('sure?')
       Meteor.call 'user/clearCandidateQueue', @_id
 
-  'click .say-yes': ->
+  'click .my-choice .say-yes': ->
+    Meteor.call 'candidate/makeChoice', @_id, 'yes'
+
+  'click .my-choice .say-no': ->
+    Meteor.call 'candidate/makeChoice', @_id, 'no'
+
+  'click .my-choice .say-maybe': ->
+    Meteor.call 'candidate/makeChoice', @_id, 'maybe'
+
+  'click .their-choice .say-yes': ->
     Meteor.call 'candidate/forceInverseCandidateChoice', @_id, 'yes'
 
-  'click .say-no': ->
+  'click .their-choice .say-no': ->
     Meteor.call 'candidate/forceInverseCandidateChoice', @_id, 'no'
 
-  'click .say-maybe': ->
+  'click .their-choice .say-maybe': ->
     Meteor.call 'candidate/forceInverseCandidateChoice', @_id, 'maybe'
-
-  'click .make-connection': ->
-    Meteor.call 'candidate/makeConnection', @_id
-
 
 Template.userConnectionList.helpers
   currentUser: ->

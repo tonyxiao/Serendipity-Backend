@@ -83,12 +83,18 @@ template(name='userCandidates')
             a(href='/users/#{ user._id }')
               img.avatar(src=user.profilePhotoUrl)
             span #{ user.firstName }
-            span Their Choice:
-              b #{ findInverse.choice }
-            button.say-yes Say YES!
-            button.say-maybe Say Maybe...
-            button.say-no Say no :(
-            button.make-connection Make Connection
+            .my-choice
+              span My Choice:
+                b #{ choice }
+              button.say-yes Say YES!
+              button.say-maybe Say Maybe...
+              button.say-no Say no :(
+            .their-choice
+              span Their Choice:
+                b #{ findInverse.choice }
+              button.say-yes Say YES!
+              button.say-maybe Say Maybe...
+              button.say-no Say no :(
 
 template(name='userConnections')
   .user-connections

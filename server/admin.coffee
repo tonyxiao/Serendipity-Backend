@@ -20,17 +20,15 @@ Meteor.methods
     if user?
       user.clearCandidateQueue()
 
+  'candidate/makeChoice': (candidateId, choice) ->
+    candidate = Candidates.findOne candidateId
+    if candidate?
+      candidate.makeChoice choice
+
   'candidate/forceInverseCandidateChoice': (candidateId, choice) ->
     candidate = Candidates.findOne candidateId
     if candidate?
       candidate.forceChoiceForInverse(choice)
-
-  'candidate/makeConnection': (candidateId) ->
-    # TODO: Replace makeConnection with the actual game mechanic
-    candidate = Candidates.findOne candidateId
-    if candidate?
-      console.log "Connecting #{candidate.forUser().firstName} with #{candidate.user().firstName}"
-      candidate.forUser().connectWithUser candidate.user(), _.sample(['yes', 'maybe'])
 
   'connection/remove': (connectionId) ->
     connection = Connections.findOne connectionId

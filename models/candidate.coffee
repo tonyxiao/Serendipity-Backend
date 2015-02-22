@@ -21,9 +21,12 @@ Candidates.helpers
     Users.findOne(@forUserId)
 
   makeChoice: (choice) ->
+    @choice = choice # Needed because collection update does not update self
     Candidates.update @_id,
       $set:
         choice: choice
+    if @matchesWithInverse()
+      return @forUser().connectWithUser @user(), choice
 
   findInverse: ->
     Candidates.findOne { forUserId: @userId, userId: @forUserId }
