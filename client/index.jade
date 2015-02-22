@@ -10,39 +10,40 @@ template(name='userList')
     ul
       each users
         li
-          a(href='/users/{{ _id }}')
+          a(href='/users/#{ _id }')
             img.avatar(src=profilePhotoUrl)
-            span {{ firstName }}
+            span #{ firstName }
 
 template(name='userNav')
   section.user-nav
     button
       a(href='/users') Back to user list
     button
-      a(href='/users/{{ _id }}') Show Profile
+      a(href='/users/#{ _id }') Show Profile
     button
-      a(href='/users/{{ _id }}/candidates') Show Candidates
+      a(href='/users/#{ _id }/candidates') Show Candidates
     button
-      a(href='/users/{{ _id }}/connections') Show Connections
+      a(href='/users/#{ _id }/connections') Show Connections
 
 template(name='userDetails')
   .user-details
-    h1 {{ firstName }} Profile
+    h1 #{ firstName } Profile
     +userNav
 
     section.info
       h2 Info
       ul
-        li Work: {{ work }}
-        li Education: {{ education }}
-        li Age: {{ age }}
-        li Created At: {{ createdAt }}
-        li Updated At: {{ updatedAt }}
+        li Work: #{ work }
+        li Education: #{ education }
+        li Age: #{ age }
+        li Created At: #{ createdAt }
+        li Updated At: #{ updatedAt }
         li About:
-          p {{ about }}
+          p #{ about }
 
     section.fb-info
       h2 Facebook Info
+          
       button.clear-photos Clear Photos
       button.reload-fb-photos Reload Facebook Photos
 
@@ -56,7 +57,7 @@ template(name='userDetails')
 
 template(name='userCandidates')
   .user-candidates
-    h1 {{ firstName }} Candidates
+    h1 #{ firstName } Candidates
     +userNav
 
     section.actions
@@ -68,11 +69,11 @@ template(name='userCandidates')
       ol
         each candidateQueue
           li
-            a(href='/users/{{ user._id }}')
+            a(href='/users/#{ user._id }')
               img.avatar(src=user.profilePhotoUrl)
-            span {{ user.firstName }}
+            span #{ user.firstName }
             span Their Choice:
-              b {{ findInverse.choice }}
+              b #{ findInverse.choice }
             button.say-yes Say YES!
             button.say-maybe Say Maybe...
             button.say-no Say no :(
@@ -80,7 +81,7 @@ template(name='userCandidates')
 
 template(name='userConnections')
   .user-connections
-    h1 {{ firstName }} Connections
+    h1 #{ firstName } Connections
     +userNav
 
     section.actions
@@ -93,9 +94,9 @@ template(name='userConnections')
       ol
         each yesConnections
           li
-            a(href='/users/{{ currentUser._id }}/connections/{{ _id }}')
+            a(href='/users/#{ currentUser._id }/connections/#{ _id }')
               img.avatar(src=otherUser.profilePhotoUrl)
-            span {{ otherUser.firstName }} [{{ readableType }}]
+            span #{ otherUser.firstName } [#{ readableType }]
             button.remove-connection Remove Connection
 
     section.connection-list.maybe-connections
@@ -103,9 +104,9 @@ template(name='userConnections')
       ol
         each maybeConnections
           li
-            a(href='/users/{{ currentUser._id }}/connections/{{ _id }}')
+            a(href='/users/#{ currentUser._id }/connections/#{ _id }')
               img.avatar(src=otherUser.profilePhotoUrl)
-            span {{ otherUser.firstName }} [{{ readableType }}]
+            span #{ otherUser.firstName } [#{ readableType }]
             button.remove-connection Remove Connection
 
 //template(name='userConnectionItem')
@@ -114,7 +115,7 @@ template(name='userConnections')
 template(name='userConnectionDetails')
   .user-connection-details
     h1 Connection Details
-    p {{ user.firstName }}
-    p {{ connection._id }}
+    p #{ user.firstName }
+    p #{ connection._id }
     //+userNav(user)
 
