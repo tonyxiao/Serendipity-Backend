@@ -51,8 +51,3 @@ Candidates.helpers
     view = _.clone this
     delete view.forUserId
     return view
-
-
-
-# TODO: Remove once outdated references are refactored
-@candidates = Candidates

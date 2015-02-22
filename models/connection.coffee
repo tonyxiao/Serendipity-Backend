@@ -52,7 +52,3 @@ Connections.helpers
     view.otherUserId = @otherUser(refUser)._id
     delete view.messageIds
     return view
-
-
-# TODO: Remove once outdated references are refactored
-@connections = Connections

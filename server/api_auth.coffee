@@ -1,4 +1,4 @@
-logger = Meteor.npmRequire('bunyan').createLogger name: 'account'
+logger = Meteor.npmRequire('bunyan').createLogger name: 'auth'
 
 # TODO: Do we need Meteor.startup here?
 Meteor.startup ->

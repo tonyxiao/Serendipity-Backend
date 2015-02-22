@@ -23,6 +23,3 @@ Messages.helpers
 
   remove: ->
     Messages.remove @_id
-
-# TODO: Remove once outdated references are refactored
-@messages = Messages
