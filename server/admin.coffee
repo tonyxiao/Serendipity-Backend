@@ -41,6 +41,11 @@ Meteor.methods
     if candidate?
       candidate.remove()
 
+  'candidate/createInverse': (candidateId) ->
+    candidate = Candidates.findOne candidateId
+    if candidate?
+      candidate.createInverse()
+
   'connection/remove': (connectionId) ->
     connection = Connections.findOne connectionId
     if connection?

@@ -32,7 +32,10 @@ Template.userCandidates.events
 Template.userCandidateList.events
   'click .remove-candidate': ->
     Meteor.call 'candidate/remove', @_id
-    
+
+  'click .create-inverse': ->
+    Meteor.call 'candidate/createInverse', @_id
+
   'click .my-choice .say-yes': ->
     Meteor.call 'candidate/makeChoice', @_id, 'yes'
 
