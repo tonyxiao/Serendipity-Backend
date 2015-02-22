@@ -22,9 +22,12 @@ class @FacebookPhotoService
 
     # TODO: Use profile photos, not just photos of me
     res = graphGet('/me/photos').data
+
+    console.log "Will import facebook photos for #{user._id} : #{user.firstName}"
     imagesToDownload = []
     i = 0
-    while i < res.length and i < PHOTO_COUNT
+    console.log "res legn #{res.length} photocount #{PHOTO_COUNT}"
+    while i < res.length and imagesToDownload.length < PHOTO_COUNT
       photo = res[i]
       # out of all images bigger than IMAGE_SIZE x IMAGE_SIZE, pick the
       # one that has the least number of pixels (to improve download).
@@ -38,14 +41,18 @@ class @FacebookPhotoService
       if imageToCrop != null
         imageToCrop.id = photo.id
         imagesToDownload.push imageToCrop
+
+      else
+        console.log "Skipping photo", photo
       i++
+
 
     futures = _.map imagesToDownload, (image) ->
       future = new Future
       onComplete = future.resolver()
       writeStream = client.upload(
         container: process.env.AZURE_CONTAINER or 's10-dev'
-        remote: util.format('%s/%s', currentUser._id, image.id))
+        remote: util.format('%s/%s', user._id, image.id))
       writeStream.on 'success', (file) ->
         url = util.format('%s%s.%s/%s/%s', client.protocol, client.config.storageAccount, client.serversUrl, file.container, file.name)
         onComplete null, url
@@ -56,6 +63,7 @@ class @FacebookPhotoService
         return
       startX = (image.width - IMAGE_SIZE) / 2
       startY = (image.height - IMAGE_SIZE) / 2
+      console.log "Will import photo #{image.source}"
       # get the facebook photo and then crop it.
       gm(request.get(image.source)).crop(IMAGE_SIZE, IMAGE_SIZE, startX, startY).stream().pipe writeStream
       return future

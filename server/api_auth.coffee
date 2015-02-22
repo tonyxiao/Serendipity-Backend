@@ -24,7 +24,7 @@ Meteor.startup ->
 
     # Update user photos if need be
     if user.photoUrls?
-      FacebookPhotoService.importPhotosForUser user
+      user.reloadPhotosFromFacebook()
 
     # a newly registered user will have no matches, let's give him / her some love
     if user.candidateQueue().count() < 3

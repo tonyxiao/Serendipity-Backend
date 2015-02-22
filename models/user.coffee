@@ -68,6 +68,12 @@ Users.helpers
   populateCandidateQueue: (maxCount) ->
     MatchService.generateMatchesForUser this, maxCount
 
+  reloadPhotosFromFacebook: ->
+    FacebookPhotoService.importPhotosForUser this
+
+  clearPhotos: ->
+    Users.update @_id, $unset: photoUrls: ''
+
   clearCandidateQueue: ->
     Candidates.remove
       forUserId: @_id

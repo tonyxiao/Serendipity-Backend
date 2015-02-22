@@ -8,6 +8,14 @@ Template.userList.helpers
   users: ->
     Users.find()
 
+Template.userDetails.events
+  'click .clear-photos': ->
+    Meteor.call 'user/clearPhotos', @_id
+
+  'click .reload-fb-photos': ->
+#    if confirm('sure?')
+    Meteor.call 'user/reloadPhotosFromFacebook', @_id
+
 Template.userCandidates.events
   'click .populate-queue': ->
     if confirm('sure?')
