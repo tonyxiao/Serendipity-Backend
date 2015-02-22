@@ -17,3 +17,8 @@ Meteor.methods
     Meteor.user().populateCandidateQueue 3
 
     return result
+
+  'connection/sendMessage': (connectionId, text) ->
+    connection = Connections.findOne connectionId
+    if connection?
+      connection.createNewMessage text, Meteor.user()

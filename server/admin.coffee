@@ -37,3 +37,9 @@ Meteor.methods
     if connection?
       connection.removeAllMessages()
       connection.remove()
+
+  'connection/sendMessageAs': (userId, connectionId, text) ->
+    connection = Connections.findOne connectionId
+    sender = Users.findOne userId
+    if connection? and sender?
+      connection.createNewMessage text, sender

@@ -66,6 +66,5 @@ Template.userConnectionDetails.helpers
 Template.userConnectionDetails.events
   'click .send-message': ->
     text = $('#new-message').val()
-    # TODO: Call explicit meteor method
-    @connection.createNewMessage text, @thisUser
-    $('#new-message').val('')
+    Meteor.call 'connection/sendMessageAs', @thisUser._id, @connection._id, text
+    $('#new-message').val('') # Clear text field
