@@ -8,7 +8,7 @@ body
 template(name='userList')
   .user-list
     ul
-      each users
+      +each users
         li
           a(href='/users/#{ _id }')
             img.avatar(src=profilePhotoUrl)
@@ -42,15 +42,26 @@ template(name='userDetails')
           p #{ about }
 
     section.fb-info
-      h2 Facebook Info
-          
+      +with services.facebook
+        h2 Facebook Info
+        ul
+          li Id:
+            a(href="https://facebook.com/#{ id }", target='_blank') #{ id } [Go to Profile]
+          li Access Token:
+            input(value=accessToken)
+          li Email: #{ email }
+          li Name: #{ name }
+          li Gender: #{ gender }
+          li TODO: Many other infos to come, location, work, etc.
+
+
       button.clear-photos Clear Photos
       button.reload-fb-photos Reload Facebook Photos
 
     section.photos
       h2 Photos
       ul
-        each photoUrls
+        +each photoUrls
           li
             img(src=this)
 
@@ -67,7 +78,7 @@ template(name='userCandidates')
 
     section.candidate-queue
       ol
-        each candidateQueue
+        +each candidateQueue
           li
             a(href='/users/#{ user._id }')
               img.avatar(src=user.profilePhotoUrl)
@@ -92,7 +103,7 @@ template(name='userConnections')
     section.connection-list.yes-connections
       h3 Marry
       ol
-        each yesConnections
+        +each yesConnections
           li
             a(href='/users/#{ currentUser._id }/connections/#{ _id }')
               img.avatar(src=otherUser.profilePhotoUrl)
@@ -102,7 +113,7 @@ template(name='userConnections')
     section.connection-list.maybe-connections
       h3 Keep
       ol
-        each maybeConnections
+        +each maybeConnections
           li
             a(href='/users/#{ currentUser._id }/connections/#{ _id }')
               img.avatar(src=otherUser.profilePhotoUrl)
