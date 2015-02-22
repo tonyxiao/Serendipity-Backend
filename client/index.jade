@@ -23,6 +23,8 @@ template(name='userNav')
     button
       a(href='/users/#{ _id }/candidates') Show Candidates
     button
+      a(href='/users/#{ _id }/previous_candidates') Show Previous Candidates
+    button
       a(href='/users/#{ _id }/connections') Show Connections
 
 template(name='userDetails')
@@ -77,24 +79,37 @@ template(name='userCandidates')
       button.clear-queue Clear Candidate Queue
 
     section.candidate-queue
-      ol
-        +each candidateQueue
-          li
-            a(href='/users/#{ user._id }')
-              img.avatar(src=user.profilePhotoUrl)
-            span #{ user.firstName }
-            .my-choice
-              span My Choice:
-                b #{ choice }
-              button.say-yes Say YES!
-              button.say-maybe Say Maybe...
-              button.say-no Say no :(
-            .their-choice
-              span Their Choice:
-                b #{ findInverse.choice }
-              button.say-yes Say YES!
-              button.say-maybe Say Maybe...
-              button.say-no Say no :(
+      +userCandidateList candidateQueue
+
+template(name='userPreviousCandidates')
+  .user-candidates
+    h1 #{ firstName } Previous Candidates
+    +userNav
+
+    section.previous-candidates
+      +userCandidateList previousCandidates
+
+template(name='userCandidateList')
+  ol
+    +each this
+      li
+        a(href='/users/#{ user._id }')
+          img.avatar(src=user.profilePhotoUrl)
+        span #{ user.firstName }
+        span Updated At #{ updatedAt }
+        button.remove-candidate Remove
+        .my-choice
+          span My Choice:
+            b #{ choice }
+          button.say-yes Say YES!
+          button.say-maybe Say Maybe...
+          button.say-no Say no :(
+        .their-choice
+          span Their Choice:
+            b #{ findInverse.choice }
+          button.say-yes Say YES!
+          button.say-maybe Say Maybe...
+          button.say-no Say no :(
 
 template(name='userConnections')
   .user-connections

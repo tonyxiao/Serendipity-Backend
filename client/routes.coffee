@@ -8,6 +8,9 @@ Router.route '/users/:_id', ->
 Router.route '/users/:_id/candidates', ->
   @render 'userCandidates', data: Users.findOne @params._id
 
+Router.route '/users/:_id/previous_candidates', ->
+  @render 'userPreviousCandidates', data: Users.findOne @params._id
+
 Router.route '/users/:_id/connections', ->
   @render 'userConnections', data: Users.findOne @params._id
 

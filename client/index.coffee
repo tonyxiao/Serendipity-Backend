@@ -29,6 +29,10 @@ Template.userCandidates.events
     if confirm('sure?')
       Meteor.call 'user/clearCandidateQueue', @_id
 
+Template.userCandidateList.events
+  'click .remove-candidate': ->
+    Meteor.call 'candidate/remove', @_id
+    
   'click .my-choice .say-yes': ->
     Meteor.call 'candidate/makeChoice', @_id, 'yes'
 
@@ -46,6 +50,7 @@ Template.userCandidates.events
 
   'click .their-choice .say-maybe': ->
     Meteor.call 'candidate/makeChoiceForInverse', @_id, 'maybe'
+
 
 Template.userConnectionList.helpers
   currentUser: ->
