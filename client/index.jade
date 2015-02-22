@@ -102,30 +102,24 @@ template(name='userConnections')
     // TODO: Refactor this to be share code with maybe-connections
     section.connection-list.yes-connections
       h3 Marry
-      ol
-        +each yesConnections
-          li
-            a(href='/users/#{ currentUser._id }/connections/#{ _id }')
-              img.avatar(src=otherUser.profilePhotoUrl)
-            span #{ otherUser.firstName } [#{ readableType }]
-            button.remove-connection Remove Connection
+      +userConnectionList yesConnections
 
     section.connection-list.maybe-connections
       h3 Keep
-      ol
-        +each maybeConnections
-          li
-            a(href='/users/#{ currentUser._id }/connections/#{ _id }')
-              img.avatar(src=otherUser.profilePhotoUrl)
-            span #{ otherUser.firstName } [#{ readableType }]
-            button.remove-connection Remove Connection
+      +userConnectionList maybeConnections
 
-//template(name='userConnectionItem')
-
+template(name='userConnectionList')
+  ol
+    +each this
+      li
+        a(href='/users/#{ currentUser._id }/connections/#{ _id }')
+          img.avatar(src=otherUser.profilePhotoUrl)
+        span #{ otherUser.firstName }
+        button.remove-connection Remove Connection
 
 template(name='userConnectionDetails')
   .user-connection-details
-    h1 Connection Details
+    h1 Connection Details [{{ readableType connection }}]
     p #{ user.firstName }
     p #{ connection._id }
     //+userNav(user)
