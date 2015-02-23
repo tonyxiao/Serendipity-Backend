@@ -8,6 +8,9 @@ template(name='_connectionList')
         a(href='/users/#{ thisUser._id }/connections/#{ _id }')
           img.avatar(src=otherUser.profilePhotoUrl)
         span #{ otherUser.firstName }
+        span Expires At: #{ expiresAt }
+        button.set-expire-days Set expire days from now
+        input.expire-days
         button.remove-connection Remove Connection
 
 
