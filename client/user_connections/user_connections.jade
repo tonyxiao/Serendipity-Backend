@@ -44,6 +44,13 @@ template(name='userConnectionDetails')
       li Type: {{ readableType connection }}
       li Last Message: #{ connection.lastMessageText }
       li Expires At: #{ connection.expiresAt }
+    +each connection.users
+      ul
+        li
+          b {{ firstName _id }} Info
+        li Last Message Date: #{ lastMessageDate }
+        li Notified: #{ notified }
+
     h2 Messages
     ol
       +each connection.messages

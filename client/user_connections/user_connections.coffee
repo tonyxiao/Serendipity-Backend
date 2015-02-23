@@ -24,6 +24,9 @@ Template.userConnectionDetails.helpers
       return 'keep'
     return ''
 
+  firstName: (userId) ->
+    Users.findOne(userId).firstName
+
 Template.userConnectionDetails.events
   'click .send-message': ->
     text = $('#new-message').val()
