@@ -28,7 +28,7 @@ Meteor.publish 'connections', ->
       added: (connectionId) ->
         if !initializing
           connection = Connections.findOne(connectionId)
-          otherUser = connection.otherUser()
+          otherUser = connection.otherUser currentUser
           self.added 'connections', connection._id, connection.clientView(currentUser)
           self.added 'users', otherUser._id, otherUser.clientView()
           # keep track of who the connected user for removal purpose
