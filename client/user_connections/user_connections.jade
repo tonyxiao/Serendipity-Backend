@@ -54,6 +54,6 @@ template(name='userConnectionDetails')
     h2 Messages
     ol
       +each connection.messages
-        li #{ sender.firstName }: #{ text }
+        li #{ sender.firstName } [#{ createdAt }]: #{ text }
     textarea#new-message
     button.send-message Send Message
