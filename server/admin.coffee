@@ -22,7 +22,6 @@ Meteor.methods
 
   'user/clearAllConnections': (userId) ->
     user = Users.findOne userId
-    console.log 'Will clear connections for', user
     if user?
       user.clearAllConnections()
 

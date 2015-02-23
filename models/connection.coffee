@@ -4,7 +4,8 @@ Connections.timestampable()
 
 # MARK: - Schema Validation
 Connections.attachSchema new SimpleSchema
-  userIds: type: [String]
+  users: type: [Object]
+  'users.$._id': type: String
   type:
     type: String
     allowedValues: ['yes', 'maybe']
@@ -17,8 +18,9 @@ Connections.helpers
 
   # Relative to current user
   otherUser: (thisUser) ->
-    if _.contains(@userIds, thisUser._id)
-      recipientId = _.without(@userIds, thisUser._id)[0]
+    userIds = _.pluck @users, '_id'
+    if _.contains(userIds, thisUser._id)
+      recipientId = _.without(userIds, thisUser._id)[0]
       return Users.findOne recipientId
 
   createNewMessage: (text, sender) ->

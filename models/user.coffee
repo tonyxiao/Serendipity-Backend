@@ -34,20 +34,16 @@ Users.helpers
   # TODO: Refactor yes, maybe and all connections to be more generic
   yesConnections: ->
     Connections.find
-      userIds:
-        $in: [@_id]
+      'users._id': @_id
       type: 'yes'
 
   maybeConnections: ->
     Connections.find
-      userIds:
-        $in: [@_id]
+      'users._id': @_id
       type: 'maybe'
 
   allConnections: ->
-    Connections.find
-      userIds:
-        $in: [@_id]
+    Connections.find 'users._id': @_id
 
   allMessages: ->
     Messages.find
@@ -64,7 +60,10 @@ Users.helpers
 
   connectWithUser: (user, connectionType) ->
     Connections.insert
-      userIds: [@_id, user._id]
+      users: [
+        {_id: @_id}
+        {_id: user._id}
+      ]
       type: connectionType
 
   populateCandidateQueue: (maxCount) ->
@@ -86,7 +85,7 @@ Users.helpers
 
   clearAllConnections: ->
     @clearAllMessages()
-    Connections.remove userIds: $in: [@_id]
+    Connections.remove 'users._id': @_id
 
   clearAllMessages: ->
     Messages.remove
