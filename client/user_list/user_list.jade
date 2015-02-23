@@ -1,0 +1,12 @@
+//
+   Created by Tony on 2/22/15.
+
+template(name='userList')
+  .user-list
+    ul
+      +each users
+        li
+          a(href='/users/#{ _id }')
+            img.avatar(src=profilePhotoUrl)
+            span #{ firstName }
+

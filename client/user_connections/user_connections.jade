@@ -1,0 +1,51 @@
+//
+   Created by Tony on 2/22/15.
+
+template(name='userConnections')
+  .user-connections
+    h1 #{ firstName } Connections
+    +userNav
+    section.actions
+      h2 Actions
+      button.clear-all-connections Clear All Connections
+    // TODO: Refactor this to be share code with maybe-connections
+    section.connection-list.yes-connections
+      h3 Marry
+      +userConnectionList yesConnections
+    section.connection-list.maybe-connections
+      h3 Keep
+      +userConnectionList maybeConnections
+
+
+template(name='userConnectionList')
+  ol
+    +each this
+      li
+        a(href='/users/#{ currentUser._id }/connections/#{ _id }')
+          img.avatar(src=otherUser.profilePhotoUrl)
+        span #{ otherUser.firstName }
+        button.remove-connection Remove Connection
+
+
+template(name='userConnectionDetails')
+  .user-connection-details
+    h1 #{ thisUser.firstName } Connection Details [{{ readableType connection }}]
+    +userNav thisUser
+    h2
+      span #{ thisUser.firstName }
+        img.avatar(src=thisUser.profilePhotoUrl)
+      span
+        button
+          a(href='/users/#{ otherUser._id}/connections/#{ connection._id}') ->
+      span #{ otherUser.firstName }
+        img.avatar(src=otherUser.profilePhotoUrl)
+    ul
+      li Id: #{ connection._id }
+      li Created At: #{ connection.createdAt }
+      li Type: {{ readableType connection }}
+    h2 Messages
+    ol
+      +each connection.messages
+        li #{ sender.firstName }: #{ text }
+    textarea#new-message
+    button.send-message Send Message

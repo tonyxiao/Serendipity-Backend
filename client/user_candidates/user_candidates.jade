@@ -1,0 +1,48 @@
+//
+   Created by Tony on 2/22/15.
+
+template(name='userCandidates')
+  .user-candidates
+    h1 #{ firstName } Candidates
+    +userNav
+
+    section.actions
+      h2 Actions
+      button.populate-queue Populate Candidate Queue
+      button.clear-queue Clear Candidate Queue
+
+    section.candidate-queue
+      +userCandidateList candidateQueue
+
+
+template(name='userPreviousCandidates')
+  .user-candidates
+    h1 #{ firstName } Previous Candidates
+    +userNav
+
+    section.previous-candidates
+      +userCandidateList previousCandidates
+
+
+template(name='userCandidateList')
+  ol
+    +each this
+      li
+        a(href='/users/#{ user._id }')
+          img.avatar(src=user.profilePhotoUrl)
+        span #{ user.firstName }
+        span Updated At #{ updatedAt }
+        button.remove-candidate Remove
+        button.create-inverse Add me to their queue
+        .my-choice
+          span My Choice:
+            b #{ choice }
+          button.say-yes Say YES!
+          button.say-maybe Say Maybe...
+          button.say-no Say no :(
+        .their-choice
+          span Their Choice:
+            b #{ findInverse.choice }
+          button.say-yes Say YES!
+          button.say-maybe Say Maybe...
+          button.say-no Say no :(

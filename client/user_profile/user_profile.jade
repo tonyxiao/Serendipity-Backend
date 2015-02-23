@@ -1,0 +1,43 @@
+//
+   Created by Tony on 2/22/15.
+
+template(name='userDetails')
+  .user-details
+    h1 #{ firstName } Profile
+    +userNav
+
+    section.info
+      h2 Info
+      ul
+        li Work: #{ work }
+        li Education: #{ education }
+        li Age: #{ age }
+        li Created At: #{ createdAt }
+        li Updated At: #{ updatedAt }
+        li About:
+          p #{ about }
+
+    section.fb-info
+      +with services.facebook
+        h2 Facebook Info
+        ul
+          li Id:
+            a(href="https://facebook.com/#{ id }", target='_blank') #{ id } [Go to Profile]
+          li Access Token:
+            input#fb-access-token(value=accessToken)
+          li Email: #{ email }
+          li Name: #{ name }
+          li Gender: #{ gender }
+          li TODO: Many other infos to come, location, work, etc.
+
+      button.update-fb-access-token Update Access Token
+      button.clear-photos Clear Photos
+      button.reload-fb-photos Reload Facebook Photos
+
+    section.photos
+      h2 Photos
+      ul
+        +each photoUrls
+          li
+            img(src=this)
+
