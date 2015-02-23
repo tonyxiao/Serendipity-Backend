@@ -11,7 +11,7 @@ Template._connectionList.events
     Meteor.call 'connection/remove', @_id
 
   'click .set-expire-days': (event) ->
-    days = parseInt $(event.target).next('.expire-days').val()
+    days = parseFloat $(event.target).next('.expire-days').val()
     Meteor.call 'connection/setExpireDays', @_id, days
 
 Template.userConnections.events
@@ -37,5 +37,5 @@ Template.userConnectionDetails.events
     $('#new-message').val('') # Clear text field
 
   'click .set-expire-days': ->
-    days = parseInt $('#expire-days').val()
+    days = parseFloat $('#expire-days').val()
     Meteor.call 'connection/setExpireDays', @connection._id, days
