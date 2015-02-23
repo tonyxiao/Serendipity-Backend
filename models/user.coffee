@@ -1,4 +1,11 @@
 
+# Needed to make connection filtering reactive
+CurrentDate = new ReactiveDict
+CurrentDate.set 'value', new Date
+Meteor.setInterval ->
+  CurrentDate.set 'value', new Date
+, 1000
+
 # Not sure why these hack is necessary. Probably because the packages are loaded *after*
 # Meteor.users collection has already been created. Need to control package load order
 # HACK ALERT: Maybe file issues?
@@ -35,9 +42,9 @@ Users.helpers
     # TODO: Make currentDate a reactive data source
     selector = 'users._id': @_id
     if active == true
-      selector.expiresAt = $gt: new Date
+      selector.expiresAt = $gt: CurrentDate.get 'value'
     else if active == false
-      selector.expiresAt = $lte: new Date
+      selector.expiresAt = $lte: CurrentDate.get 'value'
     if type?
       selector.type = type
     return Connections.find selector
@@ -115,3 +122,4 @@ Users.helpers
     view = _.clone this
     delete view.services
     return view
+
