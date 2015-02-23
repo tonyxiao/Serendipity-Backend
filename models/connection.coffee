@@ -16,7 +16,6 @@ Connections.helpers
     Messages.find
       connectionId: @_id
 
-  # Relative to current user
   otherUser: (thisUser) ->
     userIds = _.pluck @users, '_id'
     if _.contains(userIds, thisUser._id)

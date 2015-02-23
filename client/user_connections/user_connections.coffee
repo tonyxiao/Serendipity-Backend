@@ -1,6 +1,6 @@
 
 Template._connectionList.helpers
-  currentUser: ->
+  thisUser: ->
     Template.parentData(2)
 
   otherUser: ->

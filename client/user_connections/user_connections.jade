@@ -5,7 +5,7 @@ template(name='_connectionList')
   ol
     +each this
       li
-        a(href='/users/#{ currentUser._id }/connections/#{ _id }')
+        a(href='/users/#{ thisUser._id }/connections/#{ _id }')
           img.avatar(src=otherUser.profilePhotoUrl)
         span #{ otherUser.firstName }
         button.remove-connection Remove Connection
