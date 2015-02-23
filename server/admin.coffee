@@ -57,6 +57,11 @@ Meteor.methods
     if connection? and sender?
       connection.createNewMessage text, sender
 
+  'connection/setExpireDays': (connectionId, expireDays) ->
+    expiresAt = new Date
+    expiresAt.setDate(expiresAt.getDate() + expireDays)
+    Connections.update connectionId, $set: expiresAt: expiresAt
+
   'import/tinder': (jsonText) ->
     data = JSON.parse(jsonText)
     FixtureService.importFromTinder jsonText

@@ -32,3 +32,7 @@ Template.userConnectionDetails.events
     text = $('#new-message').val()
     Meteor.call 'connection/sendMessageAs', @thisUser._id, @connection._id, text
     $('#new-message').val('') # Clear text field
+
+  'click .set-expire-days': ->
+    days = parseInt $('#expire-days').val()
+    Meteor.call 'connection/setExpireDays', @connection._id, days

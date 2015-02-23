@@ -38,6 +38,9 @@ template(name='userConnectionDetails')
           a(href='/users/#{ otherUser._id}/connections/#{ connection._id}') ->
       span #{ otherUser.firstName }
         img.avatar(src=otherUser.profilePhotoUrl)
+    section.actions
+      button.set-expire-days Set expire days from now
+      input#expire-days
     ul
       li Id: #{ connection._id }
       li Created At: #{ connection.createdAt }
