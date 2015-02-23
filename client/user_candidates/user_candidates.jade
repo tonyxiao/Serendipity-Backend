@@ -8,6 +8,7 @@ template(name='_candidateList')
         a(href='/users/#{ user._id }')
           img.avatar(src=user.profilePhotoUrl)
         span #{ user.firstName }
+        span Id: #{ _id }
         span Updated At #{ updatedAt }
         button.remove-candidate Remove
         button.create-inverse Add me to their queue

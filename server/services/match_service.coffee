@@ -7,8 +7,6 @@ class @MatchService
     ineligibleUserIds = _.map user.allCandidates().fetch(), (candidate) -> candidate.userId
     ineligibleUserIds.push user._id
 
-    console.log 'ineligibleUserIds', ineligibleUserIds
-
     # TODO: Randomize & take into account gender, machine learning, what have you
     matchedUsers = Users.find({
       _id: $nin: ineligibleUserIds
