@@ -61,9 +61,10 @@ Users.helpers
   connectWithUser: (user, connectionType) ->
     Connections.insert
       users: [
-        {_id: @_id}
-        {_id: user._id}
+        {_id: @_id, notified: true}
+        {_id: user._id, notified: false}
       ]
+      expiresAt: Connections.nextExpirationDate()
       type: connectionType
 
   populateCandidateQueue: (maxCount) ->

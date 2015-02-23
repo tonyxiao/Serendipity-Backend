@@ -6,6 +6,9 @@ Connections.timestampable()
 Connections.attachSchema new SimpleSchema
   users: type: [Object]
   'users.$._id': type: String
+  'users.$.notified': type: Boolean
+  'users.$.lastMessageDate': type: Date, optional: true
+  expiresAt: type: Date
   type:
     type: String
     allowedValues: ['yes', 'maybe']
@@ -48,3 +51,8 @@ Connections.helpers
     view = _.clone this
     view.otherUserId = @otherUser(refUser)._id
     return view
+
+Connections.nextExpirationDate = ->
+  expiration = new Date
+  expiration.setDate expiration.getDate() + 3 # 3 days from now
+  return expiration
