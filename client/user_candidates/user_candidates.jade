@@ -1,30 +1,7 @@
 //
    Created by Tony on 2/22/15.
 
-template(name='userCandidates')
-  .user-candidates
-    h1 #{ firstName } Candidates
-    +userNav
-
-    section.actions
-      h2 Actions
-      button.populate-queue Populate Candidate Queue
-      button.clear-queue Clear Candidate Queue
-
-    section.candidate-queue
-      +userCandidateList candidateQueue
-
-
-template(name='userPreviousCandidates')
-  .user-candidates
-    h1 #{ firstName } Previous Candidates
-    +userNav
-
-    section.previous-candidates
-      +userCandidateList previousCandidates
-
-
-template(name='userCandidateList')
+template(name='_candidateList')
   ol
     +each this
       li
@@ -46,3 +23,26 @@ template(name='userCandidateList')
           button.say-yes Say YES!
           button.say-maybe Say Maybe...
           button.say-no Say no :(
+
+template(name='userCandidates')
+  .user-candidates
+    h1 #{ firstName } Candidates
+    +userNav
+
+    section.actions
+      h2 Actions
+      button.populate-queue Populate Candidate Queue
+      button.clear-queue Clear Candidate Queue
+
+    section.candidate-queue
+      +_candidateList candidateQueue
+
+
+template(name='userPreviousCandidates')
+  .user-candidates
+    h1 #{ firstName } Previous Candidates
+    +userNav
+
+    section.previous-candidates
+      +_candidateList previousCandidates
+

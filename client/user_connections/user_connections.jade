@@ -1,23 +1,7 @@
 //
    Created by Tony on 2/22/15.
 
-template(name='userConnections')
-  .user-connections
-    h1 #{ firstName } Connections
-    +userNav
-    section.actions
-      h2 Actions
-      button.clear-all-connections Clear All Connections
-    // TODO: Refactor this to be share code with maybe-connections
-    section.connection-list.yes-connections
-      h3 Marry
-      +userConnectionList yesConnections
-    section.connection-list.maybe-connections
-      h3 Keep
-      +userConnectionList maybeConnections
-
-
-template(name='userConnectionList')
+template(name='_connectionList')
   ol
     +each this
       li
@@ -25,6 +9,21 @@ template(name='userConnectionList')
           img.avatar(src=otherUser.profilePhotoUrl)
         span #{ otherUser.firstName }
         button.remove-connection Remove Connection
+
+
+template(name='userConnections')
+  .user-connections
+    h1 #{ firstName } Connections
+    +userNav
+    section.actions
+      h2 Actions
+      button.clear-all-connections Clear All Connections
+    section.connection-list.yes-connections
+      h3 Marry
+      +_connectionList yesConnections
+    section.connection-list.maybe-connections
+      h3 Keep
+      +_connectionList maybeConnections
 
 
 template(name='userConnectionDetails')

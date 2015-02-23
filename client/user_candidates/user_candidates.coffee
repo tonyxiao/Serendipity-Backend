@@ -1,14 +1,5 @@
 
-Template.userCandidates.events
-  'click .populate-queue': ->
-    if confirm('sure?')
-      Meteor.call 'user/populateCandidateQueue', @_id
-
-  'click .clear-queue': ->
-    if confirm('sure?')
-      Meteor.call 'user/clearCandidateQueue', @_id
-
-Template.userCandidateList.events
+Template._candidateList.events
   'click .remove-candidate': ->
     Meteor.call 'candidate/remove', @_id
 
@@ -32,3 +23,13 @@ Template.userCandidateList.events
 
   'click .their-choice .say-maybe': ->
     Meteor.call 'candidate/makeChoiceForInverse', @_id, 'maybe'
+
+Template.userCandidates.events
+  'click .populate-queue': ->
+    if confirm('sure?')
+      Meteor.call 'user/populateCandidateQueue', @_id
+
+  'click .clear-queue': ->
+    if confirm('sure?')
+      Meteor.call 'user/clearCandidateQueue', @_id
+

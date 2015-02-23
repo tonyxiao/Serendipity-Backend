@@ -1,5 +1,5 @@
 
-Template.userConnectionList.helpers
+Template._connectionList.helpers
   currentUser: ->
     Template.parentData(2)
 
