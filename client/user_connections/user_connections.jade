@@ -56,10 +56,10 @@ template(name='userConnectionDetails')
       button.set-expire-days Set expire days from now
       input#expire-days
     ul
-      li Id: #{ connection._id }
       li Created At: #{ connection.createdAt }
       li Type: {{ readableType connection }}
       li Last Message: #{ connection.lastMessageText }
+      li Is Expired: #{ connection.isExpired }
       li Expires At: #{ connection.expiresAt }
       li Message Count: #{ connection.messages.count }
     +each connection.users

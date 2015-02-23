@@ -16,6 +16,10 @@ Connections.attachSchema new SimpleSchema
 
 # MARK - Instance Methods
 Connections.helpers
+
+  isExpired: ->
+    @expiresAt < CurrentDate.get()
+
   messages: ->
     Messages.find
       connectionId: @_id

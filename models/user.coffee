@@ -1,10 +1,4 @@
 
-# Needed to make connection filtering reactive
-@CurrentDate = new ReactiveVar new Date
-Meteor.setInterval ->
-  CurrentDate.set new Date
-, 1000
-
 # Not sure why these hack is necessary. Probably because the packages are loaded *after*
 # Meteor.users collection has already been created. Need to control package load order
 # HACK ALERT: Maybe file issues?

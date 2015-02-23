@@ -34,6 +34,11 @@ Router.route '/import', ->
 Router.route '/(.*)', ->
   @render 'splash'
 
+## Global Template Helpers
+
+Template.registerHelper 'CurrentDate', ->
+  CurrentDate.get()
+
 ## Import Event Handling
 
 Template.importFixture.events
