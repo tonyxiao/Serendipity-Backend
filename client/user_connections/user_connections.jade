@@ -42,6 +42,8 @@ template(name='userConnectionDetails')
       li Id: #{ connection._id }
       li Created At: #{ connection.createdAt }
       li Type: {{ readableType connection }}
+      li Last Message: #{ connection.lastMessageText }
+      li Expires At: #{ connection.expiresAt }
     h2 Messages
     ol
       +each connection.messages

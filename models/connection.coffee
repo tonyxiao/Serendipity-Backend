@@ -9,6 +9,7 @@ Connections.attachSchema new SimpleSchema
   'users.$.notified': type: Boolean
   'users.$.lastMessageDate': type: Date, optional: true
   expiresAt: type: Date
+  lastMessageText: type: String, optional: true
   type:
     type: String
     allowedValues: ['yes', 'maybe']
@@ -25,20 +26,36 @@ Connections.helpers
       recipientId = _.without(userIds, thisUser._id)[0]
       return Users.findOne recipientId
 
+  setUserKeyValue: (user, key, value) ->
+    info = _.find @users, (u) -> u._id == user._id
+    info[key]  = value
+    selector = _id: @_id, 'users._id': user._id
+    modifier = {}
+    modifier["users.$.#{key}"] = value
+    Connections.update selector, $set: modifier
+
   createNewMessage: (text, sender) ->
     # TODO: error handling if text is null
-    recipient = @otherUser(sender)
-    messageId = Messages.insert
+    Messages.insert
       connectionId: @_id
       senderId: sender._id
-      recipientId: recipient._id
+      recipientId: @otherUser(sender)._id
       isUnread: true
       text: text
 
-    Connections.update {_id: @_id},
+    @setUserKeyValue sender, 'lastMessageDate', new Date
+
+    # Compute the next expiration date
+    expiresAt = @expireAt
+    lastMessageDates = _.compact _.pluck(@users, 'lastMessageDate')
+    if lastMessageDates.length == 2
+      expiresAt = Connections.nextExpirationDate _.min(lastMessageDates)
+
+    Connections.update @_id,
       $set:
         lastMessageText: text
-    # TODO: Update expiry, send push notification
+        expiresAt: expiresAt
+    # TODO: send push notification
 
   removeAllMessages: ->
     Messages.remove
@@ -52,7 +69,7 @@ Connections.helpers
     view.otherUserId = @otherUser(refUser)._id
     return view
 
-Connections.nextExpirationDate = ->
-  expiration = new Date
+Connections.nextExpirationDate = (relativeDate) ->
+  expiration = new Date relativeDate.getTime()
   expiration.setDate expiration.getDate() + 3 # 3 days from now
   return expiration

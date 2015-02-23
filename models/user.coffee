@@ -64,7 +64,7 @@ Users.helpers
         {_id: @_id, notified: true}
         {_id: user._id, notified: false}
       ]
-      expiresAt: Connections.nextExpirationDate()
+      expiresAt: Connections.nextExpirationDate new Date
       type: connectionType
 
   populateCandidateQueue: (maxCount) ->
