@@ -31,19 +31,31 @@ Users.helpers
   allCandidates: ->
     Candidates.find forUserId: @_id
 
-  # TODO: Refactor yes, maybe and all connections to be more generic
-  yesConnections: ->
-    Connections.find
-      'users._id': @_id
-      type: 'yes'
+  filterConnections: (active, type) ->
+    # TODO: Make currentDate a reactive data source
+    selector = 'users._id': @_id
+    if active == true
+      selector.expiresAt = $gt: new Date
+    else if active == false
+      selector.expiresAt = $lte: new Date
+    if type?
+      selector.type = type
+    return Connections.find selector
 
-  maybeConnections: ->
-    Connections.find
-      'users._id': @_id
-      type: 'maybe'
+  activeYesConnections: ->
+    @filterConnections true, 'yes'
+
+  expiredYesConnections: ->
+    @filterConnections false, 'yes'
+
+  activeMaybeConnections: ->
+    @filterConnections true, 'maybe'
+
+  expiredMaybeConnections: ->
+    @filterConnections false, 'maybe'
 
   allConnections: ->
-    Connections.find 'users._id': @_id
+    @filterConnections()
 
   allMessages: ->
     Messages.find

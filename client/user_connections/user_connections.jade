@@ -23,10 +23,21 @@ template(name='userConnections')
       button.clear-all-connections Clear All Connections
     section.connection-list.yes-connections
       h3 Marry
-      +_connectionList yesConnections
+      +_connectionList activeYesConnections
+
     section.connection-list.maybe-connections
       h3 Keep
-      +_connectionList maybeConnections
+      +_connectionList activeMaybeConnections
+
+    section.connection-list.yes-connections
+      h3 Expired Marry
+      +_connectionList expiredYesConnections
+
+    section.connection-list.maybe-connections
+      h3 Expired Keep
+      +_connectionList expiredMaybeConnections
+
+
 
 
 template(name='userConnectionDetails')
