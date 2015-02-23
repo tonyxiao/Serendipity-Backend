@@ -1,9 +1,8 @@
 
 # Needed to make connection filtering reactive
-CurrentDate = new ReactiveDict
-CurrentDate.set 'value', new Date
+@CurrentDate = new ReactiveVar new Date
 Meteor.setInterval ->
-  CurrentDate.set 'value', new Date
+  CurrentDate.set new Date
 , 1000
 
 # Not sure why these hack is necessary. Probably because the packages are loaded *after*
@@ -42,9 +41,9 @@ Users.helpers
     # TODO: Make currentDate a reactive data source
     selector = 'users._id': @_id
     if active == true
-      selector.expiresAt = $gt: CurrentDate.get 'value'
+      selector.expiresAt = $gt: CurrentDate.get()
     else if active == false
-      selector.expiresAt = $lte: CurrentDate.get 'value'
+      selector.expiresAt = $lte: CurrentDate.get()
     if type?
       selector.type = type
     return Connections.find selector
