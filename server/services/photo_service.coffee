@@ -26,7 +26,7 @@ class @FacebookPhotoService
     console.log "Will import facebook photos for #{user._id} : #{user.firstName}"
     imagesToDownload = []
     i = 0
-    console.log "res legn #{res.length} photocount #{PHOTO_COUNT}"
+    console.log "res length #{res.length} photocount #{PHOTO_COUNT}"
     while i < res.length and imagesToDownload.length < PHOTO_COUNT
       photo = res[i]
       # out of all images bigger than IMAGE_SIZE x IMAGE_SIZE, pick the

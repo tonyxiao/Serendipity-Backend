@@ -5,8 +5,9 @@ Meteor.publish 'messages', ->
     return Users.findOne(@userId).allMessages()
 
 Meteor.publish 'currentUser', ->
+  # TODO: Better implmentation of client view
   if @userId
-    return buildUser(Users.find(@userId))
+    return Users.find(@userId)
 
 #
 # Publishes topic called 'connections' which populates a client side collection called
@@ -42,7 +43,7 @@ Meteor.publish 'connections', ->
 
     currentUserConnections = Users.findOne(@userId).allConnections().fetch()
     currentUserConnections.forEach (connection) ->
-      otherUser = connection.otherUser()
+      otherUser = connection.otherUser currentUser
       self.added 'connections', connection._id, connection.clientView(currentUser)
       self.added 'users', otherUser._id, otherUser.clientView()
       connectedUsers[connection._id] = otherUser._id

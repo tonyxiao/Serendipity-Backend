@@ -7,7 +7,7 @@ Meteor.startup ->
   Accounts.registerLoginHandler 'fb-access', (serviceData) ->
     loginRequest = serviceData['fb-access']
     accessToken = loginRequest.accessToken
-    userInfo = Meteor.http.call('GET', 'https://graph.facebook.com/me?access_token=#{accessToken}').data
+    userInfo = Meteor.http.call('GET', "https://graph.facebook.com/me?access_token=#{accessToken}").data
     userInfo.accessToken = accessToken
     userInfo.expireAt = loginRequest.expire_at
     
@@ -30,4 +30,4 @@ Meteor.startup ->
     if user.candidateQueue().count() < 3
       user.populateCandidateQueue 12
 
-    return user._id
+    return userId: user._id
