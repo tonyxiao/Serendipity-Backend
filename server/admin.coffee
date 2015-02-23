@@ -57,3 +57,7 @@ Meteor.methods
     sender = Users.findOne userId
     if connection? and sender?
       connection.createNewMessage text, sender
+
+  'import/tinder': (jsonText) ->
+    data = JSON.parse(jsonText)
+    FixtureService.importFromTinder jsonText

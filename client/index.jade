@@ -18,3 +18,10 @@ template(name='userNav')
       a(href='/users/#{ _id }/previous_candidates') Show Previous Candidates
     button
       a(href='/users/#{ _id }/connections') Show Connections
+
+template(name='importFixture')
+  section.import
+    h1 Paste json text here
+    p See example in fixtures directory
+    textarea#json-text
+    button.import-submit Submit

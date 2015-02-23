@@ -4,6 +4,8 @@ Meteor.subscribe 'allCandidates'
 Meteor.subscribe 'allConnections'
 Meteor.subscribe 'allMessages'
 
+## Routing
+
 Router.route '/users', ->
   @render 'userList'
 
@@ -25,8 +27,16 @@ Router.route '/users/:_id/connections/:connectionId', ->
   otherUser = connection.otherUser thisUser
   @render 'userConnectionDetails', data: {thisUser: thisUser, otherUser: otherUser, connection: connection}
 
-
+Router.route '/import', ->
+  @render 'importFixture'
 
 # Catch all route to splash screen
 Router.route '/(.*)', ->
   @render 'splash'
+
+## Import Event Handling
+
+Template.importFixture.events
+  'click .import-submit': ->
+    jsonText = $('#json-text').val()
+    Meteor.call 'import/tinder', jsonText
