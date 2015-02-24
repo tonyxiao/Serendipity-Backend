@@ -72,3 +72,5 @@ class @FixtureService
               birthday: result.birthday
         $setOnInsert:
           createdAt: new Date
+
+    return data.results.length

@@ -44,4 +44,7 @@ Template.registerHelper 'CurrentDate', ->
 Template.importFixture.events
   'click .import-submit': ->
     jsonText = $('#json-text').val()
-    Meteor.call 'import/tinder', jsonText
+    $('#json-text').val('')
+    Meteor.call 'import/tinder', jsonText, (err, res) ->
+      alert unless err? then "imported #{res} users" else "#{err.reason}: #{err.details}"
+

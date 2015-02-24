@@ -63,4 +63,7 @@ Meteor.methods
     Connections.update connectionId, $set: expiresAt: expiresAt
 
   'import/tinder': (jsonText) ->
-    FixtureService.importFromTinder JSON.parse(jsonText)
+    try
+      FixtureService.importFromTinder JSON.parse jsonText
+    catch
+      throw new Meteor.Error(400, 'Unable to import', 'Likely malformed json');
