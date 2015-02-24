@@ -34,8 +34,8 @@ class @FixtureService
     ]
 
     userNames = []
-    console.log 'Will add users'
-    data.results.forEach (user) ->
+    console.log 'Will add users', data.results
+    for user in data.results
       userNames.push user.name
       console.log 'Will add user with name ' + user.name
       school = schools[Math.floor(Math.random() * schools.length)]
@@ -53,7 +53,7 @@ class @FixtureService
         birthday: user.birthday
       # TODO: Don't hack on top of facebook here, rather unnecessary
       meteorId = Accounts.updateOrCreateUserFromExternalService('facebook', serviceData, {})
-      Users.update {_id: meteorId.userId},
+      Users.update meteorId.userId,
         $set:
           firstName: user.name
           about: user.bio

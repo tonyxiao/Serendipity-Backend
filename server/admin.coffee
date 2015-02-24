@@ -63,5 +63,4 @@ Meteor.methods
     Connections.update connectionId, $set: expiresAt: expiresAt
 
   'import/tinder': (jsonText) ->
-    data = JSON.parse(jsonText)
-    FixtureService.importFromTinder jsonText
+    FixtureService.importFromTinder JSON.parse(jsonText)
