@@ -23,7 +23,7 @@ Meteor.startup ->
         work: 'google'
 
     # Update user photos if need be
-    if user.photoUrls?
+    if not user.photoUrls?
       user.reloadPhotosFromFacebook()
 
     # a newly registered user will have no matches, let's give him / her some love
