@@ -10,6 +10,7 @@ CollectionBehaviours.extendCollectionInstance(Meteor.users)
 @Users = Meteor.users
 Users.timestampable()
 
+# TODO: Add schema validation for user model
 
 # MARK: - Instance Methods
 Users.helpers

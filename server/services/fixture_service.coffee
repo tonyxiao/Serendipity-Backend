@@ -33,35 +33,24 @@ class @FixtureService
       'Facebook'
     ]
 
-    userNames = []
-    console.log 'Will add users', data.results
-    for user in data.results
-      userNames.push user.name
-      console.log 'Will add user with name ' + user.name
-      school = schools[Math.floor(Math.random() * schools.length)]
-      location = locations[Math.floor(Math.random() * locations.length)]
-      job = jobs[Math.floor(Math.random() * jobs.length)]
-      photos = []
-      user.photos.forEach (photo) ->
+    for result in data.results
+      console.log 'Will add user with name ' + result.name
+      photosUrls = []
+      result.photos.forEach (photo) ->
         photo.processedFiles.forEach (processedPhoto) ->
           if processedPhoto.height == 640 and processedPhoto.width == 640
-            photos.push processedPhoto.url
-      serviceData =
-        id: user._id
-        email: user._id + '@gmail.com'
-        password: user._id
-        birthday: user.birthday
-      # TODO: Don't hack on top of facebook here, rather unnecessary
-      meteorId = Accounts.updateOrCreateUserFromExternalService('facebook', serviceData, {})
-      Users.update meteorId.userId,
-        $set:
-          firstName: user.name
-          about: user.bio
-          education: school
-          createdAt: new Date
-          age: Math.floor(Math.random() * 10 + 20)
-          location: location
-          work: job
-          photoUrls: photos
+            photosUrls.push processedPhoto.url
 
-    return userNames.join ','
+      Users.upsert 'services.tinder._id': result._id,
+        firstName: result.name
+        about: result.bio
+        birthday: result.birthday
+        createdAt: new Date
+        photoUrls: photosUrls
+        education: _.sample schools
+        age: _.sample [19..35]
+        location: _.sample locations
+        work: _.sample jobs
+        services:
+          tinder:
+            _id: result._id
