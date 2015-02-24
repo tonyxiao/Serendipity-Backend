@@ -66,8 +66,9 @@ template(name='userConnectionDetails')
       ul
         li
           b {{ firstName _id }} Info
-        li Last Message Date: #{ lastMessageDate }
-        li Notified: #{ notified }
+        li Last Sent Message Date: #{ lastSentDate }
+        li Has Seen Connection: #{ hasSeenConnection }
+        li Has Unread Message: #{ hasUnreadMessage }
 
     h2 Messages
     ol

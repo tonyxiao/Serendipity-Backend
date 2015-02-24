@@ -74,8 +74,8 @@ Users.helpers
   connectWithUser: (user, connectionType) ->
     Connections.insert
       users: [
-        {_id: @_id, notified: true}
-        {_id: user._id, notified: false}
+        {_id: @_id, hasSeenConnection: true, hasUnreadMessage: false}
+        {_id: user._id, hasSeenConnection: false, hasUnreadMessage: false}
       ]
       expiresAt: Connections.nextExpirationDate new Date
       type: connectionType

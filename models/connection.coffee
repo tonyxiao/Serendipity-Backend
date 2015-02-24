@@ -6,8 +6,9 @@ Connections.timestampable()
 Connections.attachSchema new SimpleSchema
   users: type: [Object]
   'users.$._id': type: String
-  'users.$.notified': type: Boolean
-  'users.$.lastMessageDate': type: Date, optional: true
+  'users.$.hasSeenConnection': type: Boolean
+  'users.$.hasUnreadMessage': type: Boolean
+  'users.$.lastSentDate': type: Date, optional: true
   expiresAt: type: Date
   lastMessageText: type: String, optional: true
   type:
@@ -40,20 +41,22 @@ Connections.helpers
 
   createNewMessage: (text, sender) ->
     # TODO: error handling if text is null
+    recipient = @otherUser sender
     Messages.insert
       connectionId: @_id
       senderId: sender._id
-      recipientId: @otherUser(sender)._id
+      recipientId: recipient._id
       isUnread: true
       text: text
 
-    @setUserKeyValue sender, 'lastMessageDate', new Date
+    @setUserKeyValue sender, 'lastSentDate', new Date
+    @setUserKeyValue recipient, 'hasUnreadMessage', true
 
     # Compute the next expiration date
     expiresAt = @expireAt
-    lastMessageDates = _.compact _.pluck(@users, 'lastMessageDate')
-    if lastMessageDates.length == 2
-      expiresAt = Connections.nextExpirationDate _.min(lastMessageDates)
+    lastSentDates = _.compact _.pluck(@users, 'lastSentDate')
+    if lastSentDates.length == 2
+      expiresAt = Connections.nextExpirationDate _.min(lastSentDates)
 
     Connections.update @_id,
       $set:
