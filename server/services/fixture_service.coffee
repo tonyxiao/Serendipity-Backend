@@ -42,6 +42,9 @@ class @FixtureService
   @randomHeight: ->
     _.sample [150...210] # in cm
 
+  @randomGender: ->
+    _.sample ['male', 'female']
+
   # See sample_tinder_recs.json
   @importFromTinder: (data) ->
     for result in data.results
@@ -56,14 +59,16 @@ class @FixtureService
         $set:
           firstName: result.name
           about: result.bio
-          birthday: result.birthday
           photoUrls: photosUrls
           education: @randomSchool()
           age: @randomAge()
+          height: @randomHeight()
           location: @randomLocation()
           work: @randomJob()
+          gender: @randomGender()
           services:
             tinder:
               _id: result._id
+              birthday: result.birthday
         $setOnInsert:
           createdAt: new Date

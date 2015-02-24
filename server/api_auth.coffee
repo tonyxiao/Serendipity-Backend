@@ -17,10 +17,14 @@ Meteor.startup ->
       $set:
         firstName: userInfo.first_name
         about: userInfo.first_name
-        education: 'Harvard'
-        age: 23
-        location: 'mountain view, ca'
-        work: 'google'
+        education: FixtureService.randomSchool()
+        # TODO: Get data from facebook to actually populate
+        # TODO: Age should be computed, not stored, also omit height
+        age: FixtureService.randomAge()
+        height: FixtureService.randomHeight()
+        location: FixtureService.randomLocation()
+        work: FixtureService.randomJob()
+        gender: FixtureService.randomGender()
 
     # Update user photos if need be
     if not user.photoUrls?
