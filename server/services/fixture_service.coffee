@@ -1,9 +1,8 @@
 
 class @FixtureService
 
-  # See sample_tinder_recs.json
-  @importFromTinder: (data) ->
-    schools = [
+  @randomSchool: ->
+    _.sample [
       'Harvard'
       'Yale'
       'Princeton'
@@ -12,7 +11,9 @@ class @FixtureService
       'Dartmouth'
       'Penn'
     ]
-    locations = [
+
+  @randomLocation: ->
+    _.sample [
       'San Francisco, CA'
       'Mountain View, CA'
       'Palo Alto, CA'
@@ -23,7 +24,9 @@ class @FixtureService
       'Sunnyvale, CA'
       'Berkeley, CA'
     ]
-    jobs = [
+
+  @randomJob: ->
+    _.sample [
       'Google'
       'Goldman Sachs'
       'Shell'
@@ -33,6 +36,14 @@ class @FixtureService
       'Facebook'
     ]
 
+  @randomAge: ->
+    _.sample [19..35]
+
+  @randomHeight: ->
+    _.sample [150...210] # in cm
+
+  # See sample_tinder_recs.json
+  @importFromTinder: (data) ->
     for result in data.results
       console.log 'Will add user with name ' + result.name
       photosUrls = []
@@ -42,15 +53,17 @@ class @FixtureService
             photosUrls.push processedPhoto.url
 
       Users.upsert 'services.tinder._id': result._id,
-        firstName: result.name
-        about: result.bio
-        birthday: result.birthday
-        createdAt: new Date
-        photoUrls: photosUrls
-        education: _.sample schools
-        age: _.sample [19..35]
-        location: _.sample locations
-        work: _.sample jobs
-        services:
-          tinder:
-            _id: result._id
+        $set:
+          firstName: result.name
+          about: result.bio
+          birthday: result.birthday
+          photoUrls: photosUrls
+          education: @randomSchool()
+          age: @randomAge()
+          location: @randomLocation()
+          work: @randomJob()
+          services:
+            tinder:
+              _id: result._id
+        $setOnInsert:
+          createdAt: new Date
