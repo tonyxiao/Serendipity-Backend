@@ -65,7 +65,8 @@ Connections.helpers
       $set:
         lastMessageText: text
         expiresAt: expiresAt
-    # TODO: send push notification
+
+    recipient.sendTestPushMessage text
 
   removeAllMessages: ->
     Messages.remove

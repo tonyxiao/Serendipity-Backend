@@ -113,6 +113,8 @@ Users.helpers
       expiresAt: Connections.nextExpirationDate new Date
       type: connectionType
 
+    user.sendTestPushMessage "It's a Ketch! #{@firstName} also thinks highly of you :)"
+
   populateCandidateQueue: (maxCount) ->
     MatchService.generateMatchesForUser this, maxCount
 
