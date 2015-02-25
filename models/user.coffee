@@ -104,7 +104,7 @@ Users.helpers
       userId: user._id
 
   connectWithUser: (user, connectionType) ->
-    Connections.insert
+    connectionId = Connections.insert
       users: [
         {_id: @_id, hasUnreadMessage: false}
         {_id: user._id, hasUnreadMessage: true}
@@ -113,6 +113,7 @@ Users.helpers
       type: connectionType
 
     user.sendTestPushMessage "It's a Ketch! #{@firstName} also thinks highly of you :)"
+    return connectionId
 
   populateCandidateQueue: (maxCount) ->
     MatchService.generateMatchesForUser this, maxCount
