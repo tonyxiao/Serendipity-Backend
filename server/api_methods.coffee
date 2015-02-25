@@ -16,3 +16,4 @@ Meteor.methods
     connection = Connections.findOne connectionId
     if connection?
       connection.createNewMessage text, Meteor.user()
+      

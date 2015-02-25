@@ -67,8 +67,9 @@ template(name='userConnectionDetails')
         li
           b {{ firstName _id }} Info
         li Last Sent Message Date: #{ lastSentDate }
-        li Has Seen Connection: #{ hasSeenConnection }
         li Has Unread Message: #{ hasUnreadMessage }
+      .actions
+        button.mark-as-read Mark As Read for {{ firstName _id }}
 
     h2 Messages
     ol

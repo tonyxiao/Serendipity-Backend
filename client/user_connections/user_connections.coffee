@@ -39,3 +39,6 @@ Template.userConnectionDetails.events
   'click .set-expire-days': ->
     days = parseFloat $('#expire-days').val()
     Meteor.call 'connection/setExpireDays', @connection._id, days
+
+  'click .mark-as-read': ->
+    console.log this

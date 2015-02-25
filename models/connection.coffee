@@ -6,7 +6,6 @@ Connections.timestampable()
 Connections.attachSchema new SimpleSchema
   users: type: [Object]
   'users.$._id': type: String
-  'users.$.hasSeenConnection': type: Boolean
   'users.$.hasUnreadMessage': type: Boolean
   'users.$.lastSentDate': type: Date, optional: true
   expiresAt: type: Date
