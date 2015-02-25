@@ -66,10 +66,12 @@ class @FixtureService
           location: @randomLocation()
           work: @randomJob()
           gender: @randomGender()
-          services:
-            tinder:
-              _id: result._id
-              birthday: result.birthday
+# TODO: Figure out why we are getting error on heroku
+#  { [MongoError: The dotted field 'services.tinder._id' in 'services.tinder._id' is not valid for storage.] stack: [Getter] }
+#          services:
+#            tinder:
+#              _id: result._id
+#              birthday: result.birthday
         $setOnInsert:
           createdAt: new Date
 
