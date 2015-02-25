@@ -29,11 +29,12 @@ template(name='connectionDetails')
         ul
           li Last Sent Message Date: #{ lastSentDate }
           li Has Unread Message: #{ hasUnreadMessage }
+            button.mark-as-read Mark As Read
         .actions
           +with dereferenceUser this
             textarea.message-text
             button.send-message Send Message as #{ firstName }
-            button.mark-as-read Mark As Read
+
 
     h2 Messages
     ol
