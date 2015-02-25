@@ -93,5 +93,6 @@ Meteor.methods
   'import/tinder': (jsonText) ->
     try
       FixtureService.importFromTinder JSON.parse jsonText
-    catch
+    catch error
+      console.log error
       throw new Meteor.Error(400, 'Unable to import', 'Likely malformed json');
