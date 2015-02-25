@@ -7,6 +7,7 @@ apnConnection = new apn.Connection
   cert: path.join process.env.PWD, 'credentials', 'ketch_apns_sandbox.pem'
   key: path.join process.env.PWD, 'credentials', 'milasya_apns.pem'
   passphrase: process.env.APNS_KEY_PASSPHRASE
+  production: false
 
 class @PushService
 
