@@ -1,11 +1,14 @@
 
 Template.connectionDetails.helpers
-  readableType: (connection) ->
+  readableType: ->
     if @type == 'yes'
       return 'marry'
     if @type == 'maybe'
       return 'keep'
     return ''
+
+  expirationStatus: ->
+    if @isExpired() then 'expired' else 'not expired'
 
   dereferenceUser: (connectionUser) ->
     Users.findOne connectionUser._id

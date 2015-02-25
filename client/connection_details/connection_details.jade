@@ -4,7 +4,7 @@
 
 template(name='connectionDetails')
   .connection-details(data-connection-id=_id)
-    h1 Connection Details [{{ readableType }}]
+    h1 Connection Details [#{ readableType }] [#{ expirationStatus }]
 
     h2 Shared Info
     section.actions
