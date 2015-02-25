@@ -2,6 +2,15 @@
 # TODO: Make sure only authenticated users can call these methods
 
 Meteor.methods
+  'user/addPushToken': (pushToken) ->
+    # TODO: Convert this method into more generic addDevice
+    Meteor.user().addDevice
+      _id: pushToken
+      appId: 'co.ketchy.ketch'
+      apnEnvironment: 'development'
+      pushToken: pushToken
+      updatedAt: new Date
+
   'candidate/submitChoices': (choices) ->
     # TODO: Add validation for input params
     result = _.object _.map choices, (candidateId, choice) ->

@@ -18,6 +18,34 @@ Users.helpers
   profilePhotoUrl: ->
     return _.first @photoUrls
 
+  getDevice: (deviceId) ->
+    _.find @devices, (d) -> d._id == deviceId
+
+  addDevice: (device) ->
+    # TODO: Add validation for _id, pushToken, appId, apnEnvironment
+
+    if not @devices?
+      @devices = []
+    existingDevice = @getDevice device._id
+    if existingDevice?
+      # Modify in-memory
+      _.extend existingDevice, device
+      # Modify in-db
+      selector = _id: @_id, 'devices._id': device._id
+      modifier = _.object _.map device, (value, key) ->
+        ["users.$.#{key}", value]
+      Users.update selector, $set: modifier
+    else
+      @devices.push device
+      Users.update @_id, $push: devices: device
+
+  removeDevice: (device) ->
+    if @devices?
+      @devices = _.reject @devices, (d) -> d._id == device._id
+    Users.update @_id,
+      $pull: devices: _id: device._id
+
+
   previousCandidates: ->
     Candidates.find
       forUserId: @_id

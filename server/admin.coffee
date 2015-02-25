@@ -1,5 +1,22 @@
 # TODO: Consider prefixing admin methods with /admin
 Meteor.methods
+  'admin/user/addPushToken': (userId, pushToken) ->
+      # TODO: Convert this method into more generic addDevice
+    user = Users.findOne userId
+    if user?
+      user.addDevice
+        _id: pushToken
+        appId: 'co.ketchy.ketch'
+        apnEnvironment: 'development'
+        pushToken: pushToken
+        updatedAt: new Date
+
+  'admin/user/removePushToken': (userId, pushToken) ->
+    # TODO: Convert this method into more generic addDevice
+    user = Users.findOne userId
+    if user?
+      user.removeDevice _id: pushToken
+
   'user/clearPhotos': (userId) ->
     user = Users.findOne userId
     if user?

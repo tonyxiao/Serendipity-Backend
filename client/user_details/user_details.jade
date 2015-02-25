@@ -2,7 +2,7 @@
    Created by Tony on 2/22/15.
 
 template(name='userDetails')
-  .user-details
+  .user-details(data-user-id=_id)
     h1 #{ firstName } Profile
     +userNav
 
@@ -34,6 +34,16 @@ template(name='userDetails')
       button.clear-photos Clear Photos
       button.reload-fb-photos Reload Facebook Photos
 
+    section.devices
+      h2 Devices
+      ul
+        +each devices
+          li Id: #{ _id }
+          li Push Token: #{ _id }
+          li
+            button.remove-device Remove Device
+      textarea#push-token
+      button.add-push-token Add Push Token
     section.photos
       h2 Photos
       ul

@@ -31,8 +31,10 @@ Connections.helpers
       return Users.findOne recipientId
 
   setUserKeyValue: (user, key, value) ->
+    # First modify in memory
     info = _.find @users, (u) -> u._id == user._id
     info[key]  = value
+    # Then modify in db
     selector = _id: @_id, 'users._id': user._id
     modifier = {}
     modifier["users.$.#{key}"] = value
