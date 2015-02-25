@@ -55,7 +55,9 @@ class @FixtureService
           if processedPhoto.height == 640 and processedPhoto.width == 640
             photosUrls.push processedPhoto.url
 
-      Users.upsert 'services.tinder._id': result._id,
+      # TODO: Why doesn't this work on heroku? Users.upsert 'services.tinder._id': result._id,
+      # #  { [MongoError: The dotted field 'services.tinder._id' in 'services.tinder._id' is not valid for storage.] stack: [Getter] }
+      Users.upsert result._id,
         $set:
           firstName: result.name
           about: result.bio
@@ -66,12 +68,10 @@ class @FixtureService
           location: @randomLocation()
           work: @randomJob()
           gender: @randomGender()
-# TODO: Figure out why we are getting error on heroku
-#  { [MongoError: The dotted field 'services.tinder._id' in 'services.tinder._id' is not valid for storage.] stack: [Getter] }
-#          services:
-#            tinder:
-#              _id: result._id
-#              birthday: result.birthday
+          services:
+            tinder:
+              _id: result._id
+              birthday: result.birthday
         $setOnInsert:
           createdAt: new Date
 
