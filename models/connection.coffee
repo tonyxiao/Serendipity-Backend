@@ -66,7 +66,7 @@ Connections.helpers
         lastMessageText: text
         expiresAt: expiresAt
 
-    recipient.sendTestPushMessage text
+    recipient.sendTestPushMessage "#{sender.firstName}: #{text}"
 
   removeAllMessages: ->
     Messages.remove
