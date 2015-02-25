@@ -17,6 +17,11 @@ Meteor.methods
     if user?
       user.removeDevice _id: pushToken
 
+  'admin/user/sendPushMessage': (userId, pushMessage) ->
+    user = Users.findOne userId
+    if user?
+      user.sendTestPushMessage pushMessage
+
   'user/clearPhotos': (userId) ->
     user = Users.findOne userId
     if user?

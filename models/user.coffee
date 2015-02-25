@@ -45,6 +45,10 @@ Users.helpers
     Users.update @_id,
       $pull: devices: _id: device._id
 
+  # TODO: Make this generic
+  sendTestPushMessage: (message) ->
+    _.each @devices, (device) ->
+      PushService.sendTestMessage device.pushToken, message
 
   previousCandidates: ->
     Candidates.find

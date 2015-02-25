@@ -20,3 +20,8 @@ Template.userDetails.events
     pushToken = $('#push-token').val()
     Meteor.call 'admin/user/addPushToken', @_id, pushToken
     $('#push-token').val('')
+
+  'click .send-push-message': ->
+    pushMessage = $('#push-message').val()
+    Meteor.call 'admin/user/sendPushMessage', @_id, pushMessage
+    $('#push-message').val('')
