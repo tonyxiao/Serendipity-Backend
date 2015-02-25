@@ -51,7 +51,7 @@ Meteor.methods
       connection.removeAllMessages()
       connection.remove()
 
-  'connection/sendMessageAs': (userId, connectionId, text) ->
+  'connection/sendMessageAs': (connectionId, userId, text) ->
     connection = Connections.findOne connectionId
     sender = Users.findOne userId
     if connection? and sender?

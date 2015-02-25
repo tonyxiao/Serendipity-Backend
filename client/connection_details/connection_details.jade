@@ -1,0 +1,42 @@
+//
+   Created by Tony on 2/24/15.
+
+
+template(name='connectionDetails')
+  .connection-details(data-connection-id=_id)
+    h1 Connection Details [{{ readableType }}]
+
+    h2 Shared Info
+    section.actions
+      button.set-expire-days Set expire days from now
+      input#expire-days
+    ul
+      li Created At: #{ createdAt }
+      li Type: {{ readableType }}
+      li Last Message: #{ lastMessageText }
+      li Is Expired: #{ isExpired }
+      li Expires At: #{ expiresAt }
+      li Message Count: #{ messages.count }
+
+    h2 User Specific Info
+    +each users
+      .user-info
+        +with dereferenceUser this
+          a(href="/users/#{ _id }")
+            img.avatar(src=profilePhotoUrl)
+            span #{ firstName } Info
+
+        ul
+          li Last Sent Message Date: #{ lastSentDate }
+          li Has Unread Message: #{ hasUnreadMessage }
+        .actions
+          +with dereferenceUser this
+            textarea.message-text
+            button.send-message Send Message as #{ firstName }
+            button.mark-as-read Mark As Read
+
+    h2 Messages
+    ol
+      +each messages
+        li #{ sender.firstName } [#{ createdAt }]: #{ text }
+

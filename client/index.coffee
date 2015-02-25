@@ -21,11 +21,9 @@ Router.route '/users/:_id/previous_candidates', ->
 Router.route '/users/:_id/connections', ->
   @render 'userConnections', data: Users.findOne @params._id
 
-Router.route '/users/:_id/connections/:connectionId', ->
-  connection = Connections.findOne @params.connectionId
-  thisUser = Users.findOne @params._id
-  otherUser = connection.otherUser thisUser
-  @render 'userConnectionDetails', data: {thisUser: thisUser, otherUser: otherUser, connection: connection}
+Router.route '/connections/:_id', ->
+  connection = Connections.findOne @params._id
+  @render 'connectionDetails', data: connection
 
 Router.route '/import', ->
   @render 'importFixture'

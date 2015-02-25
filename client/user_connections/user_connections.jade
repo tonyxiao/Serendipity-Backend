@@ -5,7 +5,7 @@ template(name='_connectionList')
   ol
     +each this
       li
-        a(href='/users/#{ thisUser._id }/connections/#{ _id }')
+        a(href='/connections/#{ _id }')
           img.avatar(src=otherUser.profilePhotoUrl)
         span #{ otherUser.firstName }
         span Expires At: #{ expiresAt }
@@ -36,44 +36,3 @@ template(name='userConnections')
     section.connection-list.maybe-connections
       h3 Expired Keep
       +_connectionList expiredMaybeConnections
-
-
-
-
-template(name='userConnectionDetails')
-  .user-connection-details(data-connection-id=connection._id)
-    h1 #{ thisUser.firstName } Connection Details [{{ readableType connection }}]
-    +userNav thisUser
-    h2
-      span #{ thisUser.firstName }
-        img.avatar(src=thisUser.profilePhotoUrl)
-      span
-        button
-          a(href='/users/#{ otherUser._id}/connections/#{ connection._id}') ->
-      span #{ otherUser.firstName }
-        img.avatar(src=otherUser.profilePhotoUrl)
-    section.actions
-      button.set-expire-days Set expire days from now
-      input#expire-days
-    ul
-      li Created At: #{ connection.createdAt }
-      li Type: {{ readableType connection }}
-      li Last Message: #{ connection.lastMessageText }
-      li Is Expired: #{ connection.isExpired }
-      li Expires At: #{ connection.expiresAt }
-      li Message Count: #{ connection.messages.count }
-    +each connection.users
-      ul
-        li
-          b {{ firstName _id }} Info
-        li Last Sent Message Date: #{ lastSentDate }
-        li Has Unread Message: #{ hasUnreadMessage }
-      .actions
-        button.mark-as-read Mark As Read for {{ firstName _id }}
-
-    h2 Messages
-    ol
-      +each connection.messages
-        li #{ sender.firstName } [#{ createdAt }]: #{ text }
-    textarea#new-message
-    button.send-message Send Message

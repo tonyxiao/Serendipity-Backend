@@ -18,28 +18,3 @@ Template.userConnections.events
   'click .clear-all-connections': ->
     console.log this
     Meteor.call 'user/clearAllConnections', @_id
-
-Template.userConnectionDetails.helpers
-  readableType: (connection) ->
-    if connection.type == 'yes'
-      return 'marry'
-    if connection.type == 'maybe'
-      return 'keep'
-    return ''
-
-  firstName: (userId) ->
-    Users.findOne(userId).firstName
-
-Template.userConnectionDetails.events
-  'click .send-message': ->
-    text = $('#new-message').val()
-    Meteor.call 'connection/sendMessageAs', @thisUser._id, @connection._id, text
-    $('#new-message').val('') # Clear text field
-
-  'click .set-expire-days': ->
-    days = parseFloat $('#expire-days').val()
-    Meteor.call 'connection/setExpireDays', @connection._id, days
-
-  'click .mark-as-read': (event) ->
-    connectionId = $(event.target).closest('.user-connection-details').data('connection-id')
-    Meteor.call 'connection/markAsReadFor', connectionId, @_id
