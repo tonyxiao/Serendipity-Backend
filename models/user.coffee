@@ -8,8 +8,8 @@ Meteor.users.helpers = Mongo.Collection.prototype.helpers
 CollectionBehaviours.extendCollectionInstance(Meteor.users)
 
 @Users = Meteor.users
-Meteor.startup ->
-  Users.timestampable()
+#Meteor.startup ->
+#  Users.timestampable()
 
 # TODO: Add schema validation for user model
 

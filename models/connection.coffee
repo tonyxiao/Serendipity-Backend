@@ -1,8 +1,8 @@
 
 @Connections = new Mongo.Collection 'connections'
 
-Meteor.startup ->
-  Connections.timestampable()
+#Meteor.startup ->
+#  Connections.timestampable()
 
 # MARK: - Schema Validation
 Connections.attachSchema new SimpleSchema

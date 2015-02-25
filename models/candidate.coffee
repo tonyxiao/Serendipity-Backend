@@ -1,8 +1,8 @@
 
 @Candidates = new Mongo.Collection 'candidates'
 
-Meteor.startup ->
-  Candidates.timestampable()
+#Meteor.startup ->
+#  Candidates.timestampable()
 
 # MARK: - Schema Validation
 Candidates.attachSchema new SimpleSchema

@@ -1,8 +1,8 @@
 
 @Messages = new Mongo.Collection 'messages'
 
-Meteor.startup ->
-  Messages.timestampable()
+#Meteor.startup ->
+#  Messages.timestampable()
 
 # MARK: - Schema Validation
 Messages.attachSchema new SimpleSchema
