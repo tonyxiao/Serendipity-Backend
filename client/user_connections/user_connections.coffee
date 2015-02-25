@@ -40,5 +40,6 @@ Template.userConnectionDetails.events
     days = parseFloat $('#expire-days').val()
     Meteor.call 'connection/setExpireDays', @connection._id, days
 
-  'click .mark-as-read': ->
-    console.log this
+  'click .mark-as-read': (event) ->
+    connectionId = $(event.target).closest('.user-connection-details').data('connection-id')
+    Meteor.call 'connection/markAsReadFor', connectionId, @_id

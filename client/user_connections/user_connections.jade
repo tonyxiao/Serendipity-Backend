@@ -41,7 +41,7 @@ template(name='userConnections')
 
 
 template(name='userConnectionDetails')
-  .user-connection-details
+  .user-connection-details(data-connection-id=connection._id)
     h1 #{ thisUser.firstName } Connection Details [{{ readableType connection }}]
     +userNav thisUser
     h2

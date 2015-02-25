@@ -1,4 +1,6 @@
 
+# TODO: Make sure only authenticated users can call these methods
+
 Meteor.methods
   'candidate/submitChoices': (choices) ->
     # TODO: Add validation for input params
@@ -16,4 +18,8 @@ Meteor.methods
     connection = Connections.findOne connectionId
     if connection?
       connection.createNewMessage text, Meteor.user()
-      
+
+  'connection/markAsRead': (connectionId) ->
+    connection = Connections.findOne connectionId
+    if connection?
+      connection.setUserKeyValue Meteor.user(), 'hasUnreadMessage', false

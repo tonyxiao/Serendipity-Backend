@@ -1,4 +1,4 @@
-
+# TODO: Consider prefixing admin methods with /admin
 Meteor.methods
   'user/clearPhotos': (userId) ->
     user = Users.findOne userId
@@ -56,6 +56,12 @@ Meteor.methods
     sender = Users.findOne userId
     if connection? and sender?
       connection.createNewMessage text, sender
+
+  'connection/markAsReadFor': (connectionId, userId) ->
+    connection = Connections.findOne connectionId
+    user = Users.findOne userId
+    if connection? and user?
+      connection.setUserKeyValue user, 'hasUnreadMessage', false
 
   'connection/setExpireDays': (connectionId, expireDays) ->
     expiresAt = new Date
