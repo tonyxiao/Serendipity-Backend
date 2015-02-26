@@ -38,6 +38,10 @@ Meteor.publish 'connections', ->
           self.removed 'connections', connectionId
           self.removed 'users', connectedUsers[connectionId]
           delete connectedUsers[connectionId]
+      changed: (connectionId) ->
+        if !initializing
+          connection = Connections.findOne(connectionId)
+          self.changed 'connections', connection._id, connection.clientView(currentUser)
     )
     initializing = false
 

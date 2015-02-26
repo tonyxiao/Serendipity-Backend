@@ -30,9 +30,12 @@ Connections.helpers
       recipientId = _.without(userIds, thisUser._id)[0]
       return Users.findOne recipientId
 
+  getUserInfo: (user) ->
+    _.find @users, (u) -> u._id == user._id
+
   setUserKeyValue: (user, key, value) ->
     # First modify in memory
-    info = _.find @users, (u) -> u._id == user._id
+    info = @getUserInfo user
     info[key]  = value
     # Then modify in db
     selector = _id: @_id, 'users._id': user._id
@@ -76,6 +79,8 @@ Connections.helpers
   clientView: (refUser) ->
     view = _.clone this
     view.otherUserId = @otherUser(refUser)._id
+    view.hasUnreadMessage = @getUserInfo(refUser).hasUnreadMessage
+    delete view.users
     return view
 
 Connections.nextExpirationDate = (relativeDate) ->
