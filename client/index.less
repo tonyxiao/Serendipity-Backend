@@ -1,8 +1,13 @@
 // Global Stuff
+html {
+  font-size: 16px;
+}
+
 section {
   margin: 20px;
 }
 ul {
+  padding: 0;
   li {
     list-style: none;
   }
@@ -13,11 +18,26 @@ a {
   text-decoration: none;
 }
 
+button {
+  padding: 5px 10px;
+  margin-right: 10px;
+
+  &:last-of-type {
+    margin-right: 0;
+  }
+}
+
 // Navigation
 .user-nav {
+  .timestamp {
+    font-size: .85rem;
+    margin-bottom: 10px;
+  }
   img.small-avatar {
     width: 80px;
     height: 80px;
+    display: block;
+    margin: 10px 0;
   }
 }
 

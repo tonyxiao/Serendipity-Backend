@@ -1,6 +1,13 @@
 .user-details {
   margin: 10px;
+  h1 {
+    margin-left: 20px;
+  }
   .info {
+    h2 {margin-bottom: 0;}
+    ul {
+      padding: 0;
+    }
     li {
       margin-bottom: 5px;
     }
@@ -17,15 +24,36 @@
       color: blue;
     }
   }
+  .devices {
+    overflow: hidden;
+    margin-bottom: 30px;
+    #push-token, #push-message {
+      display: block;
+      width: 30%;
+      margin-right: 50px;
+      float: left;
+      textarea {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+  }
   .photos {
+    ul {
+      overflow: hidden;
+    }
     li {
       display: inline;
       float: left;
       margin: 5px;
-    }
-    img {
       width: 320px;
       height: 320px;
+    }
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
   }
 }

@@ -3,18 +3,18 @@
 
 template(name='userDetails')
   .user-details(data-user-id=_id)
-    h1 #{ firstName } Profile
+    h1 #{ firstName }’s Profile
     +userNav
 
     section.info
       h2 Info
       ul
-        li Work: #{ work }
-        li Education: #{ education }
-        li Age: #{ age }
-        li Created At: #{ createdAt }
-        li Updated At: #{ updatedAt }
-        li About:
+        li <strong>Work:</strong> #{ work }
+        li <strong>Education:</strong> #{ education }
+        li <strong>Age:</strong> #{ age }
+        li <strong>Created At:</strong> #{ createdAt }
+        li <strong>Updated At:</strong> #{ updatedAt }
+        li <strong>About:</strong>
           p #{ about }
 
     section.fb-info
@@ -42,10 +42,12 @@ template(name='userDetails')
           li Push Token: #{ _id }
           li
             button.remove-device Remove Device
-      textarea#push-token
-      button.add-push-token Add Push Token
-      textarea#push-message
-      button.send-push-message Send Push Message
+      #push-token
+        textarea
+        button.add-push-token Add Push Token
+      #push-message
+        textarea
+        button.send-push-message Send Push Message
     section.photos
       h2 Photos
       ul

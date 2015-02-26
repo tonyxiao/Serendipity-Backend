@@ -6,9 +6,8 @@ head
 body
 
 template(name='userNav')
-  span Current Date: #{ CurrentDate }
   section.user-nav
-    img.small-avatar(src=profilePhotoUrl)
+    div.timestamp Current Date: #{ CurrentDate }
     button
       a(href='/users') Back to user list
     button
@@ -19,6 +18,7 @@ template(name='userNav')
       a(href='/users/#{ _id }/previous_candidates') Show Previous Candidates
     button
       a(href='/users/#{ _id }/connections') Show Connections
+    img.small-avatar(src=profilePhotoUrl)
 
 template(name='importFixture')
   section.import

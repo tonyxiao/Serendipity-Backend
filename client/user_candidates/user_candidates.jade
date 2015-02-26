@@ -5,21 +5,22 @@ template(name='_candidateList')
   ol
     +each this
       li
-        a(href='/users/#{ user._id }')
-          img.avatar(src=user.profilePhotoUrl)
-        span #{ user.firstName }
+        a.avatar(href='/users/#{ user._id }')
+          img(src=user.profilePhotoUrl)
+        span #{ user.firstName }’s
         span Id: #{ _id }
         span Updated At #{ updatedAt }
         button.remove-candidate Remove
         button.create-inverse Add me to their queue
+        br
         .my-choice
-          span My Choice:
+          span #{ forUser.firstName }’s Choice:
             b #{ choice }
           button.say-yes Say YES!
           button.say-maybe Say Maybe...
           button.say-no Say no :(
         .their-choice
-          span Their Choice:
+          span #{ user.firstName }’s Choice:
             b #{ findInverse.choice }
           button.say-yes Say YES!
           button.say-maybe Say Maybe...
@@ -27,7 +28,7 @@ template(name='_candidateList')
 
 template(name='userCandidates')
   .user-candidates
-    h1 #{ firstName } Candidates
+    h1 #{ firstName }’s Candidates
     +userNav
 
     section.actions
@@ -41,7 +42,7 @@ template(name='userCandidates')
 
 template(name='userPreviousCandidates')
   .user-candidates
-    h1 #{ firstName } Previous Candidates
+    h1 #{ firstName }’s Previous Candidates
     +userNav
 
     section.previous-candidates
