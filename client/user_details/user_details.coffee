@@ -17,11 +17,11 @@ Template.userDetails.events
     Meteor.call 'admin/user/removePushToken', userId, @_id
 
   'click .add-push-token': ->
-    pushToken = $('#push-token textarea').val()
-    Meteor.call 'admin/user/addPushToken', @_id, pushToken
-    $('#push-token').val('')
+    textarea = $('#push-token textarea')
+    Meteor.call 'admin/user/addPushToken', @_id, textarea.val()
+    textarea.val('')
 
   'click .send-push-message': ->
-    pushMessage = $('#push-message textarea').val()
-    Meteor.call 'admin/user/sendPushMessage', @_id, pushMessage
-    $('#push-message').val('')
+    textarea = $('#push-message textarea')
+    Meteor.call 'admin/user/sendPushMessage', @_id, textarea.val()
+    textarea.val('')
