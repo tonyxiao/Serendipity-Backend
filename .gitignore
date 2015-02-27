@@ -1,4 +1,4 @@
 .idea/
-
+env_local.sh
 *.swp
 .env
