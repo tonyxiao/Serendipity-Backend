@@ -57,7 +57,8 @@ class @FixtureService
 
       # TODO: Why doesn't this work on heroku? Users.upsert 'services.tinder._id': result._id,
       # #  { [MongoError: The dotted field 'services.tinder._id' in 'services.tinder._id' is not valid for storage.] stack: [Getter] }
-      Users.upsert 'services.tinder._id': result._id,
+      Users.update
+        'services.tinder._id': result._id,
         $set:
           firstName: result.name
           about: result.bio
@@ -74,5 +75,6 @@ class @FixtureService
               birthday: result.birthday
         $setOnInsert:
           createdAt: new Date
+        {upsert: true}
 
     return data.results.length
