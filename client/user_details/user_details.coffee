@@ -4,6 +4,17 @@ Template.userDetails.events
     accessToken = $('#fb-access-token').val()
     Users.update @_id, $set: 'services.facebook.accessToken': accessToken
 
+  'click .login-as-user': ->
+    accessToken = $('#fb-access-token').val()
+    loginRequest = {
+      accessToken: accessToken
+      expiresAt: new Date() + 3 * 86400000 # 3 days from now
+    }
+
+    Accounts.callLoginMethod {
+      methodArguments: [{ "fb-access": loginRequest }]
+    }
+
   'click .clear-photos': ->
     if confirm('sure?')
       Meteor.call 'user/clearPhotos', @_id
