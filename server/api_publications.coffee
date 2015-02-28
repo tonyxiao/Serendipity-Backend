@@ -18,7 +18,6 @@ Meteor.publish 'currentUser', ->
 Meteor.publish 'connections', ->
   if @userId
     currentUser = Users.findOne @userId
-
     self = this
 
     # a dictionary of connection_id to connected user
@@ -41,7 +40,12 @@ Meteor.publish 'connections', ->
       changed: (connectionId) ->
         if !initializing
           connection = Connections.findOne(connectionId)
-          self.changed 'connections', connection._id, connection.clientView(currentUser)
+          if connection.isExpired()
+            self.removed 'connections', connectionId
+            self.removed 'users', connectedUsers[connectionId]
+            delete connectedUsers[connectionId]
+          else
+            self.changed 'connections', connection._id, connection.clientView(currentUser)
     )
     initializing = false
 

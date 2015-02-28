@@ -35,7 +35,7 @@ Router.route '/(.*)', ->
 ## Global Template Helpers
 
 Template.registerHelper 'CurrentDate', ->
-  CurrentDate.get()
+  new Date
 
 ## Import Event Handling
 

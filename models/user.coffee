@@ -64,31 +64,36 @@ Users.helpers
   allCandidates: ->
     Candidates.find forUserId: @_id
 
-  filterConnections: (active, type) ->
-    # TODO: Make currentDate a reactive data source
+  filterConnections: (type, expired) ->
     selector = 'users._id': @_id
-    if active == true
-      selector.expiresAt = $gt: CurrentDate.get()
-    else if active == false
-      selector.expiresAt = $lte: CurrentDate.get()
+    if expired
+      selector.expired = true
+    else
+      selector.expired = $ne : true
     if type?
       selector.type = type
     return Connections.find selector
 
+  activeConnections: ->
+    selector = 'users._id': @_id
+    selector.expired = $ne: true
+    return Connections.find selector
+
   activeYesConnections: ->
-    @filterConnections true, 'yes'
+    @filterConnections 'yes'
 
   expiredYesConnections: ->
-    @filterConnections false, 'yes'
+    @filterConnections 'yes', true
 
   activeMaybeConnections: ->
-    @filterConnections true, 'maybe'
+    @filterConnections 'maybe'
 
   expiredMaybeConnections: ->
-    @filterConnections false, 'maybe'
+    @filterConnections 'maybe', true
 
   allConnections: ->
-    @filterConnections()
+    selector = 'users._id': @_id
+    return Connections.find selector
 
   allMessages: ->
     Messages.find

@@ -9,6 +9,7 @@ Connections.attachSchema new SimpleSchema
   'users.$.hasUnreadMessage': type: Boolean
   'users.$.lastSentDate': type: Date, optional: true
   expiresAt: type: Date
+  expired: type: Boolean
   lastMessageText: type: String, optional: true
   type:
     type: String
@@ -18,7 +19,7 @@ Connections.attachSchema new SimpleSchema
 Connections.helpers
 
   isExpired: ->
-    @expiresAt < CurrentDate.get()
+    @expired
 
   messages: ->
     Messages.find

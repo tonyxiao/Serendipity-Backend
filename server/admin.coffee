@@ -88,7 +88,13 @@ Meteor.methods
   'connection/setExpireDays': (connectionId, expireDays) ->
     expiresAt = new Date
     expiresAt.setTime(expiresAt.getTime() + expireDays * 24 * 60 * 60 * 1000)
-    Connections.update connectionId, $set: expiresAt: expiresAt
+
+    expired = expiresAt < new Date
+
+    Connections.update connectionId,
+      $set:
+        expiresAt: expiresAt
+        expired: expired
 
   'import/tinder': (jsonText) ->
     try
