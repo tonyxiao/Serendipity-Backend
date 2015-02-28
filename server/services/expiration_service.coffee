@@ -3,9 +3,12 @@ class @ExpirationService
 
   @expireConnections: (currentDate) ->
     Connections.update {
-        $and:
-          expired: $ne: true
-          expiresAt: $lte: currentDate
+        $and: [{
+          expired:
+            $ne: true
+          expiresAt:
+            $lte: currentDate
+        }]
       }, {
         $set:
           expired: true
