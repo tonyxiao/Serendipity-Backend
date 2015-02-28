@@ -4,8 +4,8 @@ path = Npm.require 'path'
 
 # TODO: Make this work for multiple apnEnvironments
 apnConnection = new apn.Connection
-  cert: path.join process.env.PWD, 'credentials', 'ketch_apns_sandbox.pem'
-  key: path.join process.env.PWD, 'credentials', 'milasya_apns.pem'
+  cert: path.join process.env.PWD, 'credentials', 'apns_sandbox-com.milasya.ketch.dev.cert.pem'
+  key: path.join process.env.PWD, 'credentials', 'milasya_apns.key.pem'
   passphrase: process.env.APNS_KEY_PASSPHRASE
   production: false
 
