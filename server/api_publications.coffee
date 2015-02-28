@@ -23,7 +23,7 @@ Meteor.publish 'connections', ->
     # a dictionary of connection_id to connected user
     connectedUsers = {}
     initializing = true
-    handle = Users.findOne(@userId).allConnections().observeChanges(
+    handle = Users.findOne(@userId).activeConnections().observeChanges(
       added: (connectionId) ->
         if !initializing
           connection = Connections.findOne(connectionId)
@@ -49,7 +49,7 @@ Meteor.publish 'connections', ->
     )
     initializing = false
 
-    currentUserConnections = Users.findOne(@userId).allConnections().fetch()
+    currentUserConnections = Users.findOne(@userId).activeConnections().fetch()
     currentUserConnections.forEach (connection) ->
       otherUser = connection.otherUser currentUser
       self.added 'connections', connection._id, connection.clientView(currentUser)
