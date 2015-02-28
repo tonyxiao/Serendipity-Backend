@@ -22,7 +22,3 @@ Meteor.publish 'allConnections', ->
 
 Meteor.publish 'allMessages', ->
   Messages.find()
-
-Meteor.methods
-  importFixtureFromTinder: (jsonStr) ->
-    FixtureService.importFromTinder JSON.parse(jsonStr)
