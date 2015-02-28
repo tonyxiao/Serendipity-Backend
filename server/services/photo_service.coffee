@@ -21,7 +21,19 @@ class @FacebookPhotoService
     graphGet = Meteor.wrapAsync(graph.get)
 
     # TODO: Use profile photos, not just photos of me
-    res = graphGet('/me/photos').data
+    profilePicturesAlbum = graphGet('/me/albums').data
+
+    profilePicAlbumId = null
+    profilePicturesAlbum.forEach (album) ->
+      if album.name == "Profile Pictures"
+        console.log "profile pic album found"
+        profilePicAlbumId = album.id
+
+    # if the user does not have a profile picture album, default to photos of them.
+    if profilePicAlbumId == null
+      res = graphGet('/me/photos').data
+    else
+      res = graphGet(util.format('%s/photos', profilePicAlbumId)).data
 
     console.log "Will import facebook photos for #{user._id} : #{user.firstName}"
     imagesToDownload = []
@@ -52,7 +64,7 @@ class @FacebookPhotoService
       onComplete = future.resolver()
       # TODO: Is it safe to assume jpg image?
       writeStream = client.upload
-        container: process.env.AZURE_CONTAINER or 's10-dev'
+        container: process.env.AZURE_CONTAINER or 'ketch-dev'
         remote: util.format('%s/%s.jpg', user._id, image.id)
         contentType: 'image/jpeg'
 
