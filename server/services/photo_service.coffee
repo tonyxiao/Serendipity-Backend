@@ -3,14 +3,14 @@ Future = Npm.require('fibers/future')
 gm = Meteor.npmRequire('gm').subClass(imageMagick: true)
 request = Meteor.npmRequire('request')
 util = Npm.require('util')
-PHOTO_COUNT = process.env.DEFAULT_PHOTO_COUNT or 4
-IMAGE_SIZE = process.env.DEFAULT_IMAGE_SIZE or 640
+PHOTO_COUNT = Meteor.settings.DEFAULT_PHOTO_COUNT or 4
+IMAGE_SIZE = Meteor.settings.DEFAULT_IMAGE_SIZE or 640
 graph = Meteor.npmRequire('fbgraph')
 
 client = Meteor.npmRequire('pkgcloud').storage.createClient
   provider: 'azure'
-  storageAccount: process.env.AZURE_ACCOUNTID or ''
-  storageAccessKey: process.env.AZURE_ACCESSKEY or ''
+  storageAccount: Meteor.settings.AZURE_ACCOUNTID or ''
+  storageAccessKey: Meteor.settings.AZURE_ACCESSKEY or ''
 
 
 class @FacebookPhotoService
@@ -64,7 +64,7 @@ class @FacebookPhotoService
       onComplete = future.resolver()
       # TODO: Is it safe to assume jpg image?
       writeStream = client.upload
-        container: process.env.AZURE_CONTAINER or 'ketch-dev'
+        container: Meteor.settings.AZURE_CONTAINER or 'ketch-dev'
         remote: util.format('%s/%s.jpg', user._id, image.id)
         contentType: 'image/jpeg'
 

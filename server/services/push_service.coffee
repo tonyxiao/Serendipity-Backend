@@ -4,9 +4,9 @@ path = Npm.require 'path'
 
 # TODO: Make this work for multiple apnEnvironments
 apnConnection = new apn.Connection
-  cert: path.join process.env.PWD, 'credentials', 'apns_sandbox-com.milasya.ketch.dev.cert.pem'
-  key: path.join process.env.PWD, 'credentials', 'milasya_apns.key.pem'
-  passphrase: process.env.APNS_KEY_PASSPHRASE
+  cert: path.join Meteor.settings.PWD, 'credentials', 'apns_sandbox-com.milasya.ketch.dev.cert.pem'
+  key: path.join Meteor.settings.PWD, 'credentials', 'milasya_apns.key.pem'
+  passphrase: Meteor.settings.APNS_KEY_PASSPHRASE
   production: false
 
 class @PushService
