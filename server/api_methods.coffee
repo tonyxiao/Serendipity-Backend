@@ -2,12 +2,11 @@
 # TODO: Make sure only authenticated users can call these methods
 
 Meteor.methods
-  'user/addPushToken': (pushToken) ->
-    # TODO: Convert this method into more generic addDevice
+  'user/addPushToken': (appid, apnEnvironment, pushToken) ->
     Meteor.user().addDevice
       _id: pushToken
-      appId: 'co.ketchy.ketch'
-      apnEnvironment: 'development'
+      appId: appid
+      apnEnvironment: apnEnvironment
       pushToken: pushToken
       updatedAt: new Date
 

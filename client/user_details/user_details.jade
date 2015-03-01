@@ -42,6 +42,8 @@ template(name='userDetails')
         +each devices
           li Id: #{ _id }
           li Push Token: #{ _id }
+          li APN Env: #{ apnEnvironment }
+          li App ID: #{ appId }
           li
             button.remove-device Remove Device
       #push-token

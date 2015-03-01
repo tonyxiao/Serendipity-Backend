@@ -48,7 +48,7 @@ Users.helpers
   # TODO: Make this generic
   sendTestPushMessage: (message) ->
     _.each @devices, (device) ->
-      PushService.sendTestMessage device.pushToken, message
+      PushService.sendTestMessage device.pushToken, device.apnEnvironment, device.appId, message
 
   previousCandidates: ->
     Candidates.find
