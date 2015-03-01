@@ -9,7 +9,7 @@ class @ExpirationService
       ]
     }, {
       $set:
-        "expired": true
+        expired: true
     }
 
 Meteor.setInterval ->

@@ -9,6 +9,7 @@ Connections.attachSchema new SimpleSchema
   'users.$.hasUnreadMessage': type: Boolean
   'users.$.lastSentDate': type: Date, optional: true
   expiresAt: type: Date
+  expired: type: Boolean, optional: true
   lastMessageText: type: String, optional: true
   type:
     type: String
