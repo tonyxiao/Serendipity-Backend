@@ -16,7 +16,7 @@ class @FixtureService
   @mostRecentSchool: (schools) ->
     mostRecent = undefined
     schools.forEach (school) ->
-      if school? && school.year.name? && school.school.name?
+      if school? && school.year? && school.year.name? && school.school.name?
         if mostRecent == undefined || school.year.name > mostRecent.year.name
           mostRecent = school
     return mostRecent
