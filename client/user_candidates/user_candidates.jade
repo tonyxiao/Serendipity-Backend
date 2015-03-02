@@ -38,7 +38,7 @@ template(name='userCandidates')
       button.clear-queue Clear Candidate Queue
 
       +if loggedInUser
-        button.add-logged-in-user-to-queue Add #{loggedInUser.firstName} (and 2 random users) to Queue :P
+        button.add-logged-in-user-to-queue Add #{loggedInUser.firstName} and #{firstName} to eachother's Queues
 
     section.candidate-queue
       +_candidateList candidateQueue

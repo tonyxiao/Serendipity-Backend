@@ -28,9 +28,11 @@ Template.userCandidates.events
   'click .add-logged-in-user-to-queue': ->
     if confirm('sure?')
       Meteor.call 'candidate/new', @_id, Meteor.user()._id
+      Meteor.call 'candidate/new', Meteor.user()._id, @_id
       # add 2 additional users to make sure that the currently logged in user will be able
       # to play a game
       Meteor.call 'user/populateCandidateQueue', @_id, 2
+      Meteor.call 'user/populateCandidateQueue', Meteor.user()._id, 2
 
   'click .populate-queue': ->
     if confirm('sure?')

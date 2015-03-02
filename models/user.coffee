@@ -104,9 +104,14 @@ Users.helpers
 
   addUserAsCandidate: (userId) ->
     # TODO: Handle error, make more efficient
-    Candidates.insert
+    candidate = Candidates.find
       forUserId: @_id
       userId: userId
+
+    if candidate.fetch().length == 0
+      Candidates.insert
+        forUserId: @_id
+        userId: userId
 
   connectWithUser: (user, connectionType) ->
     connectionId = Connections.insert
