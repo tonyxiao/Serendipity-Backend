@@ -32,10 +32,10 @@ Meteor.methods
     if user?
       user.reloadPhotosFromFacebook()
 
-  'user/populateCandidateQueue': (userId) ->
+  'user/populateCandidateQueue': (userId, numCandidates) ->
     user = Users.findOne userId
     if user?
-      user.populateCandidateQueue()
+      user.populateCandidateQueue(numCandidates)
 
   'user/clearCandidateQueue': (userId) ->
     user = Users.findOne userId
