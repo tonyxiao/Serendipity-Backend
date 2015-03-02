@@ -137,6 +137,11 @@ Users.helpers
   clearAllCandidates: ->
     Candidates.remove forUserId: @_id
 
+  clearPreviousCandidates: ->
+    Candidates.remove
+      forUserId: @_id
+      choice: $ne: null
+
   clearAllConnections: ->
     @clearAllMessages()
     Connections.remove 'users._id': @_id

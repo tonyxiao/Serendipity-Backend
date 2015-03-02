@@ -42,6 +42,11 @@ Meteor.methods
     if user?
       user.clearCandidateQueue()
 
+  'user/clearPreviousCandidates': (userId) ->
+    user = Users.findOne userId
+    if user?
+      user.clearPreviousCandidates()
+
   'user/clearAllConnections': (userId) ->
     user = Users.findOne userId
     if user?

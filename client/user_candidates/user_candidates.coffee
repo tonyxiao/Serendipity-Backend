@@ -40,3 +40,8 @@ Template.userCandidates.events
     if confirm('sure?')
       Meteor.call 'user/clearCandidateQueue', @_id
 
+Template.userPreviousCandidates.events
+  'click .clear-previous-candidates': ->
+    if confirm("sure?")
+      Meteor.call 'user/clearPreviousCandidates', @_id
+
