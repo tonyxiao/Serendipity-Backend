@@ -25,6 +25,10 @@ Template._candidateList.events
     Meteor.call 'candidate/makeChoiceForInverse', @_id, 'maybe'
 
 Template.userCandidates.events
+  'click .replace-with-logged-in-user': ->
+    if confirm('sure?')
+      Meteor.call 'candidate/new', @_id, Meteor.user()._id
+
   'click .populate-queue': ->
     if confirm('sure?')
       Meteor.call 'user/populateCandidateQueue', @_id

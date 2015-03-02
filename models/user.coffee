@@ -102,11 +102,11 @@ Users.helpers
         { recipientId: @_id }
       ]
 
-  addUserAsCandidate: (user) ->
+  addUserAsCandidate: (userId) ->
     # TODO: Handle error, make more efficient
     Candidates.insert
       forUserId: @_id
-      userId: user._id
+      userId: userId
 
   connectWithUser: (user, connectionType) ->
     connectionId = Connections.insert

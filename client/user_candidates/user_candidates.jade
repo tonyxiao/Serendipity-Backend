@@ -11,7 +11,8 @@ template(name='_candidateList')
         span Id: #{ _id }
         span Updated At #{ updatedAt }
         button.remove-candidate Remove
-        button.create-inverse Add me to their queue
+        //button.create-inverse Add #{forUser.firstName} to #{user.firstName}'s queue
+
         br
         .my-choice
           span #{ forUser.firstName }’s Choice:
@@ -36,9 +37,11 @@ template(name='userCandidates')
       button.populate-queue Populate Candidate Queue
       button.clear-queue Clear Candidate Queue
 
+      +if loggedInUser
+        button.replace-with-logged-in-user Add #{loggedInUser.firstName} to Queue :P
+
     section.candidate-queue
       +_candidateList candidateQueue
-
 
 template(name='userPreviousCandidates')
   .user-candidates

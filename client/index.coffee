@@ -37,6 +37,9 @@ Router.route '/(.*)', ->
 Template.registerHelper 'CurrentDate', ->
   new Date
 
+Template.registerHelper 'loggedInUser', ->
+  Meteor.user()
+
 ## Import Event Handling
 
 Template.importFixture.events

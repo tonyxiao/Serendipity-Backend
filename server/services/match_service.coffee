@@ -16,4 +16,4 @@ class @MatchService
     }).fetch()
 
     for matchedUser in matchedUsers
-      user.addUserAsCandidate matchedUser
+      user.addUserAsCandidate matchedUser._id

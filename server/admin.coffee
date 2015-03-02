@@ -67,6 +67,11 @@ Meteor.methods
     if candidate?
       candidate.createInverse()
 
+  'candidate/new': (forUserId, candidateUserId) ->
+    console.log(forUserId + " " + candidateUserId)
+    forUser = Users.findOne forUserId
+    forUser.addUserAsCandidate(candidateUserId)
+
   'connection/remove': (connectionId) ->
     connection = Connections.findOne connectionId
     if connection?

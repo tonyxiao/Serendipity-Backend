@@ -4,21 +4,7 @@ head
   title Ketchy Ketch
 
 body
-
-template(name='userNav')
-  section.user-nav
-    div.timestamp Current Date: #{ CurrentDate }
-    button
-      a(href='/users') Back to user list
-    button
-      a(href='/users/#{ _id }') Show Profile
-    button
-      a(href='/users/#{ _id }/candidates') Show Candidates
-    button
-      a(href='/users/#{ _id }/previous_candidates') Show Previous Candidates
-    button
-      a(href='/users/#{ _id }/connections') Show Connections
-    img.small-avatar(src=profilePhotoUrl)
+  +footer
 
 template(name='importFixture')
   section.import
