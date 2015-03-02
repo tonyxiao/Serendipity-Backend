@@ -37,3 +37,7 @@ Template.userDetails.events
     textarea = $('#push-message textarea')
     Meteor.call 'admin/user/sendPushMessage', @_id, textarea.val()
     textarea.val('')
+
+  'click .delete-user': ->
+    if confirm('sure?')
+      Meteor.call 'admin/user/remove', @_id
