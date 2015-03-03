@@ -43,6 +43,13 @@ Template.registerHelper 'loggedInUser', ->
 ## Import Event Handling
 
 Template.importFixture.events
+  'click .remove-all-fake-data': ->
+    if confirm ("sure?")
+      _.each Users.find().fetch(), (u) ->
+        if (u.services.tinder)
+          console.log "will delete " + u._id + " " + u.firstName
+          Users.remove u._id
+
   'click .import-submit': ->
     jsonText = $('#json-text').val()
     $('#json-text').val('')
