@@ -47,8 +47,8 @@ Template.importFixture.events
     if confirm ("sure?")
       _.each Users.find().fetch(), (u) ->
         if (u.services.tinder)
-          console.log "will delete " + u._id + " " + u.firstName
-          Users.remove u._id
+          console.log "will delete #{u._id} #{u.firstName}"
+          Meteor.call 'admin/user/remove', u._id
 
   'click .import-submit': ->
     jsonText = $('#json-text').val()
