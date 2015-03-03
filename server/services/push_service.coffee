@@ -26,18 +26,20 @@ class @PushService
     note = new apn.Notification
     note.expiry = Math.floor(Date.now() / 1000) + 3600 # expires 1 hour from now
     note.alert = message
+    note.badge = 1
+    note.sound = 'default'
     device = new apn.Device pushToken
 
     apnConnection = null
 
-    if apnEnvironment == "production" && appId == "com.milasya.ketch"
+    if apnEnvironment == 'production' && appId == 'com.milasya.ketch'
       apnConnection = prodApnConnection
-    else if apnEnvironment == "production" && appId == "com.milasya.ketch.beta"
+    else if apnEnvironment == 'production' && appId == 'com.milasya.ketch.beta'
       apnConnection = betaApnConnection
-    else if apnEnvironment == "development" && appId == "com.milasya.ketch.dev"
+    else if apnEnvironment == 'development' && appId == 'com.milasya.ketch.dev'
       apnConnection = devApnConnection
 
     if apnConnection == null
-      console.log "No ApnConnection found for environment " + apnEnvironment + " and appId " + appId
+      console.log "No ApnConnection found for environment #{apnEnvironment} and appId #{appId}"
     else
       apnConnection.pushNotification note, device
