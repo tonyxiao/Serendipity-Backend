@@ -8,7 +8,7 @@ Meteor.users.allow
   update: ->
     true
   remove: ->
-  true
+    true
 
 # Publish all documents
 Meteor.publish 'allUsers', ->
