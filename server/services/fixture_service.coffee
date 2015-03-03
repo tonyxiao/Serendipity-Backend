@@ -96,6 +96,10 @@ class @FixtureService
             images.push new Image imageId, result._id, 640, 640, processedPhoto.url
 
       azureUrls = fbPhotoService.copyPhotosToAzure(images)
+
+      # TODO: not sleeping sometimes results in the meteor server getting stuck. Since
+      # this is only a tool for debugging, I added 200ms of sleep, which seems to fix the
+      # problem. A separate task would be to figure out why this is the case.
       sleep.usleep(200 * 1000) # 200 ms
 
       # TODO: Why doesn't this work on heroku? Users.upsert 'services.tinder._id': result._id,
