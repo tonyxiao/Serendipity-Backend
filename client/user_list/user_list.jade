@@ -3,6 +3,8 @@
 
 template(name='userList')
   .user-list
+    h1 Search
+      input.text(id="search")
     ul
       +each users
         li
