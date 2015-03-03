@@ -7,15 +7,80 @@ PHOTO_COUNT = Meteor.settings.DEFAULT_PHOTO_COUNT or 4
 IMAGE_SIZE = Meteor.settings.DEFAULT_IMAGE_SIZE or 640
 graph = Meteor.npmRequire('fbgraph')
 
-client = Meteor.npmRequire('pkgcloud').storage.createClient
-  provider: 'azure'
-  storageAccount: Meteor.settings.AZURE_ACCOUNTID or ''
-  storageAccessKey: Meteor.settings.AZURE_ACCESSKEY or ''
+class @Image
+  constructor: (id, userId, width, height, source) ->
+    @id = id
+    @userId = userId
+    @width = width
+    @height = height
+    @source = source
+
+  remoteId: ->
+    util.format('%s/%s.jpg', @userId, @id)
 
 
 class @FacebookPhotoService
 
-  @importPhotosForUser: (user) ->
+  constructor: (containerUrl) ->
+    @containerUrl = containerUrl
+    @client = Meteor.npmRequire('pkgcloud').storage.createClient
+      provider: 'azure'
+      storageAccount: Meteor.settings.AZURE_ACCOUNTID or ''
+      storageAccessKey: Meteor.settings.AZURE_ACCESSKEY or ''
+
+  getFileURL: (file) ->
+    util.format('%s%s.%s/%s/%s', @client.protocol, @client.config.storageAccount,
+      @client.serversUrl, file.container, file.name)
+
+  # @return a list of azure photo URLs
+  copyPhotosToAzure: (imagesToDownload) ->
+    # needed otherwise scoping doesn't work well
+    self = this
+    client = @client
+
+    futures = _.map imagesToDownload, (image) ->
+      future = new Future
+      onComplete = future.resolver()
+
+      client.getFile self.containerUrl or 'ketch-dev',
+        image.remoteId(), (err, file) ->
+          if file?
+            console.log "image " + image.remoteId() + " exists. Not importing"
+            onComplete err, self.getFileURL file
+          else
+            writeStream = client.upload
+              container: self.containerUrl or 'ketch-dev'
+              remote: image.remoteId()
+              contentType: 'image/jpeg'
+
+            writeStream.on 'success', (file) ->
+              onComplete null, self.getFileURL file
+
+            writeStream.on 'error', (err) ->
+              logger.error err
+              onComplete err
+
+            startX = (image.width - IMAGE_SIZE) / 2
+            startY = (image.height - IMAGE_SIZE) / 2
+            console.log "Will import photo #{image.source}"
+            # get the facebook photo and then crop it.
+            gm(request.get(image.source)).crop(IMAGE_SIZE, IMAGE_SIZE, startX, startY).stream().pipe writeStream
+
+      return future
+
+    Future.wait futures
+    azureUrls = []
+    futures.forEach (future) ->
+      result = future.get()
+      # in the case that facebook did not have a large enough image,
+      # result will be null
+      if result != null
+        azureUrls.push result
+      return
+
+    return azureUrls
+
+  importPhotosForUser: (user) ->
     # TODO: graph should be instance variable, as should user (part of constructor)
     graph.setAccessToken user.services.facebook.accessToken
     graphGet = Meteor.wrapAsync(graph.get)
@@ -26,7 +91,6 @@ class @FacebookPhotoService
     profilePicAlbumId = null
     profilePicturesAlbum.forEach (album) ->
       if album.name == "Profile Pictures"
-        console.log "profile pic album found"
         profilePicAlbumId = album.id
 
     # if the user does not have a profile picture album, default to photos of them.
@@ -52,45 +116,11 @@ class @FacebookPhotoService
 
       if imageToCrop != null
         imageToCrop.id = photo.id
-        imagesToDownload.push imageToCrop
-
+        imagesToDownload.push new Image photo.id, user._id,
+          photo.width, photo.height, photo.source
       else
-        console.log "Skipping photo", photo
+        console.log "Skipping photo", photo.id
       i++
 
-
-    futures = _.map imagesToDownload, (image) ->
-      future = new Future
-      onComplete = future.resolver()
-      # TODO: Is it safe to assume jpg image?
-      writeStream = client.upload
-        container: Meteor.settings.AZURE_CONTAINER or 'ketch-dev'
-        remote: util.format('%s/%s.jpg', user._id, image.id)
-        contentType: 'image/jpeg'
-
-      writeStream.on 'success', (file) ->
-        url = util.format('%s%s.%s/%s/%s', client.protocol, client.config.storageAccount, client.serversUrl, file.container, file.name)
-        onComplete null, url
-
-      writeStream.on 'error', (err) ->
-        logger.error err
-        onComplete err
-
-      startX = (image.width - IMAGE_SIZE) / 2
-      startY = (image.height - IMAGE_SIZE) / 2
-      console.log "Will import photo #{image.source}"
-      # get the facebook photo and then crop it.
-      gm(request.get(image.source)).crop(IMAGE_SIZE, IMAGE_SIZE, startX, startY).stream().pipe writeStream
-      return future
-
-    Future.wait futures
-    azureUrls = []
-    futures.forEach (future) ->
-      result = future.get()
-      # in the case that facebook did not have a large enough image,
-      # result will be null
-      if result != null
-        azureUrls.push result
-      return
-
+    azureUrls = @copyPhotosToAzure imagesToDownload
     Users.update user._id, $set: photoUrls: azureUrls

@@ -1,3 +1,5 @@
+path = Npm.require('path')
+sleep = Meteor.npmRequire('sleep')
 
 class @FixtureService
 
@@ -82,13 +84,19 @@ class @FixtureService
 
   # See sample_tinder_recs.json
   @importFromTinder: (data) ->
+    fbPhotoService = new FacebookPhotoService("tinder")
+
     for result in data.results
       console.log 'Will add user with name ' + result.name
-      photosUrls = []
+      images = []
       result.photos.forEach (photo) ->
         photo.processedFiles.forEach (processedPhoto) ->
           if processedPhoto.height == 640 and processedPhoto.width == 640
-            photosUrls.push processedPhoto.url
+            imageId = path.basename(processedPhoto.url, '.jpg')
+            images.push new Image imageId, result._id, 640, 640, processedPhoto.url
+
+      azureUrls = fbPhotoService.copyPhotosToAzure(images)
+      sleep.usleep(200 * 1000) # 200 ms
 
       # TODO: Why doesn't this work on heroku? Users.upsert 'services.tinder._id': result._id,
       # #  { [MongoError: The dotted field 'services.tinder._id' in 'services.tinder._id' is not valid for storage.] stack: [Getter] }
@@ -96,7 +104,7 @@ class @FixtureService
         { $set:
           firstName: result.name
           about: result.bio
-          photoUrls: photosUrls
+          photoUrls: azureUrls
           education: @randomSchool()
           age: @randomAge()
           height: @randomHeight()

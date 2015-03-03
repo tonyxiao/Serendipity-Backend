@@ -129,7 +129,7 @@ Users.helpers
     MatchService.generateMatchesForUser this, maxCount
 
   reloadPhotosFromFacebook: ->
-    FacebookPhotoService.importPhotosForUser this
+    new FacebookPhotoService(Meteor.settings.AZURE_CONTAINER).importPhotosForUser this
 
   clearPhotos: ->
     Users.update @_id, $unset: photoUrls: ''
