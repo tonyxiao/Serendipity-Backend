@@ -12,4 +12,4 @@ dependencies:
 
 test:
   override:
-    - PACKAGE_DIRS="..:$HOME" meteor test-packages --velocity respondly:util 2>&1ore
+    - meteor --test
