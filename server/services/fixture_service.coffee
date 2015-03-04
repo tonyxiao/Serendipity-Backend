@@ -15,7 +15,7 @@ class @FixtureService
     ]
 
   # @param schools an array of {@code education} objects from '/me' graph api response
-  @mostRecentSchool: (schools) ->
+  @mostRecentSchool: (schools = []) ->
     mostRecent = undefined
     schools.forEach (school) ->
       if school? && school.year? && school.year.name? && school.school.name?
@@ -48,7 +48,7 @@ class @FixtureService
     ]
 
   # @param schools an array of {@code work} objects from '/me' graph api response
-  @mostRecentJob: (jobs) ->
+  @mostRecentJob: (jobs = []) ->
     mostRecent = undefined
     jobs.forEach (job) ->
       if job.start_date? && job.employer.name?
