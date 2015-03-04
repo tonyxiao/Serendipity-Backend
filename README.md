@@ -1,6 +1,6 @@
 # Ketch Backend
 
-[![Circle CI](https://circleci.com/gh/Ketchteam/ketch-server.svg?style=svg)](https://circleci.com/gh/Ketchteam/ketch-server)
+[![Circle CI](https://circleci.com/gh/Ketchteam/ketch-server.svg?style=svg&circle-token=ee6ecf08305b88ec6c8a075ba2cbbde38873a04d)](https://circleci.com/gh/Ketchteam/ketch-server)
 
 Go to `server/api*.coffee`for ddp method and publication definitions.
 Go to `models/*.coffee` for information about data models and schema definitions
