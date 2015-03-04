@@ -26,6 +26,8 @@ template(name='userDetails')
             a(href="https://facebook.com/#{ id }", target='_blank') #{ id } [Go to Profile]
           li Access Token:
             input#fb-access-token(value=accessToken)
+            a(href="https://developers.facebook.com/tools/debug/accesstoken?q=#{ accessToken }", target="_blank")
+              button Debug Me
           li Email: #{ email }
           li Name: #{ name }
           li Gender: #{ gender }
@@ -59,4 +61,3 @@ template(name='userDetails')
         +each photoUrls
           li
             img(src=this)
-
