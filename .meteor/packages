@@ -24,3 +24,5 @@ aldeed:collection2
 mquandalle:jade
 lauricio:less-autoprefixer
 reactive-var
+sanjo:jasmine
+velocity:html-reporter

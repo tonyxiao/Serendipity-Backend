@@ -1,0 +1,15 @@
+dependencies:
+  cache_directories:
+    - "~/.meteor"
+    - "/usr/local/bin"
+
+  override:
+  - meteor || curl https://install.meteor.com | /bin/sh
+  - git clone https://github.com/respondly/meteor-test-reporter $HOME/respondly:test-reporter
+  - git clone https://github.com/respondly/meteor-css-stylus $HOME/respondly:css-stylus
+  - git clone https://github.com/respondly/meteor-css-common $HOME/respondly:css-common
+  - git clone https://github.com/respondly/meteor-ctrl $HOME/respondly:ctrl
+
+test:
+  override:
+    - PACKAGE_DIRS="..:$HOME" meteor test-packages --velocity respondly:util 2>&1ore
