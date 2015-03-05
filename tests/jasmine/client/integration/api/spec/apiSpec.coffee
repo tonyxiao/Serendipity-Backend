@@ -40,7 +40,7 @@ describe "Connection", ->
             type: "yes"
           done()
 
-    it "should create append a message to the connection", (done) ->
+    it "should append a message to the connection", (done) ->
       Meteor.call "connection/sendMessage", connectionId, "potatoes", (error) ->
         console.log(Messages.find().fetch())
         matcher = Messages.find
