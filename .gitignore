@@ -1,5 +1,4 @@
 .idea/
 env_local.sh
-packages/tests-proxy/
 *.swp
 .env
