@@ -77,13 +77,12 @@ Meteor.publish 'candidates', ->
       added: (candidateId) ->
         if !initializing
           candidate = Candidates.findOne(candidateId)
-          if candidate.vetted && candidate.active
-            user = candidate.user()
-            self.added 'candidates', candidateId, candidate.clientView()
-            self.added 'users', user._id, user.clientView()
-            usersByCandidate[candidateId] = user._id
+          user = candidate.user()
+          self.added 'candidates', candidateId, candidate.clientView()
+          self.added 'users', user._id, user.clientView()
+          usersByCandidate[candidateId] = user._id
       removed: (candidateId) ->
-        if !initializing && usersByCandidate[candidateId]?
+        if !initializing
           self.removed 'candidates', candidateId
           self.removed 'users', usersByCandidate[candidateId]
           delete usersByCandidate[candidateId]
@@ -91,11 +90,10 @@ Meteor.publish 'candidates', ->
     initializing = false
     currentCandidates = Users.findOne(@userId).candidateQueue().fetch()
     currentCandidates.forEach (candidate) ->
-      if candidate.vetted && candidate.active
-        user = candidate.user()
-        self.added 'candidates', candidate._id, candidate.clientView()
-        self.added 'users', user._id, user.clientView()
-        usersByCandidate[candidate._id] = user._id
+      user = candidate.user()
+      self.added 'candidates', candidate._id, candidate.clientView()
+      self.added 'users', user._id, user.clientView()
+      usersByCandidate[candidate._id] = user._id
 
     self.ready()
     @onStop ->

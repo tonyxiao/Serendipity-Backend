@@ -10,10 +10,7 @@ Candidates.attachSchema new SimpleSchema
     type: String
     allowedValues: ['yes', 'no', 'maybe']
     optional: true
-  vetted: type: Boolean
-  active: type: Boolean
 
-Candidates.NUM_CANDIDATES_PER_GAME = Meteor.settings.NUM_CANDIDATES_PER_GAME or 3
 
 # MARK: - Instance Methods
 Candidates.helpers
@@ -38,7 +35,6 @@ Candidates.helpers
     Candidates.insert
       forUserId: @userId
       userId: @forUserId
-      verified: false
 
   matchesWithInverse: ->
     if @choice != 'yes'
@@ -51,16 +47,6 @@ Candidates.helpers
     unless inverse?
       inverse = Candidates.findOne @createInverse()
     inverse.makeChoice choice
-
-  activate: ->
-    Candidates.update @_id,
-      $set:
-        active: true
-
-  deactivate: ->
-    Candidates.update @_id,
-      $set:
-        active: false
 
   remove: ->
     Candidates.remove @_id
