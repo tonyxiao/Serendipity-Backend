@@ -43,6 +43,10 @@ Meteor.startup ->
       # TODO: consider deriving location from GPS instead.
       info.location = userInfo.location.name
 
+    # TODO: don't assume that the user is in Pacific time zone
+    # TODO: handle timezone changes
+    info.timezone = 'America/Los_Angeles'
+
     Users.update user._id,
       $set: info
 
@@ -51,7 +55,7 @@ Meteor.startup ->
       user.reloadPhotosFromFacebook()
 
     # a newly registered user will have no matches, let's give him / her some love
-    if user.candidateQueue().count() < 3
+    if user.candidateQueue().count() < Candidates.NUM_CANDIDATES_PER_GAME
       user.populateCandidateQueue 12
 
     return userId: user._id

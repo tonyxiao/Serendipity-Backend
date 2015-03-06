@@ -45,6 +45,18 @@ Users.helpers
     Users.update @_id,
       $pull: devices: _id: device._id
 
+  updateNextRefreshTimestamp: ->
+    intervalMillis = Meteor.settings.REFRESH_INTERVAL or 86400000 # 24 hours
+    updatedTimeUTC = @nextRefreshTimestamp.getMilliseconds() + intervalMillis
+
+    @nextRefreshTimestamp.setMilliseconds(updatedTimeUTC)
+    console.log @firstName + " -> " + @nextRefreshTimestamp
+
+
+    Users.update @_id,
+      $set: nextRefreshTimestamp : @nextRefreshTimestamp
+
+
   # TODO: Make this generic
   sendTestPushMessage: (message) ->
     _.each @devices, (device) ->
@@ -59,6 +71,7 @@ Users.helpers
     Candidates.find {
       forUserId: @_id
       choice: null
+      vetted: true
     }, {sort: dateMatched: 1}
 
   allCandidates: ->
@@ -104,14 +117,33 @@ Users.helpers
 
   addUserAsCandidate: (userId) ->
     # TODO: Handle error, make more efficient
-    candidate = Candidates.find
+    candidate = Candidates.findOne
       forUserId: @_id
       userId: userId
 
-    if candidate.fetch().length == 0
+    if candidate?
       Candidates.insert
         forUserId: @_id
         userId: userId
+        vetted: false
+
+  vetCandidate: (userId) ->
+    candidate = Candidates.findOne
+      forUserId: @_id
+      userId: userId
+
+    if candidate?
+      Candidates.update
+        forUserId: @_id
+        userId: userId
+        { $set: { vetted: true }}
+
+  getVettedCandidates: (numCandidates) ->
+    Candidates.find({
+      forUserId: @_id
+    }, {
+      limit: numCandidates
+    })
 
   connectWithUser: (user, connectionType) ->
     connectionId = Connections.insert
@@ -127,6 +159,13 @@ Users.helpers
 
   populateCandidateQueue: (maxCount) ->
     MatchService.generateMatchesForUser this, maxCount
+
+  getCandidateQueue: ->
+    candidates = Candidates.find
+      forUserId: @_id
+      active: true
+
+    return candidates.fetch()
 
   reloadPhotosFromFacebook: ->
     new FacebookPhotoService(Meteor.settings.AZURE_CONTAINER).importPhotosForUser this
