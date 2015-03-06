@@ -13,7 +13,7 @@ Connections.attachSchema new SimpleSchema
   lastMessageText: type: String, optional: true
   type:
     type: String
-    allowedValues: ['yes', 'maybe']
+    allowedValues: ['yes']
 
 # MARK - Instance Methods
 Connections.helpers

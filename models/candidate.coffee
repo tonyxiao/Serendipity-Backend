@@ -37,6 +37,8 @@ Candidates.helpers
       userId: @forUserId
 
   matchesWithInverse: ->
+    if @choice != 'yes'
+      return false
     inverse = @findInverse()
     return if inverse then inverse.choice == @choice else false
 
