@@ -8,5 +8,8 @@ Package.describe({
 Package.onUse(function (api) {
 	api.use("coffeescript", ["client", "server"]);
 	api.add_files("tests/jasmine/client/integration/api/spec/apiSpec.coffee",["client"]);
-	api.add_files("tests/jasmine/server/integration/server.coffee",["server"]);
+	api.add_files("tests/jasmine/server/integration/sample/spec/PlayerSpec.js",["server"]);
+	api.add_files("tests/jasmine/server/integration/sample/spec/SpecMatchers.js",["server"]);
+	api.add_files("tests/jasmine/server/integration/sample/src/Player.js",["server"]);
+	api.add_files("tests/jasmine/server/integration/sample/src/Song.js",["server"]);
 });
