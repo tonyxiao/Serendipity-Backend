@@ -9,7 +9,7 @@ class @MatchService
         user.nextRefreshTimestamp = currentDate
 
       # send you new matches if you've waited for long enough
-      if currentDate.getTime() >= user.nextRefreshTimestamp.getTime()
+      if currentDate >= user.nextRefreshTimestamp
         numAllowedActiveGames = Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES or
             Candidates.NUM_CANDIDATES_PER_GAME * 3 # default to 3 allowed games.
 
