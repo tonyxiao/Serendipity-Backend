@@ -47,7 +47,7 @@ Users.helpers
 
   updateNextRefreshTimestamp: ->
     intervalMillis = Meteor.settings.REFRESH_INTERVAL_MILLIS or 86400000 # 24 hours
-    updatedTimeUTC = @nextRefreshTimestamp.getMilliseconds() + intervalMillis
+    updatedTimeUTC = @nextRefreshTimestamp + intervalMillis
 
     @nextRefreshTimestamp.setMilliseconds(updatedTimeUTC)
     @setNextRefreshTimestamp(@nextRefreshTimestamp)
