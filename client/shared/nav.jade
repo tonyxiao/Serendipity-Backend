@@ -2,13 +2,13 @@ template(name='userNav')
   section.user-nav
     div.timestamp Current Date: #{ CurrentDate }
     button
-      a(href='/users') Back to user list
+      a(href='/users') Back
     button
-      a(href='/users/#{ _id }') Show Profile
+      a(href='/users/#{ _id }') Profile
     button
-      a(href='/users/#{ _id }/candidates') Show Candidates
+      a(href='/users/#{ _id }/candidates') Candidates
     button
-      a(href='/users/#{ _id }/previous_candidates') Show Previous Candidates
+      a(href='/users/#{ _id }/previous_candidates') Previous Candidates
     button
-      a(href='/users/#{ _id }/connections') Show Connections
+      a(href='/users/#{ _id }/connections') Connections
     img.small-avatar(src=profilePhotoUrl)
