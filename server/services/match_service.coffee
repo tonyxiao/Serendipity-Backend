@@ -10,11 +10,12 @@ class @MatchService
 
       # send you new matches if you've waited for long enough
       if currentDate >= user.nextRefreshTimestamp
-        numAllowedActiveGames = Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES or
-            Candidates.NUM_CANDIDATES_PER_GAME * 3 # default to 3 allowed games.
+        numAllowedActiveGames =
+          (Meteor.settings && Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES) or 1
+        numAllowedActiveUsers = numAllowedActiveGames * Candidates.NUM_CANDIDATES_PER_GAME
 
         activeCandidates = user.activeCandidates().fetch()
-        if activeCandidates.length < numAllowedActiveGames
+        if activeCandidates.length < numAllowedActiveUsers
           vettedCandidates = user.getVettedCandidates(
             numAllowedActiveGames - activeCandidates.length)
           vettedCandidates.forEach (candidate) ->

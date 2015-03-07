@@ -13,7 +13,7 @@ Candidates.attachSchema new SimpleSchema
   vetted: type: Boolean
   active: type: Boolean
 
-Candidates.NUM_CANDIDATES_PER_GAME = (Meteor.settings && Meteor.settings.NUM_CANDIDATES_PER_GAME) or 3
+Candidates.NUM_CANDIDATES_PER_GAME =  3
 
 # MARK: - Instance Methods
 Candidates.helpers
