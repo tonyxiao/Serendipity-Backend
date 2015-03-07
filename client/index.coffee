@@ -42,6 +42,11 @@ Template.registerHelper 'loggedInUser', ->
 
 ## Import Event Handling
 
+Template.importFixture.helpers
+  oneMinuteFromNow: ->
+    now = new Date
+    return now.getTime() + 1 * 60000
+
 Template.importFixture.events
   'click .remove-all-fake-data': ->
     if confirm ("sure?")
@@ -49,6 +54,11 @@ Template.importFixture.events
         if (u.services.tinder)
           console.log "will delete #{u._id} #{u.firstName}"
           Meteor.call 'admin/user/remove', u._id
+
+  'click .remove-next-refresh': ->
+    if confirm("sure?")
+      refreshTime = parseInt($("#next-refresh-textbox").val())
+      Meteor.call 'admin/globallySetNextRefresh', refreshTime
 
   'click .import-submit': ->
     jsonText = $('#json-text').val()

@@ -8,7 +8,12 @@ body
 
 template(name='importFixture')
   section.import
-    button.remove-all-fake-data Remove ALL fake data
+    p
+      button.remove-all-fake-data Remove ALL fake data
+    p
+      span (ex: 5 minutes from now = #{ oneMinuteFromNow })
+      input#next-refresh-textbox
+      button.remove-next-refresh Set Global Refresh Timestmap (UTC Millis Since Epoch)
 
     h1 Paste json text here
     p See example in fixtures directory
