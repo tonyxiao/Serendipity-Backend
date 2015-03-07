@@ -8,7 +8,6 @@ class @MatchService
     @paused
 
   pause: ->
-    console.log "paused"
     @paused = true
 
   unpause: ->
@@ -28,11 +27,15 @@ class @MatchService
         numAllowedActiveUsers = numAllowedActiveGames * Candidates.NUM_CANDIDATES_PER_GAME
 
         activeCandidates = user.activeCandidates().fetch()
+
+        # new game happened
         if activeCandidates.length < numAllowedActiveUsers
           vettedCandidates = user.getVettedCandidates(
             numAllowedActiveGames - activeCandidates.length)
           vettedCandidates.forEach (candidate) ->
             candidate.activate()
+
+          user.sendTestPushMessage "You got a new game!"
 
         user.updateNextRefreshTimestamp()
 
