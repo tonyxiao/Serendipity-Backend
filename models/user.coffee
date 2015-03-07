@@ -147,14 +147,6 @@ Users.helpers
         vetted: false
         active: false
 
-  vetCandidate: (userId) ->
-    candidate = Candidates.findOne
-      forUserId: @_id
-      userId: userId
-
-    if !candidate?
-      candidate.vet()
-
   getVettedCandidates: (numCandidates) ->
     Candidates.find({
       forUserId: @_id
