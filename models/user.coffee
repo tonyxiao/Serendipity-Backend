@@ -50,11 +50,11 @@ Users.helpers
     updatedTimeUTC = @nextRefreshTimestamp.getMilliseconds() + intervalMillis
 
     @nextRefreshTimestamp.setMilliseconds(updatedTimeUTC)
-    console.log @firstName + " -> " + @nextRefreshTimestamp
+    @setNextRefreshTimestamp(@nextRefreshTimestamp)
 
+  setNextRefreshTimestamp: (timestamp) ->
     Users.update @_id,
-      $set: nextRefreshTimestamp : @nextRefreshTimestamp
-
+      $set: nextRefreshTimestamp : timestamp
 
   # TODO: Make this generic
   sendTestPushMessage: (message) ->
