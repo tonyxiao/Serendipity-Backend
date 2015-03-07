@@ -113,6 +113,7 @@ class @FixtureService
           age: @randomAge()
           height: @randomHeight()
           location: @randomLocation()
+          timezone: 'America/Los_Angeles'
           work: @randomJob()
           gender: @randomGender()
           services:
