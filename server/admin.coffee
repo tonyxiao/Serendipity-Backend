@@ -26,9 +26,15 @@ Meteor.methods
     Users.remove userId
 
   'admin/globallySetNextRefresh': (UTCMillisSinceEpoch) ->
-    users = Users.find().fetch()
-    users.forEach (user) ->
-      user.setNextRefreshTimestamp(new Date(UTCMillisSinceEpoch))
+    matchService = MatchService.getMatchService()
+    matchService.pause()
+
+    nextRefreshDate = new Date UTCMillisSinceEpoch
+    Users.update {},
+      { $set: nextRefreshTimestamp : nextRefreshDate}
+      { multi: true }
+
+    matchService.unpause()
 
   'user/clearPhotos': (userId) ->
     user = Users.findOne userId

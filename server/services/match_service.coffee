@@ -1,7 +1,20 @@
 
 class @MatchService
 
-  @refreshCandidates: (currentDate) ->
+  constructor: ->
+    @paused = false
+
+  isPaused: ->
+    @paused
+
+  pause: ->
+    console.log "paused"
+    @paused = true
+
+  unpause: ->
+    @paused = false
+
+  refreshCandidates: (currentDate) ->
     users = Users.find().fetch()
 
     users.forEach (user) ->
@@ -23,6 +36,13 @@ class @MatchService
 
         user.updateNextRefreshTimestamp()
 
+  @getMatchService: ->
+    if @instance?
+      return @instance
+
+    @instance = new MatchService()
+    return @instance
+
   # TOOD: Make user part of constructor
   @generateMatchesForUser: (user, maxCount) ->
     maxCount ?= 12 # Default to 12 max
@@ -40,6 +60,9 @@ class @MatchService
     for matchedUser in matchedUsers
       user.addUserAsCandidate matchedUser._id
 
+
+matchService = MatchService.getMatchService()
 Meteor.setInterval ->
-  MatchService.refreshCandidates new Date
+  if (!matchService.paused)
+    matchService.refreshCandidates new Date
 , 1000
