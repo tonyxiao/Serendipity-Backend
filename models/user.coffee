@@ -49,9 +49,6 @@ Users.helpers
     intervalMillis = Meteor.settings.REFRESH_INTERVAL_MILLIS or 86400000 # 24 hours
     @nextRefreshTimestamp.setTime(@nextRefreshTimestamp.getTime() + intervalMillis)
 
-    if @firstName == "Qiming"
-      console.log @nextRefreshTimestamp
-
     @setNextRefreshTimestamp(@nextRefreshTimestamp)
 
   setNextRefreshTimestamp: (timestamp) ->
