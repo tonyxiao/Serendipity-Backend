@@ -46,7 +46,7 @@ Users.helpers
       $pull: devices: _id: device._id
 
   updateNextRefreshTimestamp: ->
-    intervalMillis = Meteor.settings.REFRESH_INTERVAL_MILLIS or 86400000 # 24 hours
+    intervalMillis = (Meteor.settings && Meteor.settings.REFRESH_INTERVAL_MILLIS) or 86400000 # 24 hours
     @nextRefreshTimestamp.setTime(@nextRefreshTimestamp.getTime() + intervalMillis)
 
     @setNextRefreshTimestamp(@nextRefreshTimestamp)
