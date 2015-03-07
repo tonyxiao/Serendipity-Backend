@@ -24,6 +24,18 @@ Template._candidateList.events
   'click .their-choice .say-maybe': ->
     Meteor.call 'candidate/makeChoiceForInverse', @_id, 'maybe'
 
+  'click .vet-user': ->
+    Meteor.call 'candidate/vet', @_id
+
+  'click .unvet-user': ->
+    Meteor.call 'candidate/unvet', @_id
+
+  'click .activate-user': ->
+    Meteor.call 'candidate/activate', @_id
+
+  'click .deactivate-user': ->
+    Meteor.call 'candidate/deactivate', @_id
+
 Template.userCandidates.events
   'click .add-logged-in-user-to-queue': ->
     if confirm('sure?')

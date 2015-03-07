@@ -10,7 +10,10 @@ Candidates.attachSchema new SimpleSchema
     type: String
     allowedValues: ['yes', 'no', 'maybe']
     optional: true
+  vetted: type: Boolean
+  active: type: Boolean
 
+Candidates.NUM_CANDIDATES_PER_GAME = (Meteor.settings && Meteor.settings.NUM_CANDIDATES_PER_GAME) or 3
 
 # MARK: - Instance Methods
 Candidates.helpers
@@ -22,9 +25,15 @@ Candidates.helpers
 
   makeChoice: (choice) ->
     @choice = choice # Needed because collection update does not update self
-    Candidates.update @_id,
-      $set:
-        choice: choice
+
+    candidate = Candidates.findOne @_id
+    if candidate.active? && candidate.active
+      Candidates.update @_id,
+        $set:
+          choice: choice
+    else
+      console.log "cannot make choices for candidates that are not active"
+
     if @matchesWithInverse()
       return @forUser().connectWithUser @user(), choice
 
@@ -35,6 +44,8 @@ Candidates.helpers
     Candidates.insert
       forUserId: @userId
       userId: @forUserId
+      verified: false
+      active: false
 
   matchesWithInverse: ->
     if @choice != 'yes'
@@ -47,6 +58,30 @@ Candidates.helpers
     unless inverse?
       inverse = Candidates.findOne @createInverse()
     inverse.makeChoice choice
+
+  vet: ->
+    Candidates.update @_id,
+      $set:
+        vetted: true
+
+  unvet: ->
+    Candidates.update @_id,
+      $set:
+        vetted: false
+        active: false
+        choice: null
+
+  activate: ->
+    Candidates.update @_id,
+      $set:
+        vetted: true
+        active: true
+
+  deactivate: ->
+    Candidates.update @_id,
+      $set:
+        active: false
+        choice: null
 
   remove: ->
     Candidates.remove @_id

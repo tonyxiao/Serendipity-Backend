@@ -9,9 +9,28 @@ template(name='_candidateList')
           img(src=user.profilePhotoUrl)
         span #{ user.firstName }’s
         span Id: #{ _id }
+        br
         span Updated At #{ updatedAt }
+        br
+        span Is Vetted?
+        span.green #{ vetted }
+        br
+        span Is Active?
+        span.green #{ active }
+        br
         button.remove-candidate Remove
         button.create-inverse Add #{forUser.firstName} to #{user.firstName}'s queue
+
+        +if(vetted)
+          button.unvet-user Unvet User
+        +else
+          button.vet-user Vet User
+
+        +if(active)
+          button.deactivate-user Deactivate
+        +else
+          button.activate-user Activate
+
 
         br
         .my-choice
@@ -41,7 +60,7 @@ template(name='userCandidates')
         button.add-logged-in-user-to-queue Add #{loggedInUser.firstName} and #{firstName} to eachother's Queues
 
     section.candidate-queue
-      +_candidateList candidateQueue
+      +_candidateList allCandidatesWithoutDecision
 
 template(name='userPreviousCandidates')
   .user-candidates

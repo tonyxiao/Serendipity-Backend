@@ -79,6 +79,26 @@ Meteor.methods
     forUser = Users.findOne forUserId
     forUser.addUserAsCandidate(candidateUserId)
 
+  'candidate/vet': (candidateId) ->
+    candidate = Candidates.findOne candidateId
+    if candidate?
+      candidate.vet()
+
+  'candidate/unvet': (candidateId) ->
+    candidate = Candidates.findOne candidateId
+    if candidate?
+      candidate.unvet()
+
+  'candidate/activate': (candidateId) ->
+    candidate = Candidates.findOne candidateId
+    if candidate?
+      candidate.activate()
+
+  'candidate/deactivate': (candidateId) ->
+    candidate = Candidates.findOne candidateId
+    if candidate?
+      candidate.deactivate()
+
   'connection/remove': (connectionId) ->
     connection = Connections.findOne connectionId
     if connection?

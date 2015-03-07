@@ -73,22 +73,22 @@ Meteor.publish 'candidates', ->
     # a dictionary of match_id to matched user
     usersByCandidate = {}
     initializing = true
-    handle = Users.findOne(@userId).candidateQueue().observeChanges
+    handle = Users.findOne(@userId).activeCandidates().observeChanges
       added: (candidateId) ->
         if !initializing
-          candidate = Candidates.findOne(candidateId)
+          candidate = Candidates.findOne candidateId
           user = candidate.user()
           self.added 'candidates', candidateId, candidate.clientView()
           self.added 'users', user._id, user.clientView()
           usersByCandidate[candidateId] = user._id
       removed: (candidateId) ->
-        if !initializing
+        if !initializing && usersByCandidate[candidateId]?
           self.removed 'candidates', candidateId
           self.removed 'users', usersByCandidate[candidateId]
           delete usersByCandidate[candidateId]
 
     initializing = false
-    currentCandidates = Users.findOne(@userId).candidateQueue().fetch()
+    currentCandidates = Users.findOne(@userId).activeCandidates().fetch()
     currentCandidates.forEach (candidate) ->
       user = candidate.user()
       self.added 'candidates', candidate._id, candidate.clientView()

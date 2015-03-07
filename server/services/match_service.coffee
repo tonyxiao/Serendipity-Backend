@@ -1,6 +1,27 @@
 
 class @MatchService
 
+  @refreshCandidates: (currentDate) ->
+    users = Users.find().fetch()
+
+    users.forEach (user) ->
+      if !user.nextRefreshTimestamp?
+        user.nextRefreshTimestamp = currentDate
+
+      # send you new matches if you've waited for long enough
+      if currentDate.getTime() >= user.nextRefreshTimestamp.getTime()
+        numAllowedActiveGames = Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES or
+            Candidates.NUM_CANDIDATES_PER_GAME * 3 # default to 3 allowed games.
+
+        activeCandidates = user.activeCandidates().fetch()
+        if activeCandidates.length < numAllowedActiveGames
+          vettedCandidates = user.getVettedCandidates(
+            numAllowedActiveGames - activeCandidates.length)
+          vettedCandidates.forEach (candidate) ->
+            candidate.activate()
+
+        user.updateNextRefreshTimestamp()
+
   # TOOD: Make user part of constructor
   @generateMatchesForUser: (user, maxCount) ->
     maxCount ?= 12 # Default to 12 max
@@ -17,3 +38,7 @@ class @MatchService
 
     for matchedUser in matchedUsers
       user.addUserAsCandidate matchedUser._id
+
+Meteor.setInterval ->
+  MatchService.refreshCandidates new Date
+, 1000

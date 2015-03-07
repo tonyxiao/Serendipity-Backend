@@ -45,6 +45,17 @@ Users.helpers
     Users.update @_id,
       $pull: devices: _id: device._id
 
+  updateNextRefreshTimestamp: ->
+    intervalMillis = Meteor.settings.REFRESH_INTERVAL_MILLIS or 86400000 # 24 hours
+    updatedTimeUTC = @nextRefreshTimestamp.getMilliseconds() + intervalMillis
+
+    @nextRefreshTimestamp.setMilliseconds(updatedTimeUTC)
+    console.log @firstName + " -> " + @nextRefreshTimestamp
+
+    Users.update @_id,
+      $set: nextRefreshTimestamp : @nextRefreshTimestamp
+
+
   # TODO: Make this generic
   sendTestPushMessage: (message) ->
     _.each @devices, (device) ->
@@ -59,10 +70,29 @@ Users.helpers
     Candidates.find {
       forUserId: @_id
       choice: null
+      vetted: true
     }, {sort: dateMatched: 1}
 
   allCandidates: ->
-    Candidates.find forUserId: @_id
+    Candidates.find
+      forUserId: @_id
+
+  allCandidatesWithoutDecision: ->
+    Candidates.find {
+      forUserId: @_id
+      choice: null
+    }, { sort:
+      active: -1
+      vetted: -1
+      choice: 1
+      dateMatched: 1}
+
+  activeCandidates: ->
+    candidates = Candidates.find
+      forUserId: @_id
+      vetted: true
+      active: true
+      choice: null
 
   filterConnections: (type, expired) ->
     selector = 'users._id': @_id
@@ -103,15 +133,35 @@ Users.helpers
       ]
 
   addUserAsCandidate: (userId) ->
+    console.log "adding " + userId + " as candidate for " + @firstName
+
     # TODO: Handle error, make more efficient
-    candidate = Candidates.find
+    candidate = Candidates.findOne
       forUserId: @_id
       userId: userId
 
-    if candidate.fetch().length == 0
+    if !candidate?
       Candidates.insert
         forUserId: @_id
         userId: userId
+        vetted: false
+        active: false
+
+  vetCandidate: (userId) ->
+    candidate = Candidates.findOne
+      forUserId: @_id
+      userId: userId
+
+    if !candidate?
+      candidate.vet()
+
+  getVettedCandidates: (numCandidates) ->
+    Candidates.find({
+      forUserId: @_id
+      vetted: true
+    }, {
+      limit: numCandidates
+    })
 
   connectWithUser: (user, connectionType) ->
     connectionId = Connections.insert
