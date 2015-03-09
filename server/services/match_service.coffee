@@ -35,7 +35,7 @@ class @MatchService
           vettedCandidates.forEach (candidate) ->
             candidate.activate()
 
-          user.sendTestPushMessage "You got a new game!"
+          user.sendTestPushMessage "Your Ketch has arrived!"
 
         user.updateNextRefreshTimestamp()
 
