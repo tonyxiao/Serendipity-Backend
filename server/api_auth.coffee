@@ -30,7 +30,7 @@ Meteor.startup ->
       info.work = work.employer.name
 
     if userInfo.birthday?
-      info.birthday = userInfo.birthday
+      info.birthday = new Date userInfo.birthday
       info.age = FixtureService.age(userInfo.birthday)
 
     if userInfo.gender?
