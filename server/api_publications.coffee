@@ -1,4 +1,19 @@
+Meteor.publish 'metadata', ->
+  currentUser = Users.findOne @userId
 
+  softMinBuild = {
+    _id: "softMinBuild",
+    value: Meteor.settings.SOFT_MIN_BUILD or 0
+  }
+
+  hardMinBuild = {
+    _id: "hardMinBuild",
+    value: Meteor.settings.HARD_MIN_BUILD or 0
+  }
+
+  this.added 'version', softMinBuild._id, softMinBuild
+  this.added 'version', hardMinBuild._id, hardMinBuild
+  this.ready()
 
 Meteor.publish 'messages', ->
   if @userId
