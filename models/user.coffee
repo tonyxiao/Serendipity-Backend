@@ -199,6 +199,19 @@ Users.helpers
         { recipientId: @_id }
       ]
 
+  updateBirthday: (month, day) ->
+    console.log month
+    console.log day
+
+    user = Users.findOne @_id
+    user.birthday.setMonth(month - 1)
+    user.birthday.setDate(day)
+
+    console.log user.birthday
+
+    Users.update @_id,
+      $set: birthday: user.birthday
+
   # TODO: make "superclass" helpers that does create, remove, update, etc
   remove: ->
     Users.remove @_id

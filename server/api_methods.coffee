@@ -21,6 +21,9 @@ Meteor.methods
 
     return result
 
+  'user/update/birthday': (month, day) ->
+    Meteor.user().updateBirthday(month, day)
+
   'connection/sendMessage': (connectionId, text) ->
     # TODO: Add validation for input params
     connection = Connections.findOne connectionId
