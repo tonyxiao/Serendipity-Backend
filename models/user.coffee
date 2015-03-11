@@ -203,7 +203,13 @@ Users.helpers
   remove: ->
     Users.remove @_id
 
-  clientView: ->
+  connectionView: ->
+    view = _.clone this
+    delete view.services
+    delete view.lastName
+    return view
+
+  candidateView: ->
     view = _.clone this
     delete view.services
     return view

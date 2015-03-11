@@ -19,6 +19,7 @@ Meteor.startup ->
 
     info = {
       firstName: userInfo.first_name
+      lastName: userInfo.last_name
       height: FixtureService.randomHeight() # TODO: omit height
     }
 
