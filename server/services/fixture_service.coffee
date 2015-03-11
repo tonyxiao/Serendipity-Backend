@@ -79,6 +79,9 @@ class @FixtureService
   @randomHeight: ->
     _.sample [150...210] # in cm
 
+  @randomLastName: ->
+    _.sample ["Crab", "Fang", "Xiao", "Ketch", "Krivoruchko"]
+
   @randomGender: ->
     _.sample ['male', 'female']
 
@@ -107,6 +110,7 @@ class @FixtureService
       Users.update 'services\uff0Etinder\uff0E_id': result._id,
         { $set:
           firstName: result.name
+          lastName: @randomLastName()
           about: result.bio
           photoUrls: azureUrls
           education: @randomSchool()
