@@ -7,6 +7,7 @@
 meteor-platform
 insecure
 service-configuration
+aldeed:collection2
 accounts-facebook
 accounts-ui
 meteorhacks:npm
@@ -20,7 +21,6 @@ iron:router
 coffeescript
 sewdn:collection-behaviours
 dburles:collection-helpers
-aldeed:collection2
 mquandalle:jade
 lauricio:less-autoprefixer
 reactive-var
