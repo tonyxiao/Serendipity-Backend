@@ -203,14 +203,29 @@ Users.helpers
   remove: ->
     Users.remove @_id
 
-  connectionView: ->
-    view = _.clone this
+  # view changes for all clients
+  _clientView: (view) ->
+    if !view?
+      view = _.clone this
+
     delete view.services
+
+    birthday = {}
+    if view.birthday?
+      birthday.month = view.birthday.getMonth() + 1
+      birthday.day = view.birthday.getDate()
+    view.birthday = birthday
+
+    return view
+
+  connectionView: ->
+    view = @_clientView _.clone this
     delete view.lastName
     return view
 
   candidateView: ->
-    view = _.clone this
+    view = @_clientView _.clone this
     delete view.services
     return view
+
 
