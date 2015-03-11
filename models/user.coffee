@@ -45,6 +45,11 @@ Users.helpers
     Users.update @_id,
       $pull: devices: _id: device._id
 
+  # TODO: Make this generic
+  sendTestPushMessage: (message) ->
+    _.each @devices, (device) ->
+      PushService.sendTestMessage device.pushToken, device.apnEnvironment, device.appId, message
+
   updateNextRefreshTimestamp: ->
     intervalMillis = (Meteor.settings && Meteor.settings.REFRESH_INTERVAL_MILLIS) or 86400000 # 24 hours
     @nextRefreshTimestamp.setTime(@nextRefreshTimestamp.getTime() + intervalMillis)
@@ -55,16 +60,13 @@ Users.helpers
     Users.update @_id,
       $set: nextRefreshTimestamp : timestamp
 
-  # TODO: Make this generic
-  sendTestPushMessage: (message) ->
-    _.each @devices, (device) ->
-      PushService.sendTestMessage device.pushToken, device.apnEnvironment, device.appId, message
-
+  # all candidates for which the user had made a choice
   previousCandidates: ->
     Candidates.find
       forUserId: @_id
       choice: $ne: null
 
+  # all candidates who are vetted and who the user has not currently made a choice for
   candidateQueue: ->
     Candidates.find {
       forUserId: @_id
@@ -72,10 +74,12 @@ Users.helpers
       vetted: true
     }, {sort: dateMatched: 1}
 
+  # all candidates for this user
   allCandidates: ->
     Candidates.find
       forUserId: @_id
 
+  # (debug) ordered list of candidates to display on the user candidates debug screen.
   allCandidatesWithoutDecision: ->
     Candidates.find {
       forUserId: @_id
@@ -86,12 +90,36 @@ Users.helpers
       choice: 1
       dateMatched: 1}
 
+  # candidates which have the active flag flipped on.
   activeCandidates: ->
     candidates = Candidates.find
       forUserId: @_id
       vetted: true
       active: true
       choice: null
+
+  addUserAsCandidate: (userId) ->
+    console.log "adding " + userId + " as candidate for " + @firstName
+
+    # TODO: Handle error, make more efficient
+    candidate = Candidates.findOne
+      forUserId: @_id
+      userId: userId
+
+    if !candidate?
+      Candidates.insert
+        forUserId: @_id
+        userId: userId
+        vetted: false
+        active: false
+
+  vettedCandidates: (numCandidates) ->
+    Candidates.find({
+      forUserId: @_id
+      vetted: true
+    }, {
+      limit: numCandidates
+    })
 
   filterConnections: (type, expired) ->
     selector = 'users._id': @_id
@@ -130,29 +158,6 @@ Users.helpers
         { senderId: @_id }
         { recipientId: @_id }
       ]
-
-  addUserAsCandidate: (userId) ->
-    console.log "adding " + userId + " as candidate for " + @firstName
-
-    # TODO: Handle error, make more efficient
-    candidate = Candidates.findOne
-      forUserId: @_id
-      userId: userId
-
-    if !candidate?
-      Candidates.insert
-        forUserId: @_id
-        userId: userId
-        vetted: false
-        active: false
-
-  getVettedCandidates: (numCandidates) ->
-    Candidates.find({
-      forUserId: @_id
-      vetted: true
-    }, {
-      limit: numCandidates
-    })
 
   connectWithUser: (user, connectionType) ->
     connectionId = Connections.insert
@@ -200,14 +205,9 @@ Users.helpers
       ]
 
   updateBirthday: (month, day) ->
-    console.log month
-    console.log day
-
     user = Users.findOne @_id
     user.birthday.setMonth(month - 1)
     user.birthday.setDate(day)
-
-    console.log user.birthday
 
     Users.update @_id,
       $set: birthday: user.birthday

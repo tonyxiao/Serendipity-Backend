@@ -30,7 +30,7 @@ class @MatchService
 
         # new game happened
         if activeCandidates.length < numAllowedActiveUsers
-          vettedCandidates = user.getVettedCandidates(
+          vettedCandidates = user.vettedCandidates(
             numAllowedActiveGames - activeCandidates.length)
           vettedCandidates.forEach (candidate) ->
             candidate.activate()
