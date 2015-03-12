@@ -150,8 +150,7 @@ Users.helpers
           vetted: false
           active: false
       else
-        throw new Meteor.Error(500, "Attempting to add candidate <" + @_id + ","
-          + userId + ">. Both users need to be vetted first");
+        throw new Meteor.Error(500, "Attempting to add candidate <" + @_id + "," + userId + ">. Both users need to be vetted first");
 
   vettedCandidates: (numCandidates) ->
     Candidates.find({
