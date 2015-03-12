@@ -8,14 +8,23 @@ template(name='userDetails')
 
     section.info
       h2 Status
-        +if(vetted)
+        +if(isVetted)
           span.vetted Vetted
           p
-            button.unvet-user Kick #{ firstName } out of Ketch
+            +blockUser
+            +snoozeUser
         +else
-          span.unvetted Unvetted
-          p
-            button.vet-user Allow #{ firstName } into Ketch
+          +if(isBlocked)
+            span.blocked Blocked
+            p
+              +vetUser
+              +snoozeUser
+          +else
+            +if(isSnoozed)
+              span.snoozed Snoozed
+              p
+                +vetUser
+                +blockUser
 
       ul
         li <strong>Last Name:</strong> #{ lastName }

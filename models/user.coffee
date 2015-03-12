@@ -18,11 +18,28 @@ Users.helpers
   # mark this user as having joined the ketch community
   vet: ->
     Users.update @_id,
-      $set: vetted: true
+      $set: vetted: "yes"
 
   unVet: ->
     Users.update @_id,
-      $set: vetted: false
+      $set: vetted: "no"
+
+  block: ->
+    Users.update @_id,
+      $set: vetted: "blocked"
+
+  snooze: ->
+    Users.update @_id,
+      $set: vetted: "snoozed"
+
+  isVetted: ->
+    @vetted? && @vetted == "yes"
+
+  isSnoozed: ->
+    @vetted? && @vetted == "snoozed"
+
+  isBlocked: ->
+    @vetted? && @vetted == "blocked"
 
   profilePhotoUrl: ->
     return _.first @photoUrls

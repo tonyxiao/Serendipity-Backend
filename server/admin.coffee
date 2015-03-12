@@ -29,9 +29,13 @@ Meteor.methods
     user = Users.findOne userId
     user.vet()
 
-  'admin/user/unvet': (userId) ->
+  'admin/user/snooze': (userId) ->
     user = Users.findOne userId
-    user.unVet()
+    user.snooze()
+
+  'admin/user/blockFromKetch': (userId) ->
+    user = Users.findOne userId
+    user.block()
 
   'admin/globallySetNextRefresh': (UTCMillisSinceEpoch) ->
     matchService = MatchService.getMatchService()
@@ -148,8 +152,14 @@ Meteor.methods
         expired: expired
 
   'import/tinder': (jsonText) ->
+    Users.update {},
+      { $set: vetted: "yes" }
+      { multi: true }
+
+    ###
     try
       FixtureService.importFromTinder JSON.parse jsonText
     catch error
       console.log error
       throw new Meteor.Error(400, 'Unable to import', 'Likely malformed json');
+    ###

@@ -13,16 +13,8 @@ Template.userDetails.events
       }
 
       Accounts.callLoginMethod {
-        methodArguments: [{ "fb-access": loginRequest }]
+        methodArguments: [{"fb-access": loginRequest}]
       }
-
-  'click .vet-user': ->
-    if confirm('sure?')
-      Meteor.call 'admin/user/vet', @_id
-
-  'click .unvet-user': ->
-    if confirm('sure?')
-      Meteor.call 'admin/user/unvet', @_id
 
   'click .clear-photos': ->
     if confirm('sure?')

@@ -7,4 +7,7 @@ template(name='vetQueue')
           a(href='/users/#{ _id }')
             img.avatar(src=profilePhotoUrl)
             span.name #{ firstName }
-            span.grey #{ createdAt }
+          span.grey #{ createdAt }
+          +vetUser
+          +snoozeUser
+          +blockUser
