@@ -25,18 +25,21 @@ Users.helpers
       $set: vetted: "no"
     @clearAllCandidates()
     @clearFromOtherUsersCandidateList()
+    @clearAllConnections()
 
   block: ->
     Users.update @_id,
       $set: vetted: "blocked"
     @clearAllCandidates()
     @clearFromOtherUsersCandidateList()
+    @clearAllConnections()
 
   snooze: ->
     Users.update @_id,
       $set: vetted: "snoozed"
     @clearAllCandidates()
     @clearFromOtherUsersCandidateList()
+    @clearAllConnections()
 
   isVetted: ->
     @vetted? && @vetted == "yes"
