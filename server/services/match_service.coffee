@@ -55,6 +55,7 @@ class @MatchService
     # TODO: Randomize & take into account gender, machine learning, what have you
     matchedUsers = Users.find({
       _id: $nin: ineligibleUserIds
+      vetted: "yes"
     }, {
       limit: maxCount
       fields: _id: 1
