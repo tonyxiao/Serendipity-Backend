@@ -23,14 +23,20 @@ Users.helpers
   unVet: ->
     Users.update @_id,
       $set: vetted: "no"
+    @clearAllCandidates()
+    @clearFromOtherUsersCandidateList()
 
   block: ->
     Users.update @_id,
       $set: vetted: "blocked"
+    @clearAllCandidates()
+    @clearFromOtherUsersCandidateList()
 
   snooze: ->
     Users.update @_id,
       $set: vetted: "snoozed"
+    @clearAllCandidates()
+    @clearFromOtherUsersCandidateList()
 
   isVetted: ->
     @vetted? && @vetted == "yes"
@@ -125,19 +131,24 @@ Users.helpers
       choice: null
 
   addUserAsCandidate: (userId) ->
-    console.log "adding " + userId + " as candidate for " + @firstName
-
     # TODO: Handle error, make more efficient
     candidate = Candidates.findOne
       forUserId: @_id
       userId: userId
 
     if !candidate?
-      Candidates.insert
-        forUserId: @_id
-        userId: userId
-        vetted: false
-        active: false
+
+      candidateUser = Users.findOne userId
+      # Candidates can only be generated when both users are vetted
+      if candidateUser? && @isVetted() && candidateUser.isVetted()
+        Candidates.insert
+          forUserId: @_id
+          userId: userId
+          vetted: false
+          active: false
+      else
+        throw new Meteor.Error(500, "Attempting to add candidate <" + @_id + ","
+          + userId + ">. Both users need to be vetted first");
 
   vettedCandidates: (numCandidates) ->
     Candidates.find({
@@ -213,6 +224,9 @@ Users.helpers
 
   clearAllCandidates: ->
     Candidates.remove forUserId: @_id
+
+  clearFromOtherUsersCandidateList: ->
+    Candidates.remove userId: @_id
 
   clearPreviousCandidates: ->
     Candidates.remove
