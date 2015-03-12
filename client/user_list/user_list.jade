@@ -7,7 +7,13 @@ template(name='userList')
       input.text(id="search")
     ul
       +each users
-        li
-          a(href='/users/#{ _id }')
-            img.avatar(src=profilePhotoUrl)
-            span #{ firstName }
+        +if(isVetted)
+          li.vetted
+            a(href='/users/#{ _id }')
+              img.avatar(src=profilePhotoUrl)
+              span #{ firstName }
+        +else
+          li.unvetted
+            a(href='/users/#{ _id }')
+              img.avatar(src=profilePhotoUrl)
+              span #{ firstName }
