@@ -25,6 +25,14 @@ Meteor.methods
   'admin/user/remove': (userId) ->
     Users.remove userId
 
+  'admin/user/vet': (userId) ->
+    user = Users.findOne userId
+    user.vet()
+
+  'admin/user/unvet': (userId) ->
+    user = Users.findOne userId
+    user.unVet()
+
   'admin/globallySetNextRefresh': (UTCMillisSinceEpoch) ->
     matchService = MatchService.getMatchService()
     matchService.pause()

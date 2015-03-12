@@ -15,6 +15,15 @@ Users.timestampable()
 # MARK: - Instance Methods
 Users.helpers
 
+  # mark this user as having joined the ketch community
+  vet: ->
+    Users.update @_id,
+      $set: vetted: true
+
+  unVet: ->
+    Users.update @_id,
+      $set: vetted: false
+
   profilePhotoUrl: ->
     return _.first @photoUrls
 

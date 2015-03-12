@@ -29,6 +29,9 @@ Router.route '/connections/:_id', ->
 Router.route '/import', ->
   @render 'importFixture'
 
+Router.route '/vet', ->
+  @render 'vetQueue'
+
 # Catch all route to splash screen
 Router.route '/(.*)', ->
   @render 'splash'

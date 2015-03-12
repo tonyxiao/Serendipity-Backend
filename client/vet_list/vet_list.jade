@@ -1,0 +1,10 @@
+
+template(name='vetQueue')
+  .user-queue
+    ul
+      +each usersToVet
+        li
+          a(href='/users/#{ _id }')
+            img.avatar(src=profilePhotoUrl)
+            span.name #{ firstName }
+            span.grey #{ createdAt }

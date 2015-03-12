@@ -7,7 +7,16 @@ template(name='userDetails')
     +userNav
 
     section.info
-      h2 Info
+      h2 Status
+        +if(vetted)
+          span.vetted Vetted
+          p
+            button.unvet-user Kick #{ firstName } out of Ketch
+        +else
+          span.unvetted Unvetted
+          p
+            button.vet-user Allow #{ firstName } into Ketch
+
       ul
         li <strong>Last Name:</strong> #{ lastName }
         li <strong>Work:</strong> #{ work }
