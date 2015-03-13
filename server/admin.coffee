@@ -152,14 +152,8 @@ Meteor.methods
         expired: expired
 
   'import/tinder': (jsonText) ->
-    Users.update {},
-      { $set: vetted: "yes" }
-      { multi: true }
-
-    ###
     try
       FixtureService.importFromTinder JSON.parse jsonText
     catch error
       console.log error
       throw new Meteor.Error(400, 'Unable to import', 'Likely malformed json');
-    ###
