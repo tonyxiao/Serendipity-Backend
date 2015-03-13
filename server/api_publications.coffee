@@ -20,8 +20,9 @@ Meteor.publish 'messages', ->
     return Users.findOne(@userId).allMessages()
 
 Meteor.publish 'currentUser', ->
+  # TODO: Better implmentation of client view
   if @userId
-    return Users.find(@userId).view()
+    return Users.find(@userId)
 
 #
 # Publishes topic called 'connections' which populates a client side collection called
