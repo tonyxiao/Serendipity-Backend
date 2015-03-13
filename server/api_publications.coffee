@@ -20,9 +20,24 @@ Meteor.publish 'messages', ->
     return Users.findOne(@userId).allMessages()
 
 Meteor.publish 'currentUser', ->
-  # TODO: Better implmentation of client view
   if @userId
-    return Users.find(@userId)
+    self = this
+
+    initializing = true
+    handle = Users.find(@userId).observeChanges(
+      added: (userId) ->
+        console.log "publishing 'added' for #{userId}."
+      removed: (userId) ->
+        console.log "publishing 'removed' for #{userId}. This shouldn't be possible?"
+      changed: (userId) ->
+        self.changed userId, Users.findOne(userId).view()
+    )
+    initializing = false
+
+    self.added 'users', @userId, Users.findOne(@userId).view()
+    self.ready()
+    @onStop ->
+      handle.stop()
 
 #
 # Publishes topic called 'connections' which populates a client side collection called
