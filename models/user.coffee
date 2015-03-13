@@ -259,24 +259,29 @@ Users.helpers
     Users.remove @_id
 
   # view changes for all clients
-  _clientView: (view) ->
-    if !view?
-      view = _.clone this
-
-    delete view.services
-
+  _updateBirthdayInView: (view) ->
     birthday = {}
     if view.birthday?
       birthday.month = view.birthday.getMonth() + 1
       birthday.day = view.birthday.getDate()
     view.birthday = birthday
 
+  _updatePhotoURLsInView: (view) ->
     photoUrls = []
     view.photos.forEach (photo) ->
       if photo.active
         photoUrls.push(photo.url)
     view.photoUrls = photoUrls
     delete view.photos
+
+  _clientView: (view) ->
+    if !view?
+      view = _.clone this
+
+    delete view.services
+
+    @_updateBirthdayInView(view)
+    @_updatePhotoURLsInView(view)
 
     return view
 
@@ -289,3 +294,9 @@ Users.helpers
     view = @_clientView _.clone this
     return view
 
+  adminView: ->
+    view =  _.clone this
+    @_updateBirthdayInView(view)
+    @_updatePhotoURLsInView(view)
+
+    return view
