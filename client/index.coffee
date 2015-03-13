@@ -11,20 +11,28 @@ Router.route '/users', ->
   @render 'userList'
 
 Router.route '/users/:_id', ->
-  @render 'userDetails', data: Users.findOne @params._id
+  user = Users.findOne(@params._id)
+  if user?
+    @render 'userDetails', data: user.view()
 
 Router.route '/users/:_id/candidates', ->
-  @render 'userCandidates', data: Users.findOne @params._id
+  user = Users.findOne(@params._id)
+  if user?
+    @render 'userCandidates', data: user.view()
 
 Router.route '/users/:_id/previous_candidates', ->
-  @render 'userPreviousCandidates', data: Users.findOne @params._id
+  user = Users.findOne(@params._id)
+  if user?
+    @render 'userPreviousCandidates', data: user.view()
 
 Router.route '/users/:_id/connections', ->
-  @render 'userConnections', data: Users.findOne @params._id
+  user = Users.findOne(@params._id)
+  if user?
+    @render 'userConnections', data: user.view()
 
 Router.route '/connections/:_id', ->
   connection = Connections.findOne @params._id
-  @render 'connectionDetails', data: connection
+  @render 'connectiondetails', data: connection
 
 Router.route '/import', ->
   @render 'importFixture'

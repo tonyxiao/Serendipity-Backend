@@ -1,7 +1,8 @@
 
 Template.userList.helpers
   users: ->
-    Users.find()
+    Users.find().map (user) ->
+      user.view()
 
 Template.userList.events
   'keyup #search': ->

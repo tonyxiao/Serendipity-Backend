@@ -122,4 +122,20 @@ class @FacebookPhotoService
       i++
 
     azureUrls = @copyPhotosToAzure imagesToDownload
-    Users.update user._id, $set: photoUrls: azureUrls
+
+    i = 0;
+    userPhotos = []
+    while i < azureUrls.length
+      userPhoto = {}
+      userPhoto.url = azureUrls[i]
+
+      if i < Meteor.settings.PHOTO_COUNT_TO_DISPLAY
+        userPhoto.active = true
+      else
+        userPhoto.active = false
+
+      userPhotos.push(userPhoto)
+      i++
+
+    Users.update user._id, $set: photos: userPhotos
+    console.log "done uploading for #{user._id}"

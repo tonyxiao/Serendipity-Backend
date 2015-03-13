@@ -271,6 +271,13 @@ Users.helpers
       birthday.day = view.birthday.getDate()
     view.birthday = birthday
 
+    photoUrls = []
+    view.photos.forEach (photo) ->
+      if photo.active
+        photoUrls.push(photo.url)
+    view.photoUrls = photoUrls
+    delete view.photos
+
     return view
 
   connectionView: ->
@@ -278,9 +285,7 @@ Users.helpers
     delete view.lastName
     return view
 
-  candidateView: ->
+  view: ->
     view = @_clientView _.clone this
-    delete view.services
     return view
-
 

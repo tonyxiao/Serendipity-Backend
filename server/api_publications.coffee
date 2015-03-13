@@ -94,7 +94,7 @@ Meteor.publish 'candidates', ->
           candidate = Candidates.findOne candidateId
           user = candidate.user()
           self.added 'candidates', candidateId, candidate.clientView()
-          self.added 'users', user._id, user.candidateView()
+          self.added 'users', user._id, user.view()
           usersByCandidate[candidateId] = user._id
       removed: (candidateId) ->
         if !initializing && usersByCandidate[candidateId]?
@@ -107,7 +107,7 @@ Meteor.publish 'candidates', ->
     currentCandidates.forEach (candidate) ->
       user = candidate.user()
       self.added 'candidates', candidate._id, candidate.clientView()
-      self.added 'users', user._id, user.candidateView()
+      self.added 'users', user._id, user.view()
       usersByCandidate[candidate._id] = user._id
 
     self.ready()
