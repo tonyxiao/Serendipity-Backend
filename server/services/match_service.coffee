@@ -14,7 +14,9 @@ class @MatchService
     @paused = false
 
   refreshCandidates: (currentDate) ->
-    users = Users.find().fetch()
+    users = Users.find({
+      vetted: "yes"
+    }).fetch()
 
     users.forEach (user) ->
       if !user.nextRefreshTimestamp?
