@@ -3,7 +3,6 @@ Future = Npm.require('fibers/future')
 gm = Meteor.npmRequire('gm').subClass(imageMagick: true)
 request = Meteor.npmRequire('request')
 util = Npm.require('util')
-PHOTO_COUNT = Meteor.settings.DEFAULT_PHOTO_COUNT or 4
 IMAGE_SIZE = Meteor.settings.DEFAULT_IMAGE_SIZE or 640
 graph = Meteor.npmRequire('fbgraph')
 
@@ -102,8 +101,8 @@ class @FacebookPhotoService
     console.log "Will import facebook photos for #{user._id} : #{user.firstName}"
     imagesToDownload = []
     i = 0
-    console.log "res length #{res.length} photocount #{PHOTO_COUNT}"
-    while i < res.length and imagesToDownload.length < PHOTO_COUNT
+
+    while i < res.length
       photo = res[i]
       # out of all images bigger than IMAGE_SIZE x IMAGE_SIZE, pick the
       # one that has the least number of pixels (to improve download).
