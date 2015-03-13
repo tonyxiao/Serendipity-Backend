@@ -6,7 +6,7 @@ template(name='_candidateList')
     +each this
       li
         a.avatar(href='/users/#{ user._id }')
-          img(src=user.profilePhotoUrl)
+          img(src=user.view.profilePhotoUrl)
         span #{ user.firstName }’s
         span Id: #{ _id }
         br
