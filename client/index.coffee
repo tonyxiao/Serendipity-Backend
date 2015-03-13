@@ -32,7 +32,7 @@ Router.route '/users/:_id/connections', ->
 
 Router.route '/connections/:_id', ->
   connection = Connections.findOne @params._id
-  @render 'connectiondetails', data: connection
+  @render 'connectionDetails', data: connection
 
 Router.route '/import', ->
   @render 'importFixture'
@@ -77,4 +77,3 @@ Template.importFixture.events
     $('#json-text').val('')
     Meteor.call 'import/tinder', jsonText, (err, res) ->
       alert unless err? then "imported #{res} users" else "#{err.reason}: #{err.details}"
-
