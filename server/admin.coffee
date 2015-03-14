@@ -78,6 +78,16 @@ Meteor.methods
     if user?
       user.clearAllConnections()
 
+  'user/photo/activate': (userId, url) ->
+    user = Users.findOne userId
+    if user?
+      user._activatePhoto(url)
+
+  'user/photo/deactivate': (userId, url) ->
+    user = Users.findOne userId
+    if user?
+      user._deactivatePhoto(url)
+
   'candidate/makeChoice': (candidateId, choice) ->
     candidate = Candidates.findOne candidateId
     if candidate?
