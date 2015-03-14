@@ -81,6 +81,7 @@ Meteor.methods
   'candidate/makeChoice': (candidateId, choice) ->
     candidate = Candidates.findOne candidateId
     if candidate?
+      candidate.activate()
       candidate.makeChoice choice
 
   'candidate/makeChoiceForInverse': (candidateId, choice) ->
