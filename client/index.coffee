@@ -13,22 +13,22 @@ Router.route '/users', ->
 Router.route '/users/:_id', ->
   user = Users.findOne(@params._id)
   if user?
-    @render 'userDetails', data: user.adminView()
+    @render 'userDetails', data: user
 
 Router.route '/users/:_id/candidates', ->
   user = Users.findOne(@params._id)
   if user?
-    @render 'userCandidates', data: user.adminView()
+    @render 'userCandidates', data: user
 
 Router.route '/users/:_id/previous_candidates', ->
   user = Users.findOne(@params._id)
   if user?
-    @render 'userPreviousCandidates', data: user.adminView()
+    @render 'userPreviousCandidates', data: user
 
 Router.route '/users/:_id/connections', ->
   user = Users.findOne(@params._id)
   if user?
-    @render 'userConnections', data: user.view()
+    @render 'userConnections', data: user
 
 Router.route '/connections/:_id', ->
   connection = Connections.findOne @params._id

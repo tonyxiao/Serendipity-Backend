@@ -51,7 +51,9 @@ Users.helpers
     @vetted? && @vetted == "blocked"
 
   profilePhotoUrl: ->
-    return _.first @photoUrls
+    photo = _.first @photos
+    if photo?
+      return photo.url
 
   getDevice: (deviceId) ->
     _.find @devices, (d) -> d._id == deviceId
@@ -292,11 +294,4 @@ Users.helpers
 
   view: ->
     view = @_clientView _.clone this
-    return view
-
-  adminView: ->
-    view =  _.clone this
-    @_updateBirthdayInView(view)
-    @_updatePhotoURLsInView(view)
-
     return view

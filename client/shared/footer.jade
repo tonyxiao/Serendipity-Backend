@@ -3,5 +3,5 @@ template(name='footer')
     #footer
       .footer-content {{ loggedInUser.firstName }}
         button.update-fb-access-token Logout
-      img.avatar(src=loggedInUser.adminView.profilePhotoUrl)
+      img.avatar(src=loggedInUser.profilePhotoUrl)
 
