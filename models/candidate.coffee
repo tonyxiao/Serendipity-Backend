@@ -44,7 +44,7 @@ Candidates.helpers
     Candidates.insert
       forUserId: @userId
       userId: @forUserId
-      verified: false
+      vetted: false
       active: false
 
   matchesWithInverse: ->
@@ -57,6 +57,7 @@ Candidates.helpers
     inverse = @findInverse()
     unless inverse?
       inverse = Candidates.findOne @createInverse()
+    inverse.activate()
     inverse.makeChoice choice
 
   vet: ->
