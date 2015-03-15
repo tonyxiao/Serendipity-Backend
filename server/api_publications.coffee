@@ -30,7 +30,7 @@ Meteor.publish 'currentUser', ->
       removed: (userId) ->
         console.log "publishing 'removed' for #{userId}. This shouldn't be possible?"
       changed: (userId) ->
-        self.changed userId, Users.findOne(userId).view()
+        self.changed 'users', userId, Users.findOne(userId).view()
     )
     initializing = false
 
