@@ -1,0 +1,17 @@
+template(name='dataPatch')
+  .data-patch
+    h1 Connections with Invalid Users
+      button.remove-connections-with-invalid-users Remove All Invalid Connections
+    +each connectionsWithInvalidUsers
+      p
+        a(href='/connections/#{ _id }') #{ _id }
+
+    h1 Candidates with Invalid Users
+      button.remove-candidates-with-invalid-users Remove All Invalid Candidates
+    +each candidatesWithInvalidUsers
+      p #{ _id }: {{ candidateForUserName this }} -> {{ candidateToUserName this }}
+
+    h1 Users with invalid profiles
+    +each usersWithInvalidProfiles
+      p
+        a(href='/connections/#{ _id }') #{ _id }

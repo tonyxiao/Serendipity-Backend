@@ -40,6 +40,9 @@ Router.route '/import', ->
 Router.route '/vet', ->
   @render 'vetQueue'
 
+Router.route '/data', ->
+  @render 'dataPatch'
+
 # Catch all route to splash screen
 Router.route '/(.*)', ->
   @render 'splash'
