@@ -1,9 +1,15 @@
 //
    Created by Tony on 2/22/15.
+template(name="photoActivation")
+  +if(photo.active)
+    button.deactivate(data-url=photo.url data-userid=user._id) Deactivate
+  +else
+    button.activate(data-url=photo.url data-userid=user._id) Activate
 
 template(name='userDetails')
   .user-details(data-user-id=_id)
     h1 #{ firstName }’s Profile
+
     +userNav
 
     section.info
@@ -80,6 +86,12 @@ template(name='userDetails')
     section.photos
       h2 Photos
       ul
-        +each photoUrls
-          li
-            img(src=this)
+        +each photos
+          +if(this.active)
+            li.activePhoto
+              img(src=this.url)
+              +photoActivation currentUserAndPhoto
+          +else
+            li.inactivePhoto
+              img(src=this.url)
+              +photoActivation currentUserAndPhoto

@@ -1,3 +1,10 @@
+Template.userDetails.helpers
+  currentUserAndPhoto: ->
+    currentUser = Template.parentData(1)
+    return {
+      user: currentUser,
+      photo: this
+    }
 
 Template.userDetails.events
   'click .update-fb-access-token': ->
@@ -41,3 +48,18 @@ Template.userDetails.events
   'click .delete-user': ->
     if confirm('sure?')
       Meteor.call 'admin/user/remove', @_id
+
+Template.photoActivation.events
+  'click .activate': ->
+    #if confirm("sure?")
+      url = $(event.target).data('url')
+      userId = $(event.target).data('userid')
+
+      Meteor.call 'user/photo/activate', userId, url
+
+  'click .deactivate': ->
+#    if confirm("sure?")
+      url = $(event.target).data('url')
+      userId = $(event.target).data('userid')
+
+      Meteor.call 'user/photo/deactivate', userId, url

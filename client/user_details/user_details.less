@@ -24,6 +24,8 @@
       color: blue;
     }
   }
+
+  // user status
   .vetted {
     color: #006400;
   }
@@ -36,6 +38,23 @@
   .snoozed {
     color: #0000FF;
   }
+
+  // photo activation
+  .activePhoto {
+    border: 5px solid #00FF00;
+    overflow: auto;
+  }
+  .inactivePhoto {
+    border: 5px solid #cc0000;
+    overflow: auto;
+  }
+  .activate, .deactivate {
+    position: absolute;
+    top:0px;
+    left:0px;
+    z-index:5;
+  }
+
   .devices {
     overflow: hidden;
     margin-bottom: 30px;
@@ -56,6 +75,7 @@
       overflow: hidden;
     }
     li {
+      position: relative;
       display: inline;
       float: left;
       margin: 5px;
