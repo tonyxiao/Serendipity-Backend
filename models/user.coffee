@@ -51,9 +51,21 @@ Users.helpers
     @vetted? && @vetted == "blocked"
 
   profilePhotoUrl: ->
-    photo = _.first @photos
+    photo = _.first @sortedActivePhotos()
     if photo?
       return photo.url
+
+  sortedActivePhotos: ->
+    activePhotos = @sortedPhotos().filter (element) ->
+      return element.active == true
+
+    return activePhotos
+
+  sortedPhotos: ->
+    photos = _.clone @photos
+    photos.sort (a,b) ->
+      return a.order > b.order
+    return photos
 
   getDevice: (deviceId) ->
     _.find @devices, (d) -> d._id == deviceId
@@ -284,10 +296,7 @@ Users.helpers
 
   _updatePhotoURLsInView: (view) ->
     photoUrls = []
-    # sort the photos to be in ascending order
-    view.photos.sort (a,b) ->
-      return a.order > b.order
-    view.photos.forEach (photo) ->
+    view.sortedPhotos().forEach (photo) ->
       if photo.active
         photoUrls.push(photo.url)
     view.photoUrls = photoUrls
