@@ -262,19 +262,17 @@ Users.helpers
 
   _modifyPhotoActiveState: (url, value) ->
     @photos.forEach (photo) ->
-    if (photo.url == url)
-      photo.active = value
+      if (photo.url == url)
+        photo.active = value
 
     Users.update @_id,
-      $set photos: @photos
+      $set: photos: @photos
 
   _activatePhoto: (url) ->
-    console.log "activating photo "  + url
     @_modifyPhotoActiveState(url, true)
 
   _deactivatePhoto: (url) ->
-    console.log "deactivating photo "  + url
-    _modifyPhotoActiveState(url, false)
+    @_modifyPhotoActiveState(url, false)
 
   # view changes for all clients
   _updateBirthdayInView: (view) ->
