@@ -134,6 +134,7 @@ class @FacebookPhotoService
       else
         userPhoto.active = false
 
+      userPhoto.order = i
       userPhotos.push(userPhoto)
       i++
 
