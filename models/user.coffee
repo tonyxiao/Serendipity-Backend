@@ -284,6 +284,9 @@ Users.helpers
 
   _updatePhotoURLsInView: (view) ->
     photoUrls = []
+    # sort the photos to be in ascending order
+    view.photos.sort (a,b) ->
+      return a.order > b.order
     view.photos.forEach (photo) ->
       if photo.active
         photoUrls.push(photo.url)

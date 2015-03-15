@@ -1,4 +1,8 @@
 Template.userDetails.helpers
+  orderedPhotos: (photos) ->
+    photos.sort (a,b) ->
+      return a.order > b.order
+
   currentUserAndPhoto: ->
     currentUser = Template.parentData(1)
     return {
@@ -45,21 +49,37 @@ Template.userDetails.events
     Meteor.call 'admin/user/sendPushMessage', @_id, textarea.val()
     textarea.val('')
 
+  'click .reset-photo-ordering': ->
+    Meteor.call 'admin/user/photo/reset', @_id
+
   'click .delete-user': ->
     if confirm('sure?')
       Meteor.call 'admin/user/remove', @_id
 
 Template.photoActivation.events
   'click .activate': ->
-    #if confirm("sure?")
+    if confirm("sure?")
       url = $(event.target).data('url')
       userId = $(event.target).data('userid')
 
       Meteor.call 'user/photo/activate', userId, url
 
   'click .deactivate': ->
-#    if confirm("sure?")
+    if confirm("sure?")
       url = $(event.target).data('url')
       userId = $(event.target).data('userid')
 
       Meteor.call 'user/photo/deactivate', userId, url
+
+Template.photoOrder.events
+  'click .swap-order-with': (event) ->
+    currentOrder = parseInt($(event.target).data('current-order'))
+    newOrder = parseInt($(event.target).siblings('.photo-order').val())
+    userId = $(event.target).closest('.user-details').data('user-id')
+
+    Meteor.call 'admin/user/photo/swap', userId, currentOrder, newOrder, (err, res) ->
+      if err?
+        alert "#{err.reason}: #{err.details}"
+      else
+
+

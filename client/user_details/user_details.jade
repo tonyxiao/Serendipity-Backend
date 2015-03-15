@@ -6,6 +6,11 @@ template(name="photoActivation")
   +else
     button.activate(data-url=photo.url data-userid=user._id) Activate
 
+template(name="photoOrder")
+  div.update-order
+    button.swap-order-with(data-current-order=order) Swap with ...
+    input.photo-order(type=text value=order)
+
 template(name='userDetails')
   .user-details(data-user-id=_id)
     h1 #{ firstName }’s Profile
@@ -85,13 +90,20 @@ template(name='userDetails')
         button.send-push-message Send Push Message
     section.photos
       h2 Photos
+        button.reset-photo-ordering Reset Photo Ordering
       ul
-        +each photos
+        +each orderedPhotos this.photos
           +if(this.active)
             li.activePhoto
-              img(src=this.url)
+              +photoOrder this
               +photoActivation currentUserAndPhoto
+              a(href=this.url target='_blank')
+                img(src=this.url)
+
           +else
             li.inactivePhoto
-              img(src=this.url)
+              +photoOrder this
               +photoActivation currentUserAndPhoto
+              a(href=this.url target='_blank')
+                img(src=this.url)
+

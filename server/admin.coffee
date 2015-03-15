@@ -37,6 +37,32 @@ Meteor.methods
     user = Users.findOne userId
     user.block()
 
+  'admin/user/photo/reset': (userId) ->
+    user = Users.findOne userId
+    photos = user.photos
+    i = 0
+    photos.forEach (photo) ->
+      photo.order = i
+      i++
+    Users.update userId,
+      $set: photos: photos
+
+  'admin/user/photo/swap': (userId, fromOrderNumber, toOrderNumber) ->
+    user = Users.findOne userId
+    photos = user.photos
+
+    if user? && 0 <= fromOrderNumber < photos.length && 0 <= toOrderNumber < photos.length
+      photos.forEach (photo) ->
+        if photo.order == toOrderNumber
+          photo.order = fromOrderNumber
+        else if photo.order == fromOrderNumber
+          photo.order = toOrderNumber
+      Users.update userId,
+        $set: photos: photos
+    else
+      throw new Meteor.Error(500, 'Cannot swap photos',
+        'Are you sure you are swapping valid image indices?');
+
   'admin/globallySetNextRefresh': (UTCMillisSinceEpoch) ->
     matchService = MatchService.getMatchService()
     matchService.pause()
