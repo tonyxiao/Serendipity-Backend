@@ -1,13 +1,30 @@
+template(name="examineUser")
+  a(href='/users/#{ _id }')
+    img.avatar(src=profilePhotoUrl)
+    span.name #{ firstName }
+  span.grey #{ createdAt }
+  +vetUser
+  +snoozeUser
+  +blockUser
 
 template(name='vetQueue')
   .user-queue
-    ul
-      +each usersToVet
+    h1 New Users
+      +each newUsers
         li
-          a(href='/users/#{ _id }')
-            img.avatar(src=profilePhotoUrl)
-            span.name #{ firstName }
-          span.grey #{ createdAt }
-          +vetUser
-          +snoozeUser
-          +blockUser
+          +examineUser
+
+    h1 Snoozed Users
+    ul
+      +each snoozedUsers
+        li
+          +examineUser
+
+    h1 Blocked Users
+    ul
+      +each blockedUsers
+        li
+          +examineUser
+    //h1 Blocked list
+    //  ul
+    //    +each blockedUsers
