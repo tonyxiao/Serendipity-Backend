@@ -62,6 +62,10 @@ template(name='userCandidates')
     section.candidate-queue
       +_candidateList allCandidatesWithoutDecision
 
+    h2 Snoozed Candidates
+    section.candidate-queue
+      +_candidateList snoozedCandidates
+
 template(name='userPreviousCandidates')
   .user-candidates
     h1 #{ firstName }’s Previous Candidates

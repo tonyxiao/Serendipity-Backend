@@ -139,6 +139,16 @@ Users.helpers
       choice: 1
       dateMatched: 1}
 
+  snoozedCandidates: ->
+    Candidates.find {
+      forUserId: @_id
+      choice: 'maybe'
+    }, { sort:
+      active: -1
+      vetted: -1
+      choice: 1
+      dateMatched: 1}
+
   # candidates which have the active flag flipped on.
   activeCandidates: ->
     candidates = Candidates.find
