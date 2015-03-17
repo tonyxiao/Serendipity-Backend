@@ -1,7 +1,20 @@
 
 Template.userList.helpers
   users: ->
-    Users.find()
+    users = Users.find().fetch()
+    okUsers = []
+    Users.find().fetch().forEach (user) ->
+      if user.candidateQueue().fetch().length >= Candidates.NUM_CANDIDATES_PER_GAME
+        okUsers.push(user)
+    return okUsers
+
+  # TODO: refactor this and {@code users} to share code.
+  usersRunningOutOfVettedCandidates: ->
+    runningOutOfMatches = []
+    Users.find().fetch().forEach (user) ->
+      if user.candidateQueue().fetch().length < Candidates.NUM_CANDIDATES_PER_GAME
+        runningOutOfMatches.push(user)
+    return runningOutOfMatches
 
 Template.userList.events
   'keyup #search': ->
