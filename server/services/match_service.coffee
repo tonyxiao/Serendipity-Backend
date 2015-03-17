@@ -24,9 +24,8 @@ class @MatchService
 
       # send you new matches if you've waited for long enough
       if currentDate >= user.nextRefreshTimestamp
-        numAllowedActiveGames =
-          (Meteor.settings && Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES) or 1
-        numAllowedActiveUsers = numAllowedActiveGames * Candidates.NUM_CANDIDATES_PER_GAME
+        numAllowedActiveUsers = Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES *
+          Candidates.NUM_CANDIDATES_PER_GAME
 
         activeCandidates = user.activeCandidates().fetch()
 
