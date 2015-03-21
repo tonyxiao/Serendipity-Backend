@@ -32,7 +32,7 @@ class @MatchService
         # new game happened
         if activeCandidates.length < numAllowedActiveUsers
           vettedCandidates = user.vettedCandidates(
-            numAllowedActiveGames - activeCandidates.length)
+            Meteor.settings.numAllowedActiveGames - activeCandidates.length)
           vettedCandidates.forEach (candidate) ->
             candidate.activate()
 
