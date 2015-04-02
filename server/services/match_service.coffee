@@ -57,6 +57,7 @@ class @MatchService
     matchedUsers = Users.find({
       _id: $nin: ineligibleUserIds
       vetted: "yes"
+      status: $ne: "deleted"
     }, {
       limit: maxCount
       fields: _id: 1
