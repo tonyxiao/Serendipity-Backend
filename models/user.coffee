@@ -42,13 +42,36 @@ Users.helpers
     @clearAllConnections()
 
   isVetted: ->
-    @vetted? && @vetted == "yes"
+    @vetted? && @vetted == 'yes'
 
   isSnoozed: ->
-    @vetted? && @vetted == "snoozed"
+    @vetted? && @vetted == 'snoozed'
 
   isBlocked: ->
-    @vetted? && @vetted == "blocked"
+    @vetted? && @vetted == 'blocked'
+
+  _isDeleted: ->
+    @status? && @status == 'deleted'
+
+  _unmarkAsDeleted: ->
+    # TODO: there should be type checking on status once user is refactored into a schema
+    Users.update @_id,
+      $unset: status : ""
+
+  markAsDeleted: ->
+    # TODO: there should be type checking on status once user is refactored into a schema
+    Users.update @_id,
+      $set: status: 'deleted'
+
+    # expire the connections
+    selector = 'users._id': @_id
+    Connections.update selector,
+      $set:
+        expired: true
+
+    # deactivate the candidates
+    Candidates.find({ $or: [{forUserId: @_id}, {userId: @_id}] }).fetch().forEach (candidate) ->
+      candidate.unvet()
 
   profilePhotoUrl: ->
     photo = _.first @sortedActivePhotos()

@@ -63,6 +63,11 @@ Meteor.methods
       throw new Meteor.Error(500, 'Cannot swap photos',
         'Are you sure you are swapping valid image indices?');
 
+  'admin/user/delete/restore': (userId) ->
+    user = Users.findOne userId
+    if user?
+      user._unmarkAsDeleted()
+
   'admin/globallySetNextRefresh': (UTCMillisSinceEpoch) ->
     matchService = MatchService.getMatchService()
     matchService.pause()
@@ -75,7 +80,9 @@ Meteor.methods
     matchService.unpause()
 
   'user/delete': (userId) ->
-    console.log 'user deletion not implemented'
+    user = Users.findOne userId
+    if user?
+      user.markAsDeleted()
 
   'user/report': (reporterId, reporteeId) ->
     console.log 'user reporting not implemented'

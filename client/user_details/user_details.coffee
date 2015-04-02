@@ -54,7 +54,11 @@ Template.userDetails.events
 
   'click .delete-user': ->
     if confirm('sure?')
-      Meteor.call 'admin/user/remove', @_id
+      Meteor.call 'user/delete', @_id
+
+  'click .restore-deleted-user': ->
+    if confirm('sure?')
+      Meteor.call 'admin/user/delete/restore', @_id
 
 Template.photoActivation.events
   'click .activate': ->
