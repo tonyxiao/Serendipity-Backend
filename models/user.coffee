@@ -32,7 +32,9 @@ Users.timestampable()
     type: String
     optional: true
     allowedValues: ['male', 'female']
-  lastName: type: String
+  lastName:
+    type: String
+    optional: true
   location:
     type: String
     optional: true
@@ -49,7 +51,7 @@ Users.timestampable()
     blackbox: true
   status:
     type: String
-    #optional: true
+    optional: true
     allowedValues: ['deleted', 'active']
   roles:
     type: [String]
