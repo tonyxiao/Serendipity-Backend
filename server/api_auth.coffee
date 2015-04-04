@@ -48,6 +48,10 @@ Meteor.startup ->
     # TODO: handle timezone changes
     info.timezone = 'America/Los_Angeles'
 
+    # If this user has not been vetted yet, explicitly label vetted as 'no'
+    if !info.vetted?
+      info.vetted = 'no'
+
     Users.update user._id,
       $set: info
 
