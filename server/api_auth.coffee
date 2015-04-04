@@ -3,6 +3,11 @@ logger = Meteor.npmRequire('bunyan').createLogger name: 'auth'
 # TODO: Do we need Meteor.startup here?
 Meteor.startup ->
 
+  crab = Users.findOne(Meteor.settings.CRAB_USER_ID)
+  if !crab?
+    throw new Meteor.Error(501, 'Crab user not found! This means that users will not be
+      able to chat with support!');
+
   # Login handler for FB
   Accounts.registerLoginHandler 'fb-access', (serviceData) ->
     loginRequest = serviceData['fb-access']

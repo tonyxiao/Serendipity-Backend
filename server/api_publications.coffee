@@ -3,16 +3,22 @@ Meteor.publish 'metadata', ->
 
   softMinBuild = {
     _id: "softMinBuild",
-    value: Meteor.settings.SOFT_MIN_BUILD or 0
+    value: Meteor.settings.SOFT_MIN_BUILD
   }
 
   hardMinBuild = {
     _id: "hardMinBuild",
-    value: Meteor.settings.HARD_MIN_BUILD or 0
+    value: Meteor.settings.HARD_MIN_BUILD
+  }
+
+  crab = {
+    _id: "crabUserId",
+    value: Meteor.settings.CRAB_USER_ID
   }
 
   this.added 'version', softMinBuild._id, softMinBuild
   this.added 'version', hardMinBuild._id, hardMinBuild
+  this.added 'crab', crab._id, crab
   this.ready()
 
 Meteor.publish 'messages', ->
