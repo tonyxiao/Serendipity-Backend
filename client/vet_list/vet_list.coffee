@@ -6,7 +6,3 @@ Template.vetQueue.helpers
   blockedUsers: ->
     return Users.find { vetted: "blocked" },
       { sort: createdAt: 1, firstName: 1 }
-
-  newUsers: ->
-    return Users.find { $or: [{vetted: null}, {vetted: "no"}] },
-      { sort: createdAt: 1, firstName: 1 }

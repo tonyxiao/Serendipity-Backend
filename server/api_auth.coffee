@@ -51,8 +51,10 @@ Meteor.startup ->
     # TODO: handle timezone changes
     info.timezone = 'America/Los_Angeles'
 
+    # TODO: consider using simpleschema autovalue:
+    # https://github.com/aldeed/meteor-collection2/blob/master/README.md#attaching-a-schema-to-a-collection
     if !user.vetted?
-      info.vetted = 'no'
+      info.vetted = 'snoozed'
 
     Users.update user._id,
       $set: info

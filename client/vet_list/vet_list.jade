@@ -9,11 +9,6 @@ template(name="examineUser")
 
 template(name='vetQueue')
   .user-queue
-    h1 New Users
-      +each newUsers
-        li
-          +examineUser
-
     h1 Snoozed Users
     ul
       +each snoozedUsers
