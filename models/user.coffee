@@ -295,15 +295,19 @@ Users.helpers
         { recipientId: @_id }
       ]
 
-  connectWithUser: (user, connectionType) ->
+  connectWithUser: (userId, connectionType) ->
     connectionId = Connections.insert
       users: [
         {_id: @_id, hasUnreadMessage: false}
-        {_id: user._id, hasUnreadMessage: true}
+        {_id: userId, hasUnreadMessage: true}
       ]
       expiresAt: Connections.nextExpirationDate new Date
       type: connectionType
 
+    return connectionId
+
+  connectWithUserAndSendMessage: (user, connectionType) ->
+    connectionId = @connectWithUser(user._id, connectionType)
     user.sendTestPushMessage "It's a Ketch! #{@firstName} also thinks highly of you :)"
     return connectionId
 

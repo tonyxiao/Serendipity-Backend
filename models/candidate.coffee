@@ -35,7 +35,7 @@ Candidates.helpers
       console.log "cannot make choices for candidates that are not active"
 
     if @matchesWithInverse()
-      return @forUser().connectWithUser @user(), choice
+      return @forUser().connectWithUserAndSendMessage @user(), choice
 
   findInverse: ->
     Candidates.findOne { forUserId: @userId, userId: @forUserId }
