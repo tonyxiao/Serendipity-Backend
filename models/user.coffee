@@ -11,7 +11,7 @@ CollectionBehaviours.extendCollectionInstance(Meteor.users)
 Users.timestampable()
 
 # TODO: schema validation for devices, photos, etc
-Users.attachSchema new SimpleSchema
+@UserSchema = new SimpleSchema
   about:
     type: String
     optional: true
@@ -49,7 +49,7 @@ Users.attachSchema new SimpleSchema
     blackbox: true
   status:
     type: String
-    optional: true
+    #optional: true
     allowedValues: ['deleted', 'active']
   roles:
     type: [String]
@@ -58,10 +58,11 @@ Users.attachSchema new SimpleSchema
     type: String
     optional: true
     allowedValues: ['yes', 'blocked', 'snoozed']
-    defaultValue: "snoozed"
   work:
     type: String
     optional: true
+
+Users.attachSchema @UserSchema
 
 # MARK: - Instance Methods
 Users.helpers

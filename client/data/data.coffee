@@ -42,7 +42,7 @@ Template.dataPatch.helpers
   usersWithInvalidProfiles: ->
     invalidUsers = []
     Users.find().fetch().forEach (user) ->
-      if !user._id?
+      if !Match.test(user, UserSchema)
         invalidUsers.push(user)
     return invalidUsers
 
