@@ -52,6 +52,7 @@ class @MatchService
     maxCount ?= 12 # Default to 12 max
     ineligibleUserIds = _.map user.allCandidates().fetch(), (candidate) -> candidate.userId
     ineligibleUserIds.push user._id
+    ineligibleUserIds.push Meteor.settings.CRAB_USER_ID
 
     # TODO: Randomize & take into account gender, machine learning, what have you
     matchedUsers = Users.find({
