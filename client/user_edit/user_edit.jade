@@ -1,6 +1,6 @@
 template(name='userEdit')
-  section.import
+  section.import(data-user-id=_id)
     h1 Edit User
       p Please take caution in doing this.
     textarea#json-text #{info}
-    button.import-submit Submit
+    button.edit-submit Submit

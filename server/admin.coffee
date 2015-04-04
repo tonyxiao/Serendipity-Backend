@@ -37,6 +37,16 @@ Meteor.methods
     user = Users.findOne userId
     user.block()
 
+  'admin/user/edit': (userId, userInfo) ->
+    try
+      userInfo = JSON.parse userInfo
+      Users.update userId,
+        $set: userInfo
+      console.log "user #{userId} edited"
+    catch error
+      console.log error
+      throw new Meteor.Error(400, 'Unable to import', 'Likely malformed json');
+
   'admin/user/photo/reset': (userId) ->
     user = Users.findOne userId
     photos = user.photos
