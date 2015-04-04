@@ -115,14 +115,16 @@ Users.helpers
       candidate.unvet()
 
   profilePhotoUrl: ->
-    photo = _.first @sortedActivePhotos()
-    if photo?
-      return photo.url
+    if @photos? and @photos.length > 0
+      photo = _.first @sortedActivePhotos()
+      if photo?
+        return photo.url
+
+    return null
 
   sortedActivePhotos: ->
     activePhotos = @sortedPhotos().filter (element) ->
       return element.active == true
-
     return activePhotos
 
   sortedPhotos: ->
