@@ -10,7 +10,39 @@ CollectionBehaviours.extendCollectionInstance(Meteor.users)
 @Users = Meteor.users
 Users.timestampable()
 
-# TODO: Add schema validation for user model
+# MARK: - Schema Validation
+Users.attachSchema new SimpleSchema
+  about: type: String
+  age: type: Number
+  education: type: String
+  firstName: type: String
+  gender:
+    type: String
+    allowedValues: ['male', 'female']
+  lastName: type: String
+  location: type: String
+  nextRefreshTimestamp: type: Date
+  devices:
+    type: [Object]
+    optional: true
+    blackbox: true
+  photos:
+    type: [Object]
+    optional: true
+    blackbox: true
+  services:
+    type: Object
+    optional: true
+    blackbox: true
+  roles:
+    type: [String]
+    optional: true
+  vetted:
+    optional: true
+    type: String
+    #allowedValues: ['yes', 'no', 'blocked', 'snoozed']
+  work: type: String
+
 
 # MARK: - Instance Methods
 Users.helpers
