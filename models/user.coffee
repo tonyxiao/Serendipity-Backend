@@ -119,8 +119,10 @@ Users.helpers
 
   # TODO: Make this generic
   sendTestPushMessage: (message) ->
+    firstName = @firstName
     _.each @devices, (device) ->
-      PushService.sendTestMessage device.pushToken, device.apnEnvironment, device.appId, message
+      if device.pushToken? and device.pushToken != "" and device.apnEnvironment? and device.appId?
+        PushService.sendTestMessage device.pushToken, device.apnEnvironment, device.appId, message
 
   updateNextRefreshTimestamp: ->
     intervalMillis = (Meteor.settings && Meteor.settings.REFRESH_INTERVAL_MILLIS) or 86400000 # 24 hours
