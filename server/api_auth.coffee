@@ -1,7 +1,5 @@
 logger = Meteor.npmRequire('bunyan').createLogger name: 'auth'
 
-
-
 # TODO: Do we need Meteor.startup here?
 Meteor.startup ->
 
