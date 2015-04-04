@@ -55,8 +55,4 @@ Meteor.startup ->
     if not user.photoUrls?
       user.reloadPhotosFromFacebook()
 
-    # a newly registered user will have no matches, let's give him / her some love
-    if user.candidateQueue().count() < Candidates.NUM_CANDIDATES_PER_GAME
-      user.populateCandidateQueue 12
-
     return userId: user._id
