@@ -79,14 +79,6 @@ Meteor.methods
 
     matchService.unpause()
 
-  'user/delete': (userId) ->
-    user = Users.findOne userId
-    if user?
-      user.markAsDeleted()
-
-  'user/report': (reporterId, reporteeId) ->
-    console.log 'user reporting not implemented'
-
   'user/clearPhotos': (userId) ->
     user = Users.findOne userId
     if user?

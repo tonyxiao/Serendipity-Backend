@@ -10,6 +10,14 @@ Meteor.methods
       pushToken: pushToken
       updatedAt: new Date
 
+  'user/delete': ->
+    user = Meteor.user()
+    if user?
+      user.markAsDeleted()
+
+  'user/report': (userIdToReport, reason) ->
+    console.log 'user reporting not implemented'
+
   'candidate/submitChoices': (choices) ->
     # TODO: Add validation for input params
     result = _.object _.map choices, (candidateId, choice) ->
