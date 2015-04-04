@@ -43,6 +43,11 @@ Router.route '/vet', ->
 Router.route '/data', ->
   @render 'dataPatch'
 
+Router.route '/users/:_id/edit', ->
+  user = Users.findOne(@params._id)
+  if user?
+    @render 'userEdit', data: user
+
 # Catch all route to splash screen
 Router.route '/(.*)', ->
   @render 'splash'
