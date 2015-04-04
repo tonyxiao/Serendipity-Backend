@@ -62,22 +62,17 @@ Users.helpers
       $set: vetted: "yes"
 
   unVet: ->
-    Users.update @_id,
-      $set: vetted: "no"
-    @clearAllCandidates()
-    @clearFromOtherUsersCandidateList()
-    @clearAllConnections()
+    @_changeVetStatus "no"
 
   block: ->
-    Users.update @_id,
-      $set: vetted: "blocked"
-    @clearAllCandidates()
-    @clearFromOtherUsersCandidateList()
-    @clearAllConnections()
+    @_changeVetStatus "blocked"
 
   snooze: ->
+    @_changeVetStatus "snoozed"
+
+  _changeVetStatus: (vetStatus) ->
     Users.update @_id,
-      $set: vetted: "snoozed"
+      $set: vetted: vetStatus
     @clearAllCandidates()
     @clearFromOtherUsersCandidateList()
     @clearAllConnections()
