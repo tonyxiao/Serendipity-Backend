@@ -51,6 +51,9 @@ Meteor.startup ->
     # TODO: handle timezone changes
     info.timezone = 'America/Los_Angeles'
 
+    if !user.vetted?
+      info.vetted = 'no'
+
     Users.update user._id,
       $set: info
 
