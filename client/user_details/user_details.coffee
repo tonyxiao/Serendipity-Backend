@@ -1,7 +1,8 @@
 Template.userDetails.helpers
   orderedPhotos: (photos) ->
-    photos.sort (a,b) ->
-      return a.order > b.order
+    if photos?
+      photos.sort (a,b) ->
+        return a.order > b.order
 
   currentUserAndPhoto: ->
     currentUser = Template.parentData(1)
