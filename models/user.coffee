@@ -13,27 +13,32 @@ Users.timestampable()
 # TODO: schema validation for devices, photos, etc
 Users.attachSchema new SimpleSchema
   about:
-    optional: true
     type: String
+    optional: true
   age:
-    optional: true
     type: Number
-  education:
     optional: true
-    type: String
-  firstName: type: String
-  gender:
-    type: String
-    allowedValues: ['male', 'female']
-  lastName: type: String
-  location:
-    optional: true
-    type: String
-  nextRefreshTimestamp: type: Date
   devices:
     type: [Object]
     optional: true
     blackbox: true
+  education:
+    type: String
+    optional: true
+  firstName:
+    type: String
+    optional: true
+  gender:
+    type: String
+    optional: true
+    allowedValues: ['male', 'female']
+  lastName: type: String
+  location:
+    type: String
+    optional: true
+  nextRefreshTimestamp:
+    type: Date
+    optional: true
   photos:
     type: [Object]
     optional: true
@@ -47,11 +52,11 @@ Users.attachSchema new SimpleSchema
     optional: true
   vetted:
     type: String
-    allowedValues: ['yes', 'no', 'blocked', 'snoozed']
-  work:
     optional: true
+    allowedValues: ['yes', 'blocked', 'snoozed']
+  work:
     type: String
-
+    optional: true
 
 # MARK: - Instance Methods
 Users.helpers
