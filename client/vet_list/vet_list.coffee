@@ -8,5 +8,5 @@ Template.vetQueue.helpers
       { sort: createdAt: 1, firstName: 1 }
 
   newUsers: ->
-    return Users.find { vetted: null },
+    return Users.find { $or: [{vetted: null}, {vetted: "no"}] },
       { sort: createdAt: 1, firstName: 1 }
