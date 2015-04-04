@@ -5,3 +5,4 @@ Meteor.settings.HARD_MIN_BUILD = Meteor.settings.HARD_MIN_BUILD or process.env.H
 Meteor.settings.PHOTO_COUNT_TO_DISPLAY = Meteor.settings.PHOTO_COUNT_TO_DISPLAY or process.env.PHOTO_COUNT_TO_DISPLAY or 3
 Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES = Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES or process.env.NUM_ALLOWED_ACTIVE_GAMES or 1
 Meteor.settings.CRAB_USER_ID = Meteor.settings.CRAB_USER_ID or process.env.CRAB_USER_ID or "crab"
+Meteor.settings.REFRESH_INTERVAL_MILLIS = Meteor.settings.REFRESH_INTERVAL_MILLIS or process.env.REFRESH_INTERVAL_MILLIS or 86400000 # 24 hours

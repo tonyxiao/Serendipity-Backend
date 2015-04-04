@@ -47,6 +47,10 @@ Users.attachSchema new SimpleSchema
     type: Object
     optional: true
     blackbox: true
+  status:
+    type: String
+    optional: true
+    allowedValues: ['deleted', 'active']
   roles:
     type: [String]
     optional: true
@@ -54,6 +58,7 @@ Users.attachSchema new SimpleSchema
     type: String
     optional: true
     allowedValues: ['yes', 'blocked', 'snoozed']
+    defaultValue: "snoozed"
   work:
     type: String
     optional: true
@@ -95,12 +100,10 @@ Users.helpers
     @status? && @status == 'deleted'
 
   _unmarkAsDeleted: ->
-    # TODO: there should be type checking on status once user is refactored into a schema
     Users.update @_id,
-      $unset: status : ""
+      $unset: status : "active"
 
   markAsDeleted: ->
-    # TODO: there should be type checking on status once user is refactored into a schema
     Users.update @_id,
       $set: status: 'deleted'
 
@@ -168,7 +171,7 @@ Users.helpers
         PushService.sendTestMessage device.pushToken, device.apnEnvironment, device.appId, message
 
   updateNextRefreshTimestamp: ->
-    intervalMillis = (Meteor.settings && Meteor.settings.REFRESH_INTERVAL_MILLIS) or 86400000 # 24 hours
+    intervalMillis = Meteor.settings.REFRESH_INTERVAL_MILLIS
     @nextRefreshTimestamp.setTime(@nextRefreshTimestamp.getTime() + intervalMillis)
 
     @setNextRefreshTimestamp(@nextRefreshTimestamp)
@@ -232,7 +235,6 @@ Users.helpers
       userId: userId
 
     if !candidate?
-
       candidateUser = Users.findOne userId
       # Candidates can only be generated when both users are vetted
       if candidateUser? && @isVetted() && candidateUser.isVetted()
