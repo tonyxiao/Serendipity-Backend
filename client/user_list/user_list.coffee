@@ -8,6 +8,11 @@ Template.userList.helpers
         okUsers.push(user)
     return okUsers
 
+  crab: ->
+    crabUserId = Crab.findOne("crabUserId")
+    if crabUserId?
+      return Users.findOne crabUserId.value
+
   # TODO: refactor this and {@code users} to share code.
   usersRunningOutOfVettedCandidates: ->
     runningOutOfMatches = []

@@ -5,6 +5,10 @@ Meteor.subscribe 'allConnections'
 Meteor.subscribe 'allMessages'
 Meteor.subscribe 'metadata'
 
+## Client side collections
+@Version = new Mongo.Collection 'version'
+@Crab = new Mongo.Collection 'crab'
+
 ## Routing
 
 Router.route '/users', ->

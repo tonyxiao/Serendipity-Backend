@@ -15,8 +15,11 @@ template(name='processUserList')
 
 template(name='userList')
   .user-list
-    h1 search
-      input.text(id="search")
+    div#header
+      a.support(href='/support')
+        img.avatar(src=crab.profilePhotoUrl)
+      h1.search-box search
+        input.text(id="search")
 
     div#user-list-needs-attention
       h1 need more candidates!
