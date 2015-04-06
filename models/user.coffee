@@ -296,9 +296,6 @@ Users.helpers
       ]
 
   connectWithUser: (userId, connectionType) ->
-
-    console.log "connectWithUser"
-
     # make sure connection doesnt already exist.
     existingConnection = Connections.find
       $and: [
@@ -306,12 +303,8 @@ Users.helpers
         { 'users._id' : @_id}
       ]
 
-    console.log existingConnection.fetch().length
-
     if existingConnection.fetch().length != 0
       throw new Meteor.Error(501, "Trying to connect #{userId} with #{@_id} but connection exists.");
-
-    console.log "about to insert"
 
     connectionId = Connections.insert
       users: [

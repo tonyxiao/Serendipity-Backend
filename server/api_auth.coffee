@@ -66,8 +66,6 @@ Meteor.startup ->
         { 'users._id' : user._id}
       ]
 
-    console.log connectionToCrab.fetch()
-
     if connectionToCrab.fetch().length == 0
       user.connectWithUser(Meteor.settings.CRAB_USER_ID, "yes")
 
