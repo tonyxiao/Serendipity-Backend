@@ -59,17 +59,20 @@ Meteor.startup ->
     Users.update user._id,
       $set: info
 
-    # Update user photos if need be
-    if !user.photoUrls?
-      user.reloadPhotosFromFacebook()
-
-    connectionToCrab = Connections.findOne
+    # For first time users, establish connection with crab
+    connectionToCrab = Connections.find
       $and: [
         { 'users._id' : Meteor.settings.CRAB_USER_ID }
         { 'users._id' : user._id}
       ]
 
-    if !connectionToCrab?
+    console.log connectionToCrab.fetch()
+
+    if connectionToCrab.fetch().length == 0
       user.connectWithUser(Meteor.settings.CRAB_USER_ID, "yes")
+
+    # Update user photos if need be
+    if !user.photoUrls?
+      user.reloadPhotosFromFacebook()
 
     return userId: user._id
