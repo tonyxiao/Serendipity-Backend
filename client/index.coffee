@@ -47,6 +47,9 @@ Router.route '/vet', ->
 Router.route '/data', ->
   @render 'dataPatch'
 
+Router.route '/support', ->
+  @render 'support'
+
 Router.route '/users/:_id/edit', ->
   user = Users.findOne(@params._id)
   if user?

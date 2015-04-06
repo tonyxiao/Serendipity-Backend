@@ -1,0 +1,8 @@
+template(name='support')
+  .support
+    h1 Ketchy Convos
+    +each active
+      .connection-details(data-connection-id=_id)
+        +renderConnectionUser getUserFromConnection
+        +connectionUserActions getCrabFromConnnection
+        +connectionMessages

@@ -1,6 +1,26 @@
 //
    Created by Tony on 2/24/15.
 
+template(name='renderConnectionUser')
+  +with dereferenceUser this
+    p #{ firstName }
+    a(href="/users/#{ _id }")
+      img.avatar(src=profilePhotoUrl)
+
+template(name='connectionUserActions')
+  +with dereferenceUser this
+    ul
+      li Last Sent Message Date: #{ lastSentDate }
+      li Has Unread Message: #{ hasUnreadMessage }
+        button.mark-as-read Mark As Read for #{ firstName }
+    .actions
+        textarea.message-text
+        button.send-message Send Message as #{ firstName }
+
+template(name='connectionMessages')
+  ol
+    +each messages
+      li #{ sender.firstName } [#{ createdAt }]: #{ text }
 
 template(name='connectionDetails')
   .connection-details(data-connection-id=_id)
@@ -21,23 +41,10 @@ template(name='connectionDetails')
     h2 User Specific Info
     +each users
       .user-info
-        +with dereferenceUser this
-          a(href="/users/#{ _id }")
-            img.avatar(src=profilePhotoUrl)
-            span #{ firstName } Info
-
-        ul
-          li Last Sent Message Date: #{ lastSentDate }
-          li Has Unread Message: #{ hasUnreadMessage }
-            button.mark-as-read Mark As Read
-        .actions
-          +with dereferenceUser this
-            textarea.message-text
-            button.send-message Send Message as #{ firstName }
-
+        +renderConnectionUser
+        +connectionUserActions
 
     h2 Messages
-    ol
-      +each messages
-        li #{ sender.firstName } [#{ createdAt }]: #{ text }
+    +connectionMessages
+
 
