@@ -44,8 +44,9 @@ Meteor.methods
         $set: userInfo
       console.log "user #{userId} edited"
     catch error
-      console.log error
-      throw new Meteor.Error(400, 'Unable to import', 'Likely malformed json');
+      errorString = 'Exception: Unable to import. Likely malformed json'
+      console.log errorString
+      throw new Meteor.Error(400, errorString);
 
   'admin/user/photo/reset': (userId) ->
     user = Users.findOne userId
@@ -70,8 +71,9 @@ Meteor.methods
       Users.update userId,
         $set: photos: photos
     else
-      throw new Meteor.Error(500, 'Cannot swap photos',
-        'Are you sure you are swapping valid image indices?');
+      errorString = 'Exception: Cannot swap photos are you sure you are swapping valid image indices?'
+      console.log errorString
+      throw new Meteor.Error(500, errorString);
 
   'admin/user/delete/restore': (userId) ->
     user = Users.findOne userId
@@ -207,5 +209,6 @@ Meteor.methods
     try
       FixtureService.importFromTinder JSON.parse jsonText
     catch error
-      console.log error
-      throw new Meteor.Error(400, 'Unable to import', 'Likely malformed json');
+      errorString = 'Exception: Unable to import. Likely malformed json'
+      console.log errorString
+      throw new Meteor.Error(400, errorString);

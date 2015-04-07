@@ -154,7 +154,6 @@ Users.helpers
     _.find @devices, (d) -> d._id == deviceId
 
   addDevice: (device) ->
-    # TODO: Add validation for _id, pushToken, appId, apnEnvironment
     if not @devices?
       @devices = []
     existingDevice = @getDevice device._id
@@ -243,7 +242,9 @@ Users.helpers
 
   addUserAsCandidate: (userId) ->
     if userId == Meteor.settings.CRAB_USER_ID
-      throw new Meteor.Error(501, "Attempting to create crab as candidate.")
+      errorString = 'Excepton: Attempting to create crab as candidate'
+      console.log errorString
+      throw new Meteor.Error(501, errorString)
 
     # TODO: Handle error, make more efficient
     candidate = Candidates.findOne
@@ -260,7 +261,9 @@ Users.helpers
           vetted: false
           active: false
       else
-        throw new Meteor.Error(500, "Attempting to add candidate <" + @_id + "," + userId + ">. Both users need to be vetted first");
+        errorString = "Exception: Attempting to add candidate <" + @_id + "," + userId + ">. Both users need to be vetted first"
+        console.log errorString
+        throw new Meteor.Error(500, errorString)
 
   vettedCandidates: (numCandidates) ->
     Candidates.find({
@@ -317,7 +320,9 @@ Users.helpers
       ]
 
     if existingConnection.fetch().length != 0
-      throw new Meteor.Error(501, "Trying to connect #{userId} with #{@_id} but connection exists.");
+      errorString = "Trying to connect #{userId} with #{@_id} but connection exists."
+      console.log errorString
+      throw new Meteor.Error(500, errorString)
 
     connectionId = Connections.insert
       users: [
