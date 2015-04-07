@@ -232,6 +232,9 @@ Users.helpers
       choice: null
 
   addUserAsCandidate: (userId) ->
+    if userId == Meteor.settings.CRAB_USER_ID
+      throw new Meteor.Error(501, "Attempting to create crab as candidate.")
+
     # TODO: Handle error, make more efficient
     candidate = Candidates.findOne
       forUserId: @_id
