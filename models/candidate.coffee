@@ -41,6 +41,9 @@ Candidates.helpers
     Candidates.findOne { forUserId: @userId, userId: @forUserId }
 
   createInverse: ->
+    if @forUserId == Meteor.settings.CRAB_USER_ID || @userId == Meteor.settings.CRAB_USER_ID
+      throw new Meteor.Error(501, "Attempting to create crab as candidate.")
+
     Candidates.insert
       forUserId: @userId
       userId: @forUserId
