@@ -10,6 +10,21 @@ CollectionBehaviours.extendCollectionInstance(Meteor.users)
 @Users = Meteor.users
 Users.timestampable()
 
+@DeviceSchema = new SimpleSchema
+  _id:
+    type: String
+    min: 1 # not empty
+  appId:
+    type: String
+    min: 1 # not empty
+  apnEnvironment:
+    type: String
+    min: 1 # not empty
+  pushToken:
+    type: String
+    min: 1 # not empty
+  updatedAt: type: Date
+
 # TODO: schema validation for devices, photos, etc
 @UserSchema = new SimpleSchema
   about:
@@ -19,9 +34,8 @@ Users.timestampable()
     type: Number
     optional: true
   devices:
-    type: [Object]
+    type: [@DeviceSchema]
     optional: true
-    blackbox: true
   education:
     type: String
     optional: true
@@ -144,7 +158,6 @@ Users.helpers
 
   addDevice: (device) ->
     # TODO: Add validation for _id, pushToken, appId, apnEnvironment
-
     if not @devices?
       @devices = []
     existingDevice = @getDevice device._id
