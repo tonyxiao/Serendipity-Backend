@@ -88,9 +88,6 @@ Users.helpers
     Users.update @_id,
       $set: vetted: "yes"
 
-  unVet: ->
-    @_changeVetStatus "no"
-
   block: ->
     @_changeVetStatus "blocked"
 
