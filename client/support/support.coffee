@@ -7,7 +7,7 @@ Template.support.helpers
     return @.cachedNonCrabUser
 
   active: ->
-    crabUser = Crab.findOne("crabUserId")
+    crabUser = Metadata.findOne("crabUserId")
     if crabUser?
       crabUserId = crabUser.value
       selector = 'users._id': crabUserId

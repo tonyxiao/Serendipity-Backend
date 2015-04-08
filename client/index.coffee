@@ -6,12 +6,9 @@ Meteor.subscribe 'allMessages'
 Meteor.subscribe 'metadata'
 
 ## Client side collections
-@Version = new Mongo.Collection 'version'
-@Crab = new Mongo.Collection 'crab'
-@Vetted = new Mongo.Collection 'vetted'
+@Metadata = new Mongo.Collection 'metadata'
 
 ## Routing
-
 Router.route '/users', ->
   @render 'userList'
 

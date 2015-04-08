@@ -9,7 +9,7 @@ Template.userList.helpers
     return okUsers
 
   crab: ->
-    crabUserId = Crab.findOne("crabUserId")
+    crabUserId = Metadata.findOne("crabUserId")
     if crabUserId?
       return Users.findOne crabUserId.value
 

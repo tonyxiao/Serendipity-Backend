@@ -16,9 +16,9 @@ Meteor.publish 'metadata', ->
     value: Meteor.settings.CRAB_USER_ID
   }
 
-  this.added 'version', softMinBuild._id, softMinBuild
-  this.added 'version', hardMinBuild._id, hardMinBuild
-  this.added 'crab', crab._id, crab
+  this.added 'metadata', softMinBuild._id, softMinBuild
+  this.added 'metadata', hardMinBuild._id, hardMinBuild
+  this.added 'metadata', crab._id, crab
 
   if @userId
     user = Users.findOne @userId
@@ -28,7 +28,7 @@ Meteor.publish 'metadata', ->
       value: user.isVetted()
     }
 
-    this.added 'vetted', isVetted._id, isVetted
+    this.added 'metadata', isVetted._id, isVetted
 
   this.ready()
 
