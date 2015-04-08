@@ -8,6 +8,7 @@ Meteor.subscribe 'metadata'
 ## Client side collections
 @Version = new Mongo.Collection 'version'
 @Crab = new Mongo.Collection 'crab'
+@Vetted = new Mongo.Collection 'vetted'
 
 ## Routing
 

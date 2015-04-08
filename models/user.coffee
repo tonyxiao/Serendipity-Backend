@@ -427,6 +427,7 @@ Users.helpers
     if !view?
       view = _.clone this
 
+    delete view.vetted
     delete view.services
 
     @_updateBirthdayInView(view)
