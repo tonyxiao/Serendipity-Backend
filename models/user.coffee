@@ -253,15 +253,21 @@ Users.helpers
 
     if !candidate?
       candidateUser = Users.findOne userId
+
+      if @isBlocked() || candidateUser.isBlocked()
+        errorString = "Trying to add blocked user to candidate queue <#{@_id}, #{userId}>."
+        console.log errorString
+        throw new Meteor.Error(500, errorString)
+
       # Candidates can only be generated when both users are vetted
-      if candidateUser? && @isVetted() && candidateUser.isVetted()
+      if candidateUser? && candidateUser.isVetted()
         Candidates.insert
           forUserId: @_id
           userId: userId
           vetted: false
           active: false
       else
-        errorString = "Exception: Attempting to add candidate <" + @_id + "," + userId + ">. Both users need to be vetted first"
+        errorString = "Ensure  <#{userId}> is vetted before adding to queue of <#{@_id}>"
         console.log errorString
         throw new Meteor.Error(500, errorString)
 
