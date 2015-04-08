@@ -158,16 +158,15 @@ Users.helpers
       @devices = []
     existingDevice = @getDevice device._id
     if existingDevice?
+      # Modify in-db - remove it so that we can push again.
+      Users.update @_id, $pull: devices: existingDevice
+
       # Modify in-memory
       _.extend existingDevice, device
-      # Modify in-db
-      selector = _id: @_id, 'devices._id': device._id
-      modifier = _.object _.map device, (value, key) ->
-        ["users.$.#{key}", value]
-      Users.update selector, $set: modifier
-    else
-      @devices.push device
-      Users.update @_id, $push: devices: device
+
+
+    @devices.push device
+    Users.update @_id, $push: devices: device
 
   removeDevice: (device) ->
     if @devices?
