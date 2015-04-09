@@ -68,7 +68,19 @@ Meteor.startup ->
       ]
 
     if connectionToCrab.fetch().length == 0
-      user.connectWithUser(Meteor.settings.CRAB_USER_ID, "yes")
+      connectionId = user.connectWithUser(Meteor.settings.CRAB_USER_ID, "yes")
+
+      # in an ideal world, this would be 'never', but since we are forced to add an
+      # expiration timestamp to our data model, set this to far far into the future.
+      crabExpiresAt = new Date Meteor.settings.CRAB_EXPIRATION_DATE_MILLIS
+
+      console.log "updated #{connectionId} with #{crabExpiresAt}"
+
+      Connections.update connectionId,
+        $set:
+          expiresAt: crabExpiresAt
+
+
 
     # Update user photos if need be
     if !user.photoUrls?
