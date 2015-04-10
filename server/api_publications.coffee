@@ -1,3 +1,6 @@
+DEBUG = Meteor.settings.DEBUG
+console.log "debug: #{DEBUG}"
+
 Meteor.publish 'metadata', ->
   currentUser = Users.findOne @userId
 
@@ -37,6 +40,9 @@ Meteor.publish 'messages', ->
     return Users.findOne(@userId).allMessages()
 
 Meteor.publish 'currentUser', ->
+  if DEBUG
+    console.log "sending currentUser"
+
   if @userId
     self = this
 
@@ -51,7 +57,14 @@ Meteor.publish 'currentUser', ->
     )
     initializing = false
 
-    self.added 'users', @userId, Users.findOne(@userId).view()
+    user = Users.findOne(@userId).view()
+
+    self.added 'users', @userId, user
+
+    if DEBUG
+      console.log "sent currentUser #{@userId}"
+      console.log user
+
     self.ready()
     @onStop ->
       handle.stop()
@@ -63,9 +76,15 @@ Meteor.publish 'currentUser', ->
 # {@code Meteor.user} corresponding to those connections.
 #
 Meteor.publish 'connections', ->
+  if DEBUG
+    console.log "publishing connections"
+
   if @userId
     currentUser = Users.findOne @userId
     self = this
+
+    if DEBUG
+      console.log "publishing connections for current user #{@userId}"
 
     # a dictionary of connection_id to connected user
     connectedUsers = {}
@@ -79,14 +98,26 @@ Meteor.publish 'connections', ->
           self.added 'users', otherUser._id, otherUser.connectionView()
           # keep track of who the connected user for removal purpose
           connectedUsers[connectionId] = otherUser._id
+
+          if DEBUG
+            console.log "adding conection #{connectionId}"
+
       removed: (connectionId) ->
         if !initializing
           self.removed 'connections', connectionId
           self.removed 'users', connectedUsers[connectionId]
           delete connectedUsers[connectionId]
+
+          if DEBUG
+            console.log "removing conection #{connectionId}"
+
       changed: (connectionId) ->
         if !initializing
           connection = Connections.findOne(connectionId)
+
+          if DEBUG
+            console.log "changing conection #{connectionId}"
+
           if connection.isExpired()
             self.removed 'connections', connectionId
             self.removed 'users', connectedUsers[connectionId]
@@ -115,7 +146,13 @@ Meteor.publish 'connections', ->
 ###
 
 Meteor.publish 'candidates', ->
+  console.log "publishing candidates"
+
   if @userId
+
+    if DEBUG
+      console.log "publishing connections for current user #{@userId}"
+
     self = this
     # a dictionary of match_id to matched user
     usersByCandidate = {}
@@ -128,11 +165,18 @@ Meteor.publish 'candidates', ->
           self.added 'candidates', candidateId, candidate.clientView()
           self.added 'users', user._id, user.connectionView()
           usersByCandidate[candidateId] = user._id
+
+          if DEBUG
+            console.log "adding candidate #{candidateId}"
+
       removed: (candidateId) ->
         if !initializing && usersByCandidate[candidateId]?
           self.removed 'candidates', candidateId
           self.removed 'users', usersByCandidate[candidateId]
           delete usersByCandidate[candidateId]
+
+          if DEBUG
+            console.log "removing candidate #{candidateId}"
 
     initializing = false
     currentCandidates = Users.findOne(@userId).activeCandidates().fetch()

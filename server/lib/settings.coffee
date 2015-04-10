@@ -7,3 +7,4 @@ Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES = Meteor.settings.NUM_ALLOWED_ACTIVE_GA
 Meteor.settings.CRAB_USER_ID = Meteor.settings.CRAB_USER_ID or process.env.CRAB_USER_ID or "crab"
 Meteor.settings.REFRESH_INTERVAL_MILLIS = Meteor.settings.REFRESH_INTERVAL_MILLIS or process.env.REFRESH_INTERVAL_MILLIS or 86400000 # 24 hours
 Meteor.settings.CRAB_EXPIRATION_DATE_MILLIS = Meteor.settings.CRAB_EXPIRATION_DATE_MILLIS or process.env.CRAB_EXPIRATION_DATE_MILLIS or 5680281600000 # December 31, 2149
+Meteor.settings.DEBUG = Meteor.settings.DEBUG or process.env.DEBUG or true
