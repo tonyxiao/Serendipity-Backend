@@ -58,10 +58,12 @@ Connections.helpers
     @setUserKeyValue recipient, 'hasUnreadMessage', true
 
     # Compute the next expiration date
-    expiresAt = @expireAt
     lastSentDates = _.compact _.pluck(@users, 'lastSentDate')
     if lastSentDates.length == 2
-      expiresAt = Connections.nextExpirationDate _.min(lastSentDates)
+      # update expiresAt if both users have said something
+      # TODO: once the concept of "never expiring" gets implemented for ketchy,
+      # remove this logic, since expireAt should never be bigger than t + 3 days.
+      expiresAt = new Date(Math.max(@expiresAt, Connections.nextExpirationDate _.min(lastSentDates)))
 
     Connections.update @_id,
       $set:
