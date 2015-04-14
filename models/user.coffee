@@ -436,7 +436,7 @@ Users.helpers
 
     return view
 
-  connectionView: ->
+  candidateView: ->
     view = @_clientView _.clone this
     delete view.lastName
     return view

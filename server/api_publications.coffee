@@ -95,7 +95,7 @@ Meteor.publish 'connections', ->
           connection = Connections.findOne(connectionId)
           otherUser = connection.otherUser currentUser
           self.added 'connections', connection._id, connection.clientView(currentUser)
-          self.added 'users', otherUser._id, otherUser.connectionView()
+          self.added 'users', otherUser._id, otherUser.view()
           # keep track of who the connected user for removal purpose
           connectedUsers[connectionId] = otherUser._id
 
@@ -131,7 +131,7 @@ Meteor.publish 'connections', ->
     currentUserConnections.forEach (connection) ->
       otherUser = connection.otherUser currentUser
       self.added 'connections', connection._id, connection.clientView(currentUser)
-      self.added 'users', otherUser._id, otherUser.connectionView()
+      self.added 'users', otherUser._id, otherUser.view()
       connectedUsers[connection._id] = otherUser._id
 
     self.ready()
@@ -163,7 +163,7 @@ Meteor.publish 'candidates', ->
           candidate = Candidates.findOne candidateId
           user = candidate.user()
           self.added 'candidates', candidateId, candidate.clientView()
-          self.added 'users', user._id, user.connectionView()
+          self.added 'users', user._id, user.candidateView()
           usersByCandidate[candidateId] = user._id
 
           if DEBUG
@@ -183,7 +183,7 @@ Meteor.publish 'candidates', ->
     currentCandidates.forEach (candidate) ->
       user = candidate.user()
       self.added 'candidates', candidate._id, candidate.clientView()
-      self.added 'users', user._id, user.connectionView()
+      self.added 'users', user._id, user.candidateView()
       usersByCandidate[candidate._id] = user._id
 
     self.ready()
