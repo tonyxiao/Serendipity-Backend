@@ -32,7 +32,7 @@ Connections.helpers
     return null
 
   otherUser: (thisUser) ->
-    recipientId = otherUserId thisUser
+    recipientId = @otherUserId thisUser
     if recipientId?
       return Users.findOne recipientId
     return null
