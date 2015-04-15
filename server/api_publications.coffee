@@ -42,12 +42,15 @@ Meteor.publish 'metadata', ->
       changed: (metadataId, value) ->
         if !initializing
           logger.info "changing #{metadataId} from user #{self.userId} to value #{value}"
+
+          currentUser = Users.findOne self.userId
           MetadataSchema.objectKeys().forEach (fieldName) ->
             if metadataId == fieldName
-              fieldNameToUpdate = "metadata.#{fieldName}"
-              Users.update self.userId,
-                $set:
-                  fieldNameToUpdate : value
+              settings = {
+                _id: metadataId
+                value: currentUser['metadataId']
+              }
+              self.changed 'metadata', metadataId, settings
     )
     initializing = false
 
