@@ -57,6 +57,9 @@ Meteor.startup ->
     if !user.vetted?
       info.vetted = 'snoozed'
 
+    if !user.metadata?
+      info.metadata = {}
+
     Users.update user._id,
       $set: info
 
