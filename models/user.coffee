@@ -36,7 +36,9 @@ Users.timestampable()
   hasBeenWelcomed:
     type: Boolean
     optional: true
-
+  debugState:
+    type: String
+    optional: true
 
 # TODO: schema validation for devices, photos, etc
 @UserSchema = new SimpleSchema
