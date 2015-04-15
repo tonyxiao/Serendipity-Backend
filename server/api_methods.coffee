@@ -43,3 +43,18 @@ Meteor.methods
     connection = Connections.findOne connectionId
     if connection?
       connection.markAsReadFor Meteor.user()
+
+  '/metadata/update': (id, metadata) ->
+    logger.info "metadata update #{id} | #{metadata}"
+
+    user = Meteor.user()
+    if user?
+      modified = {}
+      modified["metadata.#{id._id}"] = metadata['$set'].value
+
+      modifier = {
+        '$set': modified
+      }
+
+      Users.update user._id,
+        modifier
