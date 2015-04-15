@@ -15,10 +15,6 @@ Meteor.methods
     user = Meteor.user()
     if user?
       user.markAsDeleted()
-    else
-      error = new Meteor.Error(500, 'Can only call delete when user is logged in')
-      logger.error(error)
-      throw error
 
   'user/report': (userIdToReport, reason) ->
     logger.info 'user reporting not implemented'
