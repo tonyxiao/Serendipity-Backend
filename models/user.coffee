@@ -30,10 +30,10 @@ Users.timestampable()
   bugfenderId:
     type: String
     optional: true
-  gameTutorialMode
+  gameTutorialMode:
     type: Boolean
     optional: true
-  hasBeenWelcomed
+  hasBeenWelcomed:
     type: Boolean
     optional: true
 
