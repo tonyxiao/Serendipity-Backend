@@ -1,3 +1,4 @@
+logger = Meteor.npmRequire('bunyan').createLogger(name: 'users')
 
 # Not sure why these hack is necessary. Probably because the packages are loaded *after*
 # Meteor.users collection has already been created. Need to control package load order
@@ -241,9 +242,9 @@ Users.helpers
 
   addUserAsCandidate: (userId) ->
     if userId == Meteor.settings.CRAB_USER_ID
-      errorString = 'Excepton: Attempting to create crab as candidate'
-      console.log errorString
-      throw new Meteor.Error(501, errorString)
+      error =  new Meteor.Error(501, 'Excepton: Attempting to create crab as candidate')
+      logger.error(error)
+      throw error
 
     # TODO: Handle error, make more efficient
     candidate = Candidates.findOne
@@ -254,9 +255,9 @@ Users.helpers
       candidateUser = Users.findOne userId
 
       if @isBlocked() || candidateUser.isBlocked()
-        errorString = "Trying to add blocked user to candidate queue <#{@_id}, #{userId}>."
-        console.log errorString
-        throw new Meteor.Error(500, errorString)
+        error = new Meteor.Error(500, "Trying to add blocked user to candidate queue <#{@_id}, #{userId}>.")
+        logger.error(error)
+        throw error
 
       # Candidates can only be generated when both users are vetted
       if candidateUser? && candidateUser.isVetted()
@@ -266,9 +267,9 @@ Users.helpers
           vetted: false
           active: false
       else
-        errorString = "Ensure  <#{userId}> is vetted before adding to queue of <#{@_id}>"
-        console.log errorString
-        throw new Meteor.Error(500, errorString)
+        error = new Meteor.Error(500, "Ensure  <#{userId}> is vetted before adding to queue of <#{@_id}>")
+        logger.error(error)
+        throw error
 
   vettedCandidates: (numCandidates) ->
     Candidates.find({
@@ -325,9 +326,9 @@ Users.helpers
       ]
 
     if existingConnection.fetch().length != 0
-      errorString = "Trying to connect #{userId} with #{@_id} but connection exists."
-      console.log errorString
-      throw new Meteor.Error(500, errorString)
+      error = new Meteor.Error(500, "Trying to connect #{userId} with #{@_id} but connection exists.")
+      logger.error(error)
+      throw error
 
     connectionId = Connections.insert
       users: [

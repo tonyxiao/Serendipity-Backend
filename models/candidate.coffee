@@ -1,3 +1,4 @@
+logger = Meteor.npmRequire('bunyan').createLogger(name: 'candidates')
 
 @Candidates = new Mongo.Collection 'candidates'
 Candidates.timestampable()
@@ -42,9 +43,9 @@ Candidates.helpers
 
   createInverse: ->
     if @forUserId == Meteor.settings.CRAB_USER_ID || @userId == Meteor.settings.CRAB_USER_ID
-      errorString = 'Excepton: Attempting to create crab as candidate'
-      console.log errorString
-      throw new Meteor.Error(501, errorString)
+      error = new Meteor.Error(501, 'Exception: Attempting to create crab as candidate')
+      logger.error(error)
+      throw error
 
     Candidates.insert
       forUserId: @userId

@@ -5,9 +5,9 @@ Meteor.startup ->
 
   crab = Users.findOne(Meteor.settings.CRAB_USER_ID)
   if !crab?
-    errorString = 'Exception: Crab user not found! This means that users will not be able to chat with support!'
-    console.log errorString
-    throw new Meteor.Error(500, errorString);
+    error = new Meteor.Error(500, 'Exception: Crab user not found! This means that users will not be able to chat with support!');
+    logger.error(error)
+    throw error
 
   # Login handler for FB
   Accounts.registerLoginHandler 'fb-access', (serviceData) ->

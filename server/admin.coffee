@@ -1,3 +1,5 @@
+logger = Meteor.npmRequire('bunyan').createLogger(name: 'admin')
+
 # TODO: Consider prefixing admin methods with /admin
 Meteor.methods
   'admin/user/addPushToken': (userId, pushToken) ->
@@ -43,10 +45,10 @@ Meteor.methods
       Users.update userId,
         $set: userInfo
       console.log "user #{userId} edited"
-    catch error
-      errorString = 'Exception: Unable to import. Likely malformed json'
-      console.log errorString
-      throw new Meteor.Error(400, errorString);
+    catch e
+      error = new Meteor.Error(400, 'Exception: Unable to import. Likely malformed json');
+      logger.error(error)
+      throw error
 
   'admin/user/photo/reset': (userId) ->
     user = Users.findOne userId
@@ -71,9 +73,9 @@ Meteor.methods
       Users.update userId,
         $set: photos: photos
     else
-      errorString = 'Exception: Cannot swap photos are you sure you are swapping valid image indices?'
-      console.log errorString
-      throw new Meteor.Error(500, errorString);
+      error = new Meteor.Error(500, 'Exception: Cannot swap photos are you sure you are swapping valid image indices?');
+      logger.error(error)
+      throw error
 
   'admin/user/delete/restore': (userId) ->
     user = Users.findOne userId
@@ -209,6 +211,6 @@ Meteor.methods
     try
       FixtureService.importFromTinder JSON.parse jsonText
     catch error
-      errorString = 'Exception: Unable to import. Likely malformed json'
-      console.log errorString
-      throw new Meteor.Error(400, errorString);
+      error = new Meteor.Error(400, 'Exception: Unable to import. Likely malformed json')
+      logger.error(error)
+      throw error
