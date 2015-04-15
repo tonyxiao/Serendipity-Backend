@@ -8,6 +8,8 @@ Connections.attachSchema new SimpleSchema
   'users.$._id': type: String
   'users.$.hasUnreadMessage': type: Boolean
   'users.$.lastSentDate': type: Date, optional: true
+  'users.$.lastMessageIdSeen': type: String, optional: true
+  'users.$.lastTimestampSeen': type: String, optional: true
   expiresAt: type: Date
   expired: type: Boolean, optional: true
   lastMessageText: type: String, optional: true
@@ -19,11 +21,24 @@ Connections.attachSchema new SimpleSchema
 Connections.helpers
 
   isExpired: ->
-    @expired
+    return @expired
 
   messages: ->
     Messages.find
       connectionId: @_id
+
+  lastMessageBy: (userId) ->
+    messagesBySender = Messages.find({
+      connectionId: @_id
+      senderId: userId
+    }, { sort:
+      createdAt: -1
+    }).fetch()
+
+    # TODO: should use limit here, but limit is undefined in minimongo?
+    if messagesBySender.length > 0
+      return messagesBySender[0]
+    return null
 
   otherUserId: (thisUser) ->
     userIds = _.pluck @users, '_id'
@@ -40,6 +55,16 @@ Connections.helpers
   getUserInfo: (user) ->
     _.find @users, (u) -> u._id == user._id
 
+  markAsReadFor: (user) ->
+    @setUserKeyValue user, 'hasUnreadMessage', false
+    otherUser = @otherUser user
+
+    # stores the last message seen my the current user (from the other user)
+    lastMessageSeenByCurrentUser = @lastMessageBy otherUser._id
+    if lastMessageSeenByCurrentUser?
+      @setUserKeyValue user, 'lastMessageIdSeen', lastMessageSeenByCurrentUser._id
+      @setUserKeyValue user, 'lastTimestampSeen', new Date
+
   setUserKeyValue: (user, key, value) ->
     # First modify in memory
     info = @getUserInfo user
@@ -48,6 +73,9 @@ Connections.helpers
     selector = _id: @_id, 'users._id': user._id
     modifier = {}
     modifier["users.$.#{key}"] = value
+
+    console.log modifier
+
     Connections.update selector, $set: modifier
 
   createNewMessage: (text, sender) ->

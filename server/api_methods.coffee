@@ -41,4 +41,4 @@ Meteor.methods
   'connection/markAsRead': (connectionId) ->
     connection = Connections.findOne connectionId
     if connection?
-      connection.setUserKeyValue Meteor.user(), 'hasUnreadMessage', false
+      connection.markAsReadFor Meteor.currentUser()

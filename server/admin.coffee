@@ -194,7 +194,7 @@ Meteor.methods
     connection = Connections.findOne connectionId
     user = Users.findOne userId
     if connection? and user?
-      connection.setUserKeyValue user, 'hasUnreadMessage', false
+      connection.markAsReadFor user
 
   'connection/setExpireDays': (connectionId, expireDays) ->
     expiresAt = new Date
