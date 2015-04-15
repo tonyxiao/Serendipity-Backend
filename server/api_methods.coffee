@@ -41,4 +41,4 @@ Meteor.methods
   'connection/markAsRead': (connectionId) ->
     connection = Connections.findOne connectionId
     if connection?
-      connection.markAsReadFor Meteor.currentUser()
+      connection.markAsReadFor Meteor.user()
