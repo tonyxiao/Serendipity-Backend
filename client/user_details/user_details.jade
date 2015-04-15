@@ -48,6 +48,8 @@ template(name='userDetails')
         li <strong>Next candidate refresh:</strong> #{ nextRefreshTimestamp }
         li <strong>Created At:</strong> #{ createdAt }
         li <strong>Updated At:</strong> #{ updatedAt }
+        +each metadataView
+          li.metadata <strong>#{_id}</strong>: #{value}
         li <strong>About:</strong>
           p #{ about }
 

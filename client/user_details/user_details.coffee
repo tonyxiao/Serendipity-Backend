@@ -11,6 +11,16 @@ Template.userDetails.helpers
       photo: this
     }
 
+  metadataView: ->
+    metadataOutput = []
+    _.each @metadata, (value, key) ->
+      metadataOutput.push {
+        _id: key
+        value: value
+      }
+
+    return metadataOutput
+
 Template.userDetails.events
   'click .update-fb-access-token': ->
     accessToken = $('#fb-access-token').val()
