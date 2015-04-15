@@ -1,3 +1,5 @@
+logger = new KetchLogger 'publications'
+
 Meteor.publish 'metadata', ->
   currentUser = Users.findOne @userId
 
@@ -43,9 +45,9 @@ Meteor.publish 'currentUser', ->
     initializing = true
     handle = Users.find(@userId).observeChanges(
       added: (userId) ->
-        console.log "publishing 'added' for #{userId}."
+        logger.info "publishing 'added' for #{userId}."
       removed: (userId) ->
-        console.log "publishing 'removed' for #{userId}. This shouldn't be possible?"
+        logger.info "publishing 'removed' for #{userId}. This shouldn't be possible?"
       changed: (userId) ->
         self.changed 'users', userId, Users.findOne(userId).view()
     )
@@ -73,6 +75,7 @@ Meteor.publish 'connections', ->
     handle = Users.findOne(@userId).activeConnections().observeChanges(
       added: (connectionId) ->
         if !initializing
+          logger.info "connection #{connectionId} added"
           connection = Connections.findOne(connectionId)
           otherUser = connection.otherUser currentUser
           self.added 'connections', connection._id, connection.clientView(currentUser)
@@ -81,11 +84,13 @@ Meteor.publish 'connections', ->
           connectedUsers[connectionId] = otherUser._id
       removed: (connectionId) ->
         if !initializing
+          logger.info "connection #{connectionId} removed"
           self.removed 'connections', connectionId
           self.removed 'users', connectedUsers[connectionId]
           delete connectedUsers[connectionId]
       changed: (connectionId) ->
         if !initializing
+          logger.info "connection #{connectionId} changed"
           connection = Connections.findOne(connectionId)
           if connection.isExpired()
             self.removed 'connections', connectionId
