@@ -1,8 +1,26 @@
 logger = new KetchLogger 'publications'
 
 Meteor.publish 'metadata', ->
-  currentUser = Users.findOne @userId
+  metadata = {
+    _id: 'metadata',
+  }
 
+  metadata.softMinBuild = Meteor.settings.SOFT_MIN_BUILD
+  metadata.hardMinBuild = Meteor.settings.HARD_MIN_BUILD
+  metadata.crabUserId = Meteor.settings.CRAB_USER_ID
+
+  if @userId
+    user = Users.findOne @userId
+
+    # TODO: vetted should be in user metadata.
+    metadata.vetted = user.isVetted()
+    _.extend metadata, user.metadata
+
+  console.log @userId
+  console.log metadata
+  this.added 'metadata', metadata._id, metadata
+
+  ### TO DELETE ###
   softMinBuild = {
     _id: 'softMinBuild',
     value: Meteor.settings.SOFT_MIN_BUILD

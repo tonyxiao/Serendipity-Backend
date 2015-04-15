@@ -26,6 +26,11 @@ Users.timestampable()
     min: 1 # not empty
   updatedAt: type: Date
 
+@MetadataSchema = new SimpleSchema
+  bugfenderId:
+    type: String
+    optional: true
+
 # TODO: schema validation for devices, photos, etc
 @UserSchema = new SimpleSchema
   about:
@@ -53,6 +58,9 @@ Users.timestampable()
   location:
     type: String
     optional: true
+  metadata:
+    type: @MetadataSchema
+    optional: true
   nextRefreshTimestamp:
     type: Date
     optional: true
@@ -64,14 +72,14 @@ Users.timestampable()
     type: Object
     optional: true
     blackbox: true
-  status:
+  status: # TODO: status should be in user metadata.
     type: String
     optional: true
     allowedValues: ['deleted', 'active']
   roles:
     type: [String]
     optional: true
-  vetted:
+  vetted: # TODO: vetted should be in user metadata.
     type: String
     optional: true
     allowedValues: ['yes', 'blocked', 'snoozed']
