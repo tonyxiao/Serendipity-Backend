@@ -1,26 +1,6 @@
 logger = new KetchLogger 'publications'
 
 Meteor.publish 'metadata', ->
-  metadata = {
-    _id: 'metadata',
-  }
-
-  metadata.softMinBuild = Meteor.settings.SOFT_MIN_BUILD
-  metadata.hardMinBuild = Meteor.settings.HARD_MIN_BUILD
-  metadata.crabUserId = Meteor.settings.CRAB_USER_ID
-
-  if @userId
-    user = Users.findOne @userId
-
-    # TODO: vetted should be in user metadata.
-    metadata.vetted = user.isVetted()
-    _.extend metadata, user.metadata
-
-  console.log @userId
-  console.log metadata
-  this.added 'metadata', metadata._id, metadata
-
-  ### TO DELETE ###
   softMinBuild = {
     _id: 'softMinBuild',
     value: Meteor.settings.SOFT_MIN_BUILD
@@ -41,13 +21,41 @@ Meteor.publish 'metadata', ->
   this.added 'metadata', crab._id, crab
 
   if @userId
+    self = this
+
+    initializing = true
+    Users.find(@userId,
+      fields:
+        metadata: 1).observeChanges(
+      added: (metadataId) ->
+        logger.info "adding to #{metadataId} for user #{self.userId}"
+      removed: (metadataId) ->
+        logger.info "removing #{metadataId} from user #{self.userId}"
+      changed: (metadataId, value) ->
+        if !initializing
+          logger.info "changing #{metadataId} from user #{self.userId} to value #{value}"
+          MetadataSchema.objectKeys().forEach (fieldName) ->
+            if metadataId == fieldName
+              fieldNameToUpdate = "metadata.#{fieldName}"
+              Users.update self.userId,
+                $set:
+                  fieldNameToUpdate : value
+    )
+    initializing = false
+
     user = Users.findOne @userId
+    if user.metadata?
+      _.each user.metadata, (value, key) ->
+        settings = {
+          _id: key
+          value: value
+        }
+        self.added 'metadata', settings._id, settings
 
     isVetted = {
       _id: 'vetted'
       value: user.isVetted()
     }
-
     this.added 'metadata', isVetted._id, isVetted
 
   this.ready()
