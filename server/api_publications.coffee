@@ -24,6 +24,7 @@ Meteor.publish 'metadata', ->
     self = this
 
     # special read-only collections
+    user = Users.findOne @userId
     isVetted = {
       _id: 'vetted'
       value: user.isVetted()
@@ -50,7 +51,6 @@ Meteor.publish 'metadata', ->
     )
     initializing = false
 
-    user = Users.findOne @userId
     if user.metadata?
       _.each user.metadata, (value, key) ->
         settings = {
@@ -58,8 +58,6 @@ Meteor.publish 'metadata', ->
           value: value
         }
         self.added 'metadata', settings._id, settings
-
-
 
   this.ready()
 
