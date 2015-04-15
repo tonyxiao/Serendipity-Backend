@@ -30,7 +30,11 @@ Users.timestampable()
   bugfenderId:
     type: String
     optional: true
-  vetted: # TODO: vetted should be in user metadata.
+  status:
+    type: String
+    optional: true
+    allowedValues: ['deleted', 'active']
+  vetted:
     type: String
     optional: true
     allowedValues: ['yes', 'blocked', 'snoozed']
@@ -76,10 +80,6 @@ Users.timestampable()
     type: Object
     optional: true
     blackbox: true
-  status: # TODO: status should be in user metadata.
-    type: String
-    optional: true
-    allowedValues: ['deleted', 'active']
   roles:
     type: [String]
     optional: true
@@ -120,15 +120,16 @@ Users.helpers
     @metadata? && @metadata.vetted? && @metadata.vetted == 'blocked'
 
   _isDeleted: ->
-    @status? && @status == 'deleted'
+    @metadata? && @metadata.status? && @metadata.status == 'deleted'
 
   _unmarkAsDeleted: ->
     Users.update @_id,
-      $unset: status : "active"
+      $unset: 'metadata.status' : "active"
 
   markAsDeleted: ->
+    console.log 'mark as deleted'
     Users.update @_id,
-      $set: status: 'deleted'
+      $set: 'metadata.status': 'deleted'
 
     # expire the connections
     selector = 'users._id': @_id
