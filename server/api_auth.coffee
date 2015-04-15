@@ -54,11 +54,8 @@ Meteor.startup ->
 
     # TODO: consider using simpleschema autovalue:
     # https://github.com/aldeed/meteor-collection2/blob/master/README.md#attaching-a-schema-to-a-collection
-    if !user.metadata?
-      user.metadata = {}
-
-    if !user.metadata.vetted?
-      info.metadata.vetted = 'snoozed'
+    if !user.vetted?
+      info.vetted = 'snoozed'
 
     Users.update user._id,
       $set: info
