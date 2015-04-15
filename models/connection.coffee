@@ -113,8 +113,14 @@ Connections.helpers
 
   clientView: (refUser) ->
     view = _.clone this
-    view.otherUserId = @otherUser(refUser)._id
+
+    otherUser = @otherUser(refUser)
+
+    view.otherUserId = otherUser._id
     view.hasUnreadMessage = @getUserInfo(refUser).hasUnreadMessage
+    view.otherUserLastSeenMessageId = otherUser.lastMessageIdSeen
+    view.otherUserLastSeenAt = otherUser.lastTimestampSeen
+
     delete view.users
     return view
 
