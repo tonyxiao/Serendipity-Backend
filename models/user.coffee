@@ -30,6 +30,13 @@ Users.timestampable()
   bugfenderId:
     type: String
     optional: true
+  gameTutorialMode
+    type: Boolean
+    optional: true
+  hasBeenWelcomed
+    type: Boolean
+    optional: true
+
 
 # TODO: schema validation for devices, photos, etc
 @UserSchema = new SimpleSchema
