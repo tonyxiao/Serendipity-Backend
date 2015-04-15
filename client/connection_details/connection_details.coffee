@@ -23,6 +23,11 @@ Template.connectionDetails.helpers
       else
         return 'not expired'
 
+Template.connectionUserActions.helpers
+  lastMessageTextSeen: ->
+    if @lastMessageIdSeen? and Messages.findOne(@lastMessageIdSeen)?
+      Messages.findOne(@lastMessageIdSeen).text
+
 Template.connectionUserActions.events
   'click .send-message': (event) ->
     textField = $(event.target).prev('.message-text')

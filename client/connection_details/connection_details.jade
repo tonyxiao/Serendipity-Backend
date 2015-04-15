@@ -8,12 +8,14 @@ template(name='renderConnectionUser')
       img.avatar(src=profilePhotoUrl)
 
 template(name='connectionUserActions')
-  +with dereferenceUser this
-    ul
-      li Last Sent Message Date: #{ lastSentDate }
-      li Has Unread Message: #{ hasUnreadMessage }
+  ul
+    li Last Sent Message Date: #{ lastSentDate }
+    li Last Seen Message: #{ lastMessageTextSeen }
+    li Has Unread Message: #{ hasUnreadMessage }
+      +with dereferenceUser this
         button.mark-as-read Mark As Read for #{ firstName }
-    .actions
+  .actions
+      +with dereferenceUser this
         textarea.message-text
         button.send-message Send Message as #{ firstName }
 
