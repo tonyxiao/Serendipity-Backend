@@ -30,6 +30,10 @@ Users.timestampable()
   bugfenderId:
     type: String
     optional: true
+  vetted: # TODO: vetted should be in user metadata.
+    type: String
+    optional: true
+    allowedValues: ['yes', 'blocked', 'snoozed']
 
 # TODO: schema validation for devices, photos, etc
 @UserSchema = new SimpleSchema
@@ -79,10 +83,6 @@ Users.timestampable()
   roles:
     type: [String]
     optional: true
-  vetted: # TODO: vetted should be in user metadata.
-    type: String
-    optional: true
-    allowedValues: ['yes', 'blocked', 'snoozed']
   work:
     type: String
     optional: true
@@ -95,7 +95,7 @@ Users.helpers
   # mark this user as having joined the ketch community
   vet: ->
     Users.update @_id,
-      $set: vetted: "yes"
+      $set: 'metadata.vetted': "yes"
 
   block: ->
     @_changeVetStatus "blocked"
@@ -105,19 +105,19 @@ Users.helpers
 
   _changeVetStatus: (vetStatus) ->
     Users.update @_id,
-      $set: vetted: vetStatus
+      $set: 'metadata.vetted': vetStatus
     @clearAllCandidates()
     @clearFromOtherUsersCandidateList()
     @clearAllConnections()
 
   isVetted: ->
-    @vetted? && @vetted == 'yes'
+    @metadata? && @metadata.vetted? && @metadata.vetted == 'yes'
 
   isSnoozed: ->
-    @vetted? && @vetted == 'snoozed'
+    @metadata? && @metadata.vetted? && @metadata.vetted == 'snoozed'
 
   isBlocked: ->
-    @vetted? && @vetted == 'blocked'
+    @metadata? && @metadata.vetted? && @metadata.vetted == 'blocked'
 
   _isDeleted: ->
     @status? && @status == 'deleted'
@@ -211,7 +211,7 @@ Users.helpers
     Candidates.find {
       forUserId: @_id
       choice: null
-      vetted: true
+      'metadata.vetted': true
     }, {sort: dateMatched: 1}
 
   # all candidates for this user
@@ -226,7 +226,7 @@ Users.helpers
       choice: null
     }, { sort:
       active: -1
-      vetted: -1
+      'metadata.vetted': -1
       choice: 1
       dateMatched: 1}
 
@@ -236,7 +236,7 @@ Users.helpers
       choice: 'maybe'
     }, { sort:
       active: -1
-      vetted: -1
+      'metadata.vetted': -1
       choice: 1
       dateMatched: 1}
 
@@ -244,7 +244,7 @@ Users.helpers
   activeCandidates: ->
     candidates = Candidates.find
       forUserId: @_id
-      vetted: true
+      'metadata.vetted': true
       active: true
       choice: null
 
@@ -272,7 +272,7 @@ Users.helpers
         Candidates.insert
           forUserId: @_id
           userId: userId
-          vetted: false
+          'metadata.vetted': false
           active: false
       else
         error = new Meteor.Error(500, "Ensure  <#{userId}> is vetted before adding to queue of <#{@_id}>")
@@ -282,7 +282,7 @@ Users.helpers
   vettedCandidates: (numCandidates) ->
     Candidates.find({
       forUserId: @_id
-      vetted: true
+      'metadata.vetted': true
     }, {
       limit: numCandidates
     })
@@ -435,9 +435,6 @@ Users.helpers
     if !view?
       view = _.clone this
 
-    # TODO: delete vetted before sending down to the client once client no longer depends
-    # on vetted field for state.
-    # delete view.vetted
     delete view.services
 
     @_updateBirthdayInView(view)

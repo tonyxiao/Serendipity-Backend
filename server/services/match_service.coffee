@@ -16,7 +16,7 @@ class @MatchService
 
   refreshCandidates: (currentDate) ->
     users = Users.find({
-      vetted: "yes"
+      'metadata.vetted': "yes"
     }).fetch()
 
     users.forEach (user) ->
@@ -68,7 +68,7 @@ class @MatchService
     # TODO: Randomize & take into account gender, machine learning, what have you
     matchedUsers = Users.find({
       _id: $nin: ineligibleUserIds
-      vetted: "yes"
+      'metadata.vetted': "yes"
       status: $ne: "deleted"
     }, {
       limit: maxCount
