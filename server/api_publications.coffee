@@ -33,7 +33,7 @@ Meteor.publish 'metadata', ->
 
     cachedMetadata = {}
     initializing = true
-    Users.find(@userId,
+    handle = Users.find(@userId,
       fields:
         metadata: 1).observeChanges(
       added: (userId) ->
@@ -67,7 +67,9 @@ Meteor.publish 'metadata', ->
         logger.info "initializing metadata for #{self.userId} with key #{key} to value #{JSON.stringify(settings)}"
         self.added 'metadata', settings._id, settings
 
-  this.ready()
+    self.ready()
+    @onStop ->
+      handle.stop()
 
 Meteor.publish 'messages', ->
   if @userId
@@ -78,12 +80,16 @@ Meteor.publish 'currentUser', ->
     self = this
 
     initializing = true
-    handle = Users.find(@userId).observeChanges(
+    handle = Users.find(@userId,
+      fields:
+        metadata: 0,
+        updatedAt: 0).observeChanges(
       added: (userId) ->
         logger.info "publishing 'added' for #{userId}."
       removed: (userId) ->
         logger.info "publishing 'removed' for #{userId}. This shouldn't be possible?"
       changed: (userId) ->
+        logger.info "publishing 'changed' for #{userId}."
         self.changed 'users', userId, Users.findOne(userId).view()
     )
     initializing = false

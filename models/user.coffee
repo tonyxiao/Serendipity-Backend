@@ -442,9 +442,9 @@ Users.helpers
     if !view?
       view = _.clone this
 
-    # TODO: delete vetted before sending down to the client once client no longer depends
-    # on vetted field for state.
-    # delete view.vetted
+    delete view.status
+    delete view.vetted
+    delete view.metadata
     delete view.services
 
     @_updateBirthdayInView(view)
