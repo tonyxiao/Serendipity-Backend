@@ -1,3 +1,4 @@
+logger = new KetchLogger 'match_service'
 
 class @MatchService
 
@@ -50,7 +51,17 @@ class @MatchService
   # TOOD: Make user part of constructor
   @generateMatchesForUser: (user, maxCount) ->
     maxCount ?= 12 # Default to 12 max
+    # current candidates should not be surfaced in the match queue.
     ineligibleUserIds = _.map user.allCandidates().fetch(), (candidate) -> candidate.userId
+
+    # connections should never be surfaced in the match queue
+    user.allConnections().fetch().forEach (connection) ->
+      otherUserId = connection.otherUserId(user)
+      if otherUserId?
+        ineligibleUserIds.push otherUserId
+      else
+        logger.error("user.allConnections returned collection #{connection._id} which does not contain the user in context (#{user._id})")
+
     ineligibleUserIds.push user._id
     ineligibleUserIds.push Meteor.settings.CRAB_USER_ID
 

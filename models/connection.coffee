@@ -25,11 +25,17 @@ Connections.helpers
     Messages.find
       connectionId: @_id
 
-  otherUser: (thisUser) ->
+  otherUserId: (thisUser) ->
     userIds = _.pluck @users, '_id'
     if _.contains(userIds, thisUser._id)
-      recipientId = _.without(userIds, thisUser._id)[0]
+      return _.without(userIds, thisUser._id)[0]
+    return null
+
+  otherUser: (thisUser) ->
+    recipientId = otherUserId thisUser
+    if recipientId?
       return Users.findOne recipientId
+    return null
 
   getUserInfo: (user) ->
     _.find @users, (u) -> u._id == user._id
