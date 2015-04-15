@@ -6,3 +6,7 @@ class @KetchLogger
   error: (e) ->
     if @logger?
       @logger.error(e)
+
+  info: (i) ->
+    if @logger?
+      @logger.info(i)
