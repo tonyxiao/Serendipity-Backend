@@ -1,4 +1,4 @@
-logger = Meteor.npmRequire('bunyan').createLogger(name: 'admin')
+logger = new KetchLogger 'admin'
 
 # TODO: Consider prefixing admin methods with /admin
 Meteor.methods

@@ -1,4 +1,4 @@
-logger = Meteor.npmRequire('bunyan').createLogger(name: 'users')
+logger = new KetchLogger 'users'
 
 # Not sure why these hack is necessary. Probably because the packages are loaded *after*
 # Meteor.users collection has already been created. Need to control package load order

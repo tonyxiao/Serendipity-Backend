@@ -1,4 +1,4 @@
-logger = Meteor.npmRequire('bunyan').createLogger name: 'auth'
+logger = new KetchLogger 'auth'
 
 # TODO: Do we need Meteor.startup here?
 Meteor.startup ->

@@ -1,4 +1,4 @@
-logger = Meteor.npmRequire('bunyan').createLogger(name: 'candidates')
+logger = new KetchLogger 'candidates'
 
 @Candidates = new Mongo.Collection 'candidates'
 Candidates.timestampable()
