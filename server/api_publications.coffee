@@ -36,11 +36,24 @@ Meteor.publish 'metadata', ->
     handle = Users.find(@userId,
       fields:
         metadata: 1).observeChanges(
-      added: (userId) ->
-        logger.info "metadata add for user #{userId}"
+      added: (userId, value) ->
+        logger.info "metadata add for user #{userId} | #{JSON.stringify(value)}"
+
+        # TODO: the right thing to do here is probably to figure out which value got added
+        # patching this in to prevent server logs. Will investigate later.
+        user = Users.findOne(userId)
+        _.each user.metadata, (value, key) ->
+          settings = {
+            _id: key
+            value: value
+          }
+          if !cachedMetadata[key]?
+            self.added 'metadata', settings._id, settings
+
       removed: (userId) ->
         logger.info "metadata remove for user #{userId}"
       changed: (userId, value) ->
+        logger.info "metadata change #{userId} | #{JSON.stringify(value)}"
         if !initializing
           _.each value.metadata, (metadataValue, metadataKey) ->
             MetadataSchema.objectKeys().forEach (fieldName) ->
@@ -52,7 +65,7 @@ Meteor.publish 'metadata', ->
                   _id: metadataKey
                   value: metadataValue
                 }
-                logger.info "changed #{metadataKey} from user #{self.userId} to value #{metadataValue}"
+                logger.info "changed #{metadataKey} from user #{userId} to value #{metadataValue}"
                 self.changed 'metadata', metadataKey, settings
     )
     initializing = false
@@ -63,7 +76,7 @@ Meteor.publish 'metadata', ->
           _id: key
           value: value
         }
-        cachedMetadata.key = value
+        cachedMetadata[key] = value
         logger.info "initializing metadata for #{self.userId} with key #{key} to value #{JSON.stringify(settings)}"
         self.added 'metadata', settings._id, settings
 
