@@ -1,3 +1,4 @@
 Template.splash.helpers
   version: ->
-    return Metadata.findOne("softMinBuild").value + " | " + Metadata.findOne("hardMinBuild").value
+    if Metadata.findOne("softMinBuild")? and Metadata.findOne("hardMinBuild")?
+      return Metadata.findOne("softMinBuild").value + " | " + Metadata.findOne("hardMinBuild").value
