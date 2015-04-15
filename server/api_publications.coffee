@@ -31,26 +31,29 @@ Meteor.publish 'metadata', ->
     }
     this.added 'metadata', isVetted._id, isVetted
 
+    cachedMetadata = {}
     initializing = true
     Users.find(@userId,
       fields:
         metadata: 1).observeChanges(
-      added: (metadataId) ->
-        logger.info "adding to #{metadataId} for user #{self.userId}"
-      removed: (metadataId) ->
-        logger.info "removing #{metadataId} from user #{self.userId}"
-      changed: (metadataId, value) ->
+      added: (userId) ->
+        logger.info "metadata add for user #{userId}"
+      removed: (userId) ->
+        logger.info "metadata remove for user #{userId}"
+      changed: (userId, value) ->
         if !initializing
-          logger.info "changing #{metadataId} from user #{self.userId} to value #{value}"
-
-          currentUser = Users.findOne self.userId
-          MetadataSchema.objectKeys().forEach (fieldName) ->
-            if metadataId == fieldName
-              settings = {
-                _id: metadataId
-                value: currentUser['metadataId']
-              }
-              self.changed 'metadata', metadataId, settings
+          _.each value.metadata, (metadataValue, metadataKey) ->
+            MetadataSchema.objectKeys().forEach (fieldName) ->
+              # update cache if metadataKey is valid and there either doesn't exist a mapping yet
+              # or exists a different mapping
+              if metadataKey == fieldName && (!cachedMetadata[metadataKey]? || cachedMetadata[metadataKey] != metadataValue)
+                cachedMetadata[metadataKey] = metadataValue
+                settings = {
+                  _id: metadataKey
+                  value: metadataValue
+                }
+                logger.info "changed #{metadataKey} from user #{self.userId} to value #{metadataValue}"
+                self.changed 'metadata', metadataKey, settings
     )
     initializing = false
 
@@ -60,6 +63,8 @@ Meteor.publish 'metadata', ->
           _id: key
           value: value
         }
+        cachedMetadata.key = value
+        logger.info "initializing metadata for #{self.userId} with key #{key} to value #{JSON.stringify(settings)}"
         self.added 'metadata', settings._id, settings
 
   this.ready()

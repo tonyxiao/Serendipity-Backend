@@ -45,7 +45,7 @@ Meteor.methods
       connection.markAsReadFor Meteor.user()
 
   '/metadata/update': (id, metadata) ->
-    logger.info "metadata update #{id} | #{metadata}"
+    logger.info "metadata update #{JSON.stringify(id)} | #{JSON.stringify(metadata)}"
 
     user = Meteor.user()
     if user?
