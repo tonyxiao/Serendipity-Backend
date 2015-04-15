@@ -17,7 +17,11 @@ Template.connectionDetails.helpers
     return ''
 
   expirationStatus: ->
-    if @isExpired() then 'expired' else 'not expired'
+    if @_id?
+      if @isExpired()
+        return 'expired'
+      else
+        return 'not expired'
 
 Template.connectionUserActions.events
   'click .send-message': (event) ->
