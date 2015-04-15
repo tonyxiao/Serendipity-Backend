@@ -44,6 +44,25 @@ Meteor.methods
     if connection?
       connection.markAsReadFor Meteor.user()
 
+  # TODO: refactor
+  '/metadata/insert': (metadata) ->
+    logger.info "metadata insert #{JSON.stringify(metadata)}"
+    user = Meteor.user()
+    if user?
+      modifier = {}
+      modifier["metadata.#{metadata._id}"] = metadata.value
+      Users.update user._id,
+        $set: modifier
+
+  '/metadata/remove': (metadata) ->
+    logger.info "metadata remove #{JSON.stringify(metadata)}"
+    user = Meteor.user()
+    if user?
+      modifier = {}
+      modifier["metadata.#{metadata._id}"] = ""
+      Users.update user._id,
+        $unset: modifier
+
   '/metadata/update': (id, metadata) ->
     logger.info "metadata update #{JSON.stringify(id)} | #{JSON.stringify(metadata)}"
 
