@@ -74,8 +74,6 @@ Connections.helpers
     modifier = {}
     modifier["users.$.#{key}"] = value
 
-    console.log modifier
-
     Connections.update selector, $set: modifier
 
   createNewMessage: (text, sender) ->
