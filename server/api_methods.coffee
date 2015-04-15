@@ -1,3 +1,4 @@
+logger = new KetchLogger 'api'
 
 # TODO: Make sure only authenticated users can call these methods
 
@@ -16,7 +17,7 @@ Meteor.methods
       user.markAsDeleted()
 
   'user/report': (userIdToReport, reason) ->
-    console.log 'user reporting not implemented'
+    logger.info 'user reporting not implemented'
 
   'candidate/submitChoices': (choices) ->
     # TODO: Add validation for input params

@@ -44,7 +44,7 @@ class @FacebookPhotoService
       client.getFile self.containerUrl or 'ketch-dev',
         image.remoteId(), (err, file) ->
           if file?
-            console.log "image " + image.remoteId() + " exists. Not importing"
+            logger.info "image " + image.remoteId() + " exists. Not importing"
             onComplete err, self.getFileURL file
           else
             writeStream = client.upload
@@ -61,7 +61,7 @@ class @FacebookPhotoService
 
             startX = (image.width - IMAGE_SIZE) / 2
             startY = (image.height - IMAGE_SIZE) / 2
-            console.log "Will import photo #{image.source}"
+            logger.info "Will import photo #{image.source}"
             # get the facebook photo and then crop it.
             gm(request.get(image.source)).crop(IMAGE_SIZE, IMAGE_SIZE, startX, startY).stream().pipe writeStream
 
@@ -98,7 +98,7 @@ class @FacebookPhotoService
     else
       res = graphGet(util.format('%s/photos', profilePicAlbumId)).data
 
-    console.log "Will import facebook photos for #{user._id} : #{user.firstName}"
+    logger.info "Will import facebook photos for #{user._id} : #{user.firstName}"
     imagesToDownload = []
     i = 0
 
@@ -118,7 +118,7 @@ class @FacebookPhotoService
         imagesToDownload.push new Image photo.id, user._id,
           photo.width, photo.height, photo.source
       else
-        console.log "Skipping photo", photo.id
+        logger.info "Skipping photo", photo.id
       i++
 
     azureUrls = @copyPhotosToAzure imagesToDownload
@@ -139,4 +139,5 @@ class @FacebookPhotoService
       i++
 
     Users.update user._id, $set: photos: userPhotos
-    console.log "done uploading for #{user._id}"
+    logger.info
+    "done uploading for #{user._id}"

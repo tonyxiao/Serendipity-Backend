@@ -74,7 +74,7 @@ Meteor.startup ->
       # expiration timestamp to our data model, set this to far far into the future.
       crabExpiresAt = new Date Meteor.settings.CRAB_EXPIRATION_DATE_MILLIS
 
-      console.log "updated #{connectionId} with #{crabExpiresAt}"
+      logger.info "updated #{connectionId} with #{crabExpiresAt}"
 
       Connections.update connectionId,
         $set:

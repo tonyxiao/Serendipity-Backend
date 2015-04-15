@@ -1,3 +1,5 @@
+logger = new KetchLogger 'push-service'
+
 # TODO: What's the difference between npm.require vs meteor.npmRequire
 apn = Meteor.npmRequire 'apn'
 path = Npm.require 'path'
@@ -40,6 +42,6 @@ class @PushService
       apnConnection = devApnConnection
 
     if apnConnection == null
-      console.log "No ApnConnection found for environment #{apnEnvironment} and appId #{appId}"
+      logger.info "No ApnConnection found for environment #{apnEnvironment} and appId #{appId}"
     else
       apnConnection.pushNotification note, device

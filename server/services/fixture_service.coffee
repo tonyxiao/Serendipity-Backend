@@ -1,3 +1,5 @@
+logger = new KetchLogger 'fixture'
+
 path = Npm.require('path')
 sleep = Meteor.npmRequire('sleep')
 
@@ -90,7 +92,7 @@ class @FixtureService
     fbPhotoService = new FacebookPhotoService("tinder")
 
     for result in data.results
-      console.log 'Will add user with name ' + result.name
+      logger.info "Will add user with name #{result.name}"
       images = []
       result.photos.forEach (photo) ->
         photo.processedFiles.forEach (processedPhoto) ->

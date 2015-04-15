@@ -44,7 +44,7 @@ Meteor.methods
       userInfo = JSON.parse userInfo
       Users.update userId,
         $set: userInfo
-      console.log "user #{userId} edited"
+      logger.info "user #{userId} edited"
     catch e
       error = new Meteor.Error(400, 'Exception: Unable to import. Likely malformed json');
       logger.error(error)
