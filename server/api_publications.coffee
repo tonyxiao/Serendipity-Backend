@@ -23,6 +23,13 @@ Meteor.publish 'metadata', ->
   if @userId
     self = this
 
+    # special read-only collections
+    isVetted = {
+      _id: 'vetted'
+      value: user.isVetted()
+    }
+    this.added 'metadata', isVetted._id, isVetted
+
     initializing = true
     Users.find(@userId,
       fields:
@@ -52,11 +59,7 @@ Meteor.publish 'metadata', ->
         }
         self.added 'metadata', settings._id, settings
 
-    isVetted = {
-      _id: 'vetted'
-      value: user.isVetted()
-    }
-    this.added 'metadata', isVetted._id, isVetted
+
 
   this.ready()
 
