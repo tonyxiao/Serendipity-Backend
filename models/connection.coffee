@@ -1,3 +1,4 @@
+logger = new KetchLogger 'connections'
 
 @Connections = new Mongo.Collection 'connections'
 Connections.timestampable()
@@ -9,7 +10,7 @@ Connections.attachSchema new SimpleSchema
   'users.$.hasUnreadMessage': type: Boolean
   'users.$.lastSentDate': type: Date, optional: true
   'users.$.lastMessageIdSeen': type: String, optional: true
-  'users.$.lastTimestampSeen': type: String, optional: true
+  'users.$.lastTimestampSeen': type: Date, optional: true
   expiresAt: type: Date
   expired: type: Boolean, optional: true
   lastMessageText: type: String, optional: true
@@ -38,6 +39,8 @@ Connections.helpers
     # TODO: should use limit here, but limit is undefined in minimongo?
     if messagesBySender.length > 0
       return messagesBySender[0]
+
+    logger.info "Could not find lastMessageBy #{userId} in connection #{@_id}"
     return null
 
   otherUserId: (thisUser) ->
@@ -118,8 +121,8 @@ Connections.helpers
 
     view.otherUserId = otherUser._id
     view.hasUnreadMessage = @getUserInfo(refUser).hasUnreadMessage
-    view.otherUserLastSeenMessageId = otherUser.lastMessageIdSeen
-    view.otherUserLastSeenAt = otherUser.lastTimestampSeen
+    view.otherUserLastSeenMessageId = @getUserInfo(otherUser).lastMessageIdSeen
+    view.otherUserLastSeenAt = @getUserInfo(otherUser).lastTimestampSeen
 
     delete view.users
     return view
