@@ -21,16 +21,15 @@ Meteor.startup ->
     accountInfo = Accounts.updateOrCreateUserFromExternalService 'facebook', userInfo, {}
     user = Users.findOne(accountInfo.userId)
 
+    # Ketchy crab should not get any info pulled from Facebook.
+    if user._id == Meteor.settings.CRAB_USER_ID
+      return
+
     info = {
       firstName: userInfo.first_name
       lastName: userInfo.last_name
       height: FixtureService.randomHeight() # TODO: omit height
     }
-
-    # Special handling for Ketchy the crab
-    if user._id == Meteor.settings.CRAB_USER_ID
-      info.firstName = Meteor.settings.CRAB_FIRST_NAME
-      info.lastName =  Meteor.settings.CRAB_FIRST_NAME
 
     if FixtureService.mostRecentSchool(userInfo.education)?
       info.education = FixtureService.mostRecentSchool(userInfo.education).school.name
