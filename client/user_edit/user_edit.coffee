@@ -14,4 +14,8 @@ Template.userEdit.events
   'click .edit-submit': ->
     updatedInfo = $("#json-text").val()
     userId = $(event.target).closest('.import').data('user-id')
-    Meteor.call('admin/user/edit', userId, updatedInfo)
+    Meteor.call 'admin/user/edit', userId, updatedInfo, (error, result) ->
+      if error?
+        alert 'Error?'
+      else
+        alert 'updated successfully'
