@@ -119,9 +119,7 @@ Users.helpers
   _changeVetStatus: (vetStatus) ->
     Users.update @_id,
       $set: vetted: vetStatus
-    @clearAllCandidates()
     @clearFromOtherUsersCandidateList()
-    @clearAllConnections()
 
   isVetted: ->
     @vetted? && @vetted == 'yes'
