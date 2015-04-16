@@ -85,7 +85,7 @@ Connections.helpers
     modifier = {}
     modifier["users.$.#{key}"] = value
 
-    _validateUsersVetted()
+    @_validateUsersVetted()
     Connections.update selector, $set: modifier
 
   createNewMessage: (text, sender) ->
@@ -117,7 +117,7 @@ Connections.helpers
     #  logger.error(error)
     #  throw error
 
-    _validateUsersVetted()
+    @_validateUsersVetted()
     Connections.update @_id,
       $set:
         lastMessageText: text

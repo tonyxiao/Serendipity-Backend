@@ -38,7 +38,7 @@ Candidates.helpers
 
     candidate = Candidates.findOne @_id
     if candidate.active? && candidate.active
-      _validateUsersVetted()
+      @_validateUsersVetted()
       Candidates.update @_id,
         $set:
           choice: choice
@@ -57,7 +57,7 @@ Candidates.helpers
       logger.error(error)
       throw error
 
-    _validateUsersVetted()
+    @_validateUsersVetted()
     Candidates.insert
       forUserId: @userId
       userId: @forUserId
@@ -78,13 +78,13 @@ Candidates.helpers
     inverse.makeChoice choice
 
   vet: ->
-    _validateUsersVetted()
+    @_validateUsersVetted()
     Candidates.update @_id,
       $set:
         vetted: true
 
   unvet: ->
-    _validateUsersVetted()
+    @_validateUsersVetted()
     Candidates.update @_id,
       $set:
         vetted: false
@@ -92,14 +92,14 @@ Candidates.helpers
         choice: null
 
   activate: ->
-    _validateUsersVetted()
+    @_validateUsersVetted()
     Candidates.update @_id,
       $set:
         vetted: true
         active: true
 
   deactivate: ->
-    _validateUsersVetted()
+    @_validateUsersVetted()
     Candidates.update @_id,
       $set:
         active: false
