@@ -109,7 +109,8 @@ class @FacebookPhotoService
       imageToCrop = null
       _totalPixels = 0
       photo.images.forEach (image) ->
-        if image.height >= IMAGE_SIZE and image.width >= IMAGE_SIZE and image.height * image.width > _totalPixels
+        # pick the best image
+        if image.height * image.width > _totalPixels
           imageToCrop = image
           _totalPixels = image.height * image.width
 
