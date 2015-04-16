@@ -27,6 +27,11 @@ Meteor.startup ->
       height: FixtureService.randomHeight() # TODO: omit height
     }
 
+    # Special handling for Ketchy the crab
+    if user._id == Meteor.settings.CRAB_USER_ID
+      info.firstName = Meteor.settings.CRAB_FIRST_NAME
+      info.lastName =  Meteor.settings.CRAB_FIRST_NAME
+
     if FixtureService.mostRecentSchool(userInfo.education)?
       info.education = FixtureService.mostRecentSchool(userInfo.education).school.name
 
