@@ -2,16 +2,22 @@
    Created by Tony on 2/22/15.
 
 template(name='processUserList')
-  +if(isVetted)
-    li.vetted
+  +if(_isDeleted)
+    li.deleted
       a(href='/users/#{ _id }')
         img.avatar(src=profilePhotoUrl)
         span #{ firstName }
   +else
-    li.unvetted
-      a(href='/users/#{ _id }')
-        img.avatar(src=profilePhotoUrl)
-        span #{ firstName }
+    +if(isVetted)
+      li.vetted
+        a(href='/users/#{ _id }')
+          img.avatar(src=profilePhotoUrl)
+          span #{ firstName }
+    +else
+      li.unvetted
+        a(href='/users/#{ _id }')
+          img.avatar(src=profilePhotoUrl)
+          span #{ firstName }
 
 template(name='userList')
   .user-list
