@@ -24,7 +24,7 @@ Connections.helpers
   _validateUsersVetted: ->
     @users.forEach (connectionUser) ->
       user = Users.findOne connectionUser._id
-      if user? or !user.isVetted()
+      if !user.isVetted()
         error = new Meteor.Error(500, "Please ensure that #{user._id} is vetted before modifying connection #{@_id}")
         logger.error(error)
         throw error

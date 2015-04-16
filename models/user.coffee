@@ -356,7 +356,7 @@ Users.helpers
 
     # TODO: refactor this with validation method in Connections
     otherUser = Users.findOne userId
-    if !isVetted() or !otherUser? or !otherUser.isVetted()
+    if !@isVetted() or !otherUser? or !otherUser.isVetted()
       error = new Meteor.Error(500, "Please ensure that #{user._id} and #{otherUser._id} are vetted before inserting connection.")
       logger.error(error)
       throw error

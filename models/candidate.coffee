@@ -28,8 +28,8 @@ Candidates.helpers
     user = Users.findOne @userId
     forUser = Users.findOne @forUserId
 
-    if !user? or forUser? or user.isVetted() or !forUser.isVetted()
-      error = new Meteor.Error(500, "Please ensure that both #{userId} and #{forUserId} are both vetted first.")
+    if (!user.isVetted()) or (!forUser.isVetted())
+      error = new Meteor.Error(500, "Please ensure that both #{@userId} and #{@forUserId} are both vetted first.")
       logger.error(error)
       throw error
 
