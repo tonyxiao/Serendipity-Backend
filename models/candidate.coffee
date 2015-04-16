@@ -24,11 +24,21 @@ Candidates.helpers
   forUser: ->
     Users.findOne(@forUserId)
 
+  _validateUsersVetted: ->
+    user = Users.findOne @userId
+    forUser = Users.findOne @forUserId
+
+    if !user? or forUser? or user.isVetted() or !forUser.isVetted()
+      error = new Meteor.Error(500, "Please ensure that both #{userId} and #{forUserId} are both vetted first.")
+      logger.error(error)
+      throw error
+
   makeChoice: (choice) ->
     @choice = choice # Needed because collection update does not update self
 
     candidate = Candidates.findOne @_id
     if candidate.active? && candidate.active
+      _validateUsersVetted()
       Candidates.update @_id,
         $set:
           choice: choice
@@ -47,6 +57,7 @@ Candidates.helpers
       logger.error(error)
       throw error
 
+    _validateUsersVetted()
     Candidates.insert
       forUserId: @userId
       userId: @forUserId
@@ -67,11 +78,13 @@ Candidates.helpers
     inverse.makeChoice choice
 
   vet: ->
+    _validateUsersVetted()
     Candidates.update @_id,
       $set:
         vetted: true
 
   unvet: ->
+    _validateUsersVetted()
     Candidates.update @_id,
       $set:
         vetted: false
@@ -79,12 +92,14 @@ Candidates.helpers
         choice: null
 
   activate: ->
+    _validateUsersVetted()
     Candidates.update @_id,
       $set:
         vetted: true
         active: true
 
   deactivate: ->
+    _validateUsersVetted()
     Candidates.update @_id,
       $set:
         active: false

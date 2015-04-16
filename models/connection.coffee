@@ -21,6 +21,14 @@ Connections.attachSchema new SimpleSchema
 # MARK - Instance Methods
 Connections.helpers
 
+  _validateUsersVetted: ->
+    @users.forEach (connectionUser) ->
+      user = Users.findOne connectionUser._id
+      if user? or !user.isVetted()
+        error = new Meteor.Error(500, "Please ensure that #{user._id} is vetted before modifying connection #{@_id}")
+        logger.error(error)
+        throw error
+
   isExpired: ->
     return @expired
 
@@ -77,6 +85,7 @@ Connections.helpers
     modifier = {}
     modifier["users.$.#{key}"] = value
 
+    _validateUsersVetted()
     Connections.update selector, $set: modifier
 
   createNewMessage: (text, sender) ->
@@ -102,12 +111,13 @@ Connections.helpers
 
     # This is to ensure that the Ketchy connection will not expire for at least
     # 5 years from the year that this message is sent
-    crabUserId = Meteor.settings.CRAB_USER_ID
-    if (sender._id == crabUserId || recipient._id == crabUserId) &&  !(expiresAt.getFullYear() > new Date().getFullYear() + 5)
-      error = new Meteor.Error(500, "The Ketchy connection (#{@_id}) is about to expire ... within 5 years")
-      logger.error(error)
-      throw error
+    # crabUserId = Meteor.settings.CRAB_USER_ID
+    #if (sender._id == crabUserId || recipient._id == crabUserId) &&  !(expiresAt.getFullYear() > new Date().getFullYear() + 5)
+    #  error = new Meteor.Error(500, "The Ketchy connection (#{@_id}) is about to expire ... within 5 years")
+    #  logger.error(error)
+    #  throw error
 
+    _validateUsersVetted()
     Connections.update @_id,
       $set:
         lastMessageText: text
