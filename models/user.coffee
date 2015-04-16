@@ -21,11 +21,14 @@ Users.timestampable()
   apnEnvironment:
     type: String
     min: 1 # not empty
+    optional: true
   pushToken:
     type: String
     min: 1 # not empty
+    optional: true
   updatedAt: type: Date
 
+# TODO: use metadata schema to validate metadata
 @MetadataSchema = new SimpleSchema
   bugfenderId:
     type: String
@@ -68,7 +71,8 @@ Users.timestampable()
     type: String
     optional: true
   metadata:
-    type: @MetadataSchema
+    type: Object
+    blackbox: true
     optional: true
   nextRefreshTimestamp:
     type: Date
@@ -172,6 +176,13 @@ Users.helpers
     _.find @devices, (d) -> d._id == deviceId
 
   addDevice: (device) ->
+    # apsEnv and push token may not be sent. In cases that they are not sent, do not
+    # update the user's stored list of devices with the (nonexistant) apsEnv and token
+    if !device.apsEnv?
+      delete device.apsEnv
+    if !device.pushToken?
+      delete device.pushToken
+
     if not @devices?
       @devices = []
     existingDevice = @getDevice device._id
@@ -180,9 +191,14 @@ Users.helpers
       Users.update @_id, $pull: devices: existingDevice
 
       # Modify in-memory
+      index = @devices.indexOf existingDevice
+      if index >= 0
+        @devices.splice(index, 1)
+
       _.extend existingDevice, device
 
-
+    # Modify in-memory
+    logger.info "Adding device #{JSON.stringify(device)} for #{@_id}"
     @devices.push device
     Users.update @_id, $push: devices: device
 

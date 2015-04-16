@@ -3,13 +3,17 @@ logger = new KetchLogger 'api'
 # TODO: Make sure only authenticated users can call these methods
 
 Meteor.methods
-  'user/addPushToken': (appid, apnEnvironment, pushToken) ->
-    Meteor.user().addDevice
-      _id: pushToken
-      appId: appid
-      apnEnvironment: apnEnvironment
-      pushToken: pushToken
-      updatedAt: new Date
+  'user/registerDevice': (device) ->
+    user = Meteor.user()
+    if user?
+      user.addDevice
+        _id: device.deviceId
+        appId: device.appId
+        apsEnv: device.apsEnv
+        pushToken: device.pushToken
+        updatedAt: new Date
+    else
+      logger.info "Tring to add device #{JSON.stringify(device)} for nonexistant user"
 
   'user/delete': ->
     user = Meteor.user()

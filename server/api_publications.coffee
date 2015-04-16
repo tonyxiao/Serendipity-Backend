@@ -1,88 +1,74 @@
 logger = new KetchLogger 'publications'
 
 Meteor.publish 'metadata', ->
-  softMinBuild = {
-    _id: 'softMinBuild',
-    value: Meteor.settings.SOFT_MIN_BUILD
-  }
+  self = this
 
-  hardMinBuild = {
-    _id: 'hardMinBuild',
-    value: Meteor.settings.HARD_MIN_BUILD
-  }
+  metadata = {}
+  metadata["softMinBuild"] = Meteor.settings.SOFT_MIN_BUILD
+  metadata["hardMinBuild"] = Meteor.settings.HARD_MIN_BUILD
+  metadata["crabUserId"] = Meteor.settings.CRAB_USER_ID
 
-  crab = {
-    _id: 'crabUserId',
-    value: Meteor.settings.CRAB_USER_ID
-  }
-
-  this.added 'metadata', softMinBuild._id, softMinBuild
-  this.added 'metadata', hardMinBuild._id, hardMinBuild
-  this.added 'metadata', crab._id, crab
-
+  cache = {}
   if @userId
-    self = this
-
-    # special read-only collections
     user = Users.findOne @userId
-    isVetted = {
-      _id: 'vetted'
-      value: user.isVetted()
-    }
-    this.added 'metadata', isVetted._id, isVetted
 
-    cachedMetadata = {}
+    metadata["vetted"] = user.isVetted()
+    if user.metadata?
+      _.extend metadata, user.metadata
+
     initializing = true
     handle = Users.find(@userId,
       fields:
         metadata: 1).observeChanges(
       added: (userId, value) ->
-        logger.info "metadata add for user #{userId} | #{JSON.stringify(value)}"
-
-        # TODO: the right thing to do here is probably to figure out which value got added
-        # patching this in to prevent server logs. Will investigate later.
-        user = Users.findOne(userId)
-        _.each user.metadata, (value, key) ->
+        _.each value.metadata, (value, key) ->
           settings = {
             _id: key
             value: value
           }
-          if !cachedMetadata[key]?
-            self.added 'metadata', settings._id, settings
+          cache[key] = value
+
+          logger.info "adding metadata for #{self.userId}. <#{key}, #{value}>"
+          self.added 'metadata', settings._id, settings
 
       removed: (userId) ->
+        # should never be triggered?
         logger.info "metadata remove for user #{userId}"
+
       changed: (userId, value) ->
         logger.info "metadata change #{userId} | #{JSON.stringify(value)}"
-        if !initializing
-          _.each value.metadata, (metadataValue, metadataKey) ->
-            MetadataSchema.objectKeys().forEach (fieldName) ->
-              # update cache if metadataKey is valid and there either doesn't exist a mapping yet
-              # or exists a different mapping
-              if metadataKey == fieldName && (!cachedMetadata[metadataKey]? || cachedMetadata[metadataKey] != metadataValue)
-                cachedMetadata[metadataKey] = metadataValue
-                settings = {
-                  _id: metadataKey
-                  value: metadataValue
-                }
-                logger.info "changed #{metadataKey} from user #{userId} to value #{metadataValue}"
-                self.changed 'metadata', metadataKey, settings
+        _.each value.metadata, (value, key) ->
+          if cache[key] != value
+            settings = {
+              _id: key
+              value: value
+            }
+
+            isChange = cache[key]?
+            cache[key] = value
+
+            if isChange
+              self.changed 'metadata', settings._id, settings
+            else
+              self.added 'metadata', settings._id, settings
     )
     initializing = false
-
-    if user.metadata?
-      _.each user.metadata, (value, key) ->
-        settings = {
-          _id: key
-          value: value
-        }
-        cachedMetadata[key] = value
-        logger.info "initializing metadata for #{self.userId} with key #{key} to value #{JSON.stringify(settings)}"
-        self.added 'metadata', settings._id, settings
-
-    self.ready()
     @onStop ->
       handle.stop()
+
+  # initialize by serving 'added' for everything in metadata
+  _.each metadata, (value, key) ->
+    settings = {
+      _id: key
+      value: value
+    }
+    cache[key] = value
+
+    logger.info "initializing metadata. <#{key}, #{value}>"
+    self.added 'metadata', settings._id, settings
+
+  self.ready()
+
 
 Meteor.publish 'messages', ->
   if @userId
