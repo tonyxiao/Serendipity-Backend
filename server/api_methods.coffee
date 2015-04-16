@@ -9,7 +9,7 @@ Meteor.methods
       user.addDevice
         _id: device.deviceId
         appId: device.appId
-        apsEnv: device.apsEnv
+        apnEnvironment: device.apsEnv
         pushToken: device.pushToken
         updatedAt: new Date
     else

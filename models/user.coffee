@@ -176,13 +176,6 @@ Users.helpers
     _.find @devices, (d) -> d._id == deviceId
 
   addDevice: (device) ->
-    # apsEnv and push token may not be sent. In cases that they are not sent, do not
-    # update the user's stored list of devices with the (nonexistant) apsEnv and token
-    if !device.apsEnv?
-      delete device.apsEnv
-    if !device.pushToken?
-      delete device.pushToken
-
     if not @devices?
       @devices = []
     existingDevice = @getDevice device._id
