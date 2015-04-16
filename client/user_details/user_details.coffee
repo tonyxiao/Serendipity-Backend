@@ -65,7 +65,7 @@ Template.userDetails.events
 
   'click .delete-user': ->
     if confirm('sure?')
-      Meteor.call 'user/delete', @_id
+      Meteor.call 'admin/user/delete', @_id
 
   'click .restore-deleted-user': ->
     if confirm('sure?')

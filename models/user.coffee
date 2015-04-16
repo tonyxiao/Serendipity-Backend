@@ -138,6 +138,11 @@ Users.helpers
       $unset: status : "active"
 
   markAsDeleted: ->
+    if @_id == Meteor.settings.CRAB_USER_ID
+      error =  new Meteor.Error(501, 'Exception: Cannot mark crab user as deleted')
+      logger.error(error)
+      throw error
+
     Users.update @_id,
       $set: status: 'deleted'
 

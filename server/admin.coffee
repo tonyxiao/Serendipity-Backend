@@ -50,6 +50,11 @@ Meteor.methods
       logger.error(error)
       throw error
 
+  'admin/user/delete': (userId) ->
+    user = Users.findOne userId
+    if user?
+      user.markAsDeleted()
+
   'admin/user/photo/reset': (userId) ->
     user = Users.findOne userId
     photos = user.photos

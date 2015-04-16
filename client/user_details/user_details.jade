@@ -15,6 +15,11 @@ template(name='userDetails')
   .user-details(data-user-id=_id)
     h1 #{ firstName }’s Profile
 
+    +if(_isDeleted)
+      h1.blocked DELETED
+    +else
+      h1.vetted ACTIVE (not deleted)
+
     +userNav
 
     section.info
