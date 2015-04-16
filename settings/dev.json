@@ -4,5 +4,6 @@
   "FB_APPID": "730107913748748",
   "AZURE_ACCOUNTID": "ketch",
   "AZURE_CONTAINER": "ketch-dev",
-  "CRAB_USER_ID": "5sRK8nbs2shYsva8C"
+  "CRAB_USER_ID": "5sRK8nbs2shYsva8C",
+  "SOFT_MIN_BUILD": "5"
 }
