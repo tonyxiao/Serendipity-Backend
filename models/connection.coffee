@@ -100,6 +100,14 @@ Connections.helpers
       # remove this logic, since expireAt should never be bigger than t + 3 days.
       expiresAt = new Date(Math.max(@expiresAt, Connections.nextExpirationDate _.min(lastSentDates)))
 
+    # This is to ensure that the Ketchy connection will not expire for at least
+    # 5 years from the year that this message is sent
+    crabUserId = Meteor.settings.CRAB_USER_ID
+    if (sender._id == crabUserId || recipient._id == crabUserId) &&  !(expiresAt.getFullYear() > new Date().getFullYear() + 5)
+      error = new Meteor.Error(500, "The Ketchy connection (#{@_id}) is about to expire ... within 5 years")
+      logger.error(error)
+      throw error
+
     Connections.update @_id,
       $set:
         lastMessageText: text
