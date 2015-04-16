@@ -15,8 +15,8 @@ Template.userDetails.helpers
     metadataOutput = []
     _.each @metadata, (value, key) ->
       metadataOutput.push {
-        _id: key
-        value: value
+        _id: key.toString()
+        value: value.toString()
       }
 
     return metadataOutput
