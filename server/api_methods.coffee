@@ -3,7 +3,9 @@ logger = new KetchLogger 'api'
 # TODO: Make sure only authenticated users can call these methods
 
 Meteor.methods
-  'user/registerDevice': (device) ->
+
+  # Account Updates
+  'me/update/device': (device) ->
     user = Meteor.user()
     if user?
       user.addDevice
@@ -15,7 +17,25 @@ Meteor.methods
     else
       logger.info "Tring to add device #{JSON.stringify(device)} for nonexistant user"
 
-  'user/delete': ->
+  'me/update/birthday': (month, day) ->
+    Meteor.user().updateBirthday(month, day)
+
+  'me/update/genderPref': (genderPref) ->
+    Meteor.user().updateAttribute('genderPref', education)
+
+  'me/update/height': (height) ->
+    Meteor.user().updateAttribute('height', height)
+
+  'me/update/work': (work) ->
+    Meteor.user().updateAttribute('work', work)
+
+  'me/update/education': (education) ->
+    Meteor.user().updateAttribute('education', education)
+
+  'me/update/about': (about) ->
+    Meteor.user().updateAttribute('about', about)
+
+  'me/delete': ->
     user = Meteor.user()
     if user?
       user.markAsDeleted()
@@ -23,6 +43,8 @@ Meteor.methods
   'user/report': (userIdToReport, reason) ->
     logger.info 'user reporting not implemented'
 
+
+  # Core Mechanic
   'candidate/submitChoices': (choices) ->
     # TODO: Add validation for input params
     result = _.object _.map choices, (candidateId, choice) ->
@@ -33,9 +55,6 @@ Meteor.methods
     Meteor.user().populateCandidateQueue 3
 
     return result
-
-  'user/update/birthday': (month, day) ->
-    Meteor.user().updateBirthday(month, day)
 
   'connection/sendMessage': (connectionId, text) ->
     # TODO: Add validation for input params
@@ -48,6 +67,7 @@ Meteor.methods
     if connection?
       connection.markAsReadFor Meteor.user()
 
+  # Metadata operations
   # TODO: refactor
   '/metadata/insert': (metadata) ->
     logger.info "metadata insert #{JSON.stringify(metadata)}"

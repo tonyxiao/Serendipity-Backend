@@ -67,6 +67,10 @@ Users.timestampable()
     type: String
     optional: true
     allowedValues: ['male', 'female']
+  genderPref:
+    type: String
+    optional: true
+    allowedValues: ['men', 'women', 'both']
   height:
     type: Number
     optional: true
@@ -433,6 +437,16 @@ Users.helpers
 
     Users.update @_id,
       $set: birthday: user.birthday
+
+  # Since we have no validation yet, a generic update method will do
+  # Once we have validation, we should consider breaking out the separate cases of
+  # updateAttribute.
+  updateAttribute: (fieldName, value) ->
+    logger.info "updating #{fieldName} with #{value} for user #{@_id}"
+    modifier = {}
+    modifier[fieldName] = value
+    Users.update @_id,
+      $set: modifier
 
   # TODO: make "superclass" helpers that does create, remove, update, etc
   remove: ->
