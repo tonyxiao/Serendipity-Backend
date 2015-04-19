@@ -17,6 +17,9 @@ Meteor.publish 'metadata', ->
     if user.email?
       metadata["email"] = user.email
 
+    if user.genderPref?
+      metadata["genderPref"] = user.genderPref
+
     if user.metadata?
       _.extend metadata, user.metadata
 
