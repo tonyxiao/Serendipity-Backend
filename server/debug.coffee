@@ -10,6 +10,14 @@ Meteor.users.allow
   remove: ->
     true
 
+Accounts.registerLoginHandler 'debug', (serviceData) ->
+  if serviceData? and serviceData.debug? and serviceData.debug.userId
+    user = Users.findOne(serviceData.debug.userId)
+    if user?
+      return userId: user._id
+
+  throw Meteor.Error(400, "Trying to log in with fake user #{serviceData} failed")
+
 # Publish all documents
 Meteor.publish 'allUsers', ->
   Users.find()
