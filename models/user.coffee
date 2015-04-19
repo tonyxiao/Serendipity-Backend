@@ -22,13 +22,24 @@ Users.timestampable()
     type: String
     min: 1 # not empty
     optional: true
-  apnEnvironment:
+  apsEnv:
     type: String
     min: 1 # not empty
     optional: true
   build:
     type: String
     min: 1 # not empty
+    optional: true
+  lat:
+    type: Number
+    optional: true
+    decimal: true
+  long:
+    type: Number
+    optional: true
+    decimal: true
+  timestamp:
+    type: Date
     optional: true
   pushToken:
     type: String

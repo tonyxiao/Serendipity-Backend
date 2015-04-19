@@ -8,13 +8,11 @@ class @DeviceRegistrationService
   @registerDevice: (deviceId, currentUser, options) ->
     if deviceId?
       options['_id'] = deviceId
-      options = DeviceRegistrationService.update(options)
-      if currentUser?
-        currentUser.upsertDevice(options)
-    else
-      error = new Meteor.Error(500, "Registering a device with no id. #{currentUser._id} | #{options}")
-      logger.error(error)
-      throw error
+
+    options = DeviceRegistrationService.update(options)
+
+    if currentUser? and deviceId?
+      currentUser.upsertDevice(options)
 
   @update: (options) ->
     details = ServerSession.get(ACTIVE_DEVICE_DETAILS)
