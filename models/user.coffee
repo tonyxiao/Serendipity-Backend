@@ -1,5 +1,8 @@
 logger = new KetchLogger 'users'
 
+@ACTIVE_DEVICE_ID = 'active_device'
+@ACTIVE_DEVICE_DETAILS = 'active_device_details'
+
 # Not sure why these hack is necessary. Probably because the packages are loaded *after*
 # Meteor.users collection has already been created. Need to control package load order
 # HACK ALERT: Maybe file issues?
@@ -18,7 +21,12 @@ Users.timestampable()
   appId:
     type: String
     min: 1 # not empty
+    optional: true
   apnEnvironment:
+    type: String
+    min: 1 # not empty
+    optional: true
+  build:
     type: String
     min: 1 # not empty
     optional: true
@@ -26,7 +34,12 @@ Users.timestampable()
     type: String
     min: 1 # not empty
     optional: true
-  updatedAt: type: Date
+  updatedAt:
+    type: Date
+  version:
+    type: String
+    min: 1
+    optional: true
 
 # TODO: use metadata schema to validate metadata
 @MetadataSchema = new SimpleSchema
@@ -195,25 +208,24 @@ Users.helpers
   getDevice: (deviceId) ->
     _.find @devices, (d) -> d._id == deviceId
 
-  addDevice: (device) ->
+  upsertDevice: (device) ->
+    device['updatedAt'] = new Date
+
     if not @devices?
       @devices = []
     existingDevice = @getDevice device._id
     if existingDevice?
-      # Modify in-db - remove it so that we can push again.
-      Users.update @_id, $pull: devices: existingDevice
-
-      # Modify in-memory
-      index = @devices.indexOf existingDevice
-      if index >= 0
-        @devices.splice(index, 1)
-
+      # Modify in memory
       _.extend existingDevice, device
 
-    # Modify in-memory
-    logger.info "Adding device #{JSON.stringify(device)} for #{@_id}"
-    @devices.push device
-    Users.update @_id, $push: devices: device
+      # Modify in DB
+      selector = _id: @_id, 'devices._id': device._id
+      modifier = _.object _.map device, (value, key) ->
+        ["devices.$.#{key}", value]
+      Users.update selector, $set: modifier
+    else
+      @devices.push device
+      Users.update @_id, $push: devices: device
 
   removeDevice: (device) ->
     if @devices?
@@ -493,6 +505,7 @@ Users.helpers
     if !view?
       view = _.clone this
 
+    delete view.genderPref
     delete view.email
     delete view.status
     delete view.vetted

@@ -6,7 +6,7 @@ Meteor.methods
       # TODO: Convert this method into more generic addDevice
     user = Users.findOne userId
     if user?
-      user.addDevice
+      user.upsertDevice
         _id: pushToken
         appId: 'co.ketchy.ketch'
         apnEnvironment: 'development'

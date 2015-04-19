@@ -2,21 +2,30 @@ logger = new KetchLogger 'api'
 
 # TODO: Make sure only authenticated users can call these methods
 
-Meteor.methods
-
-  # Account Updates
-  'me/update/device': (device) ->
-    user = Meteor.user()
-    if user?
-      user.addDevice
-        _id: device.deviceId
-        appId: device.appId
-        apnEnvironment: device.apsEnv
-        pushToken: device.pushToken
-        updatedAt: new Date
+class @DeviceRegistrationService
+  # Registers the device with the current user, if the current user is known
+  # If the current user is not known, register it into the session
+  @registerDevice: (deviceId, currentUser, options) ->
+    if deviceId?
+      options['_id'] = deviceId
+      options = DeviceRegistrationService.update(options)
+      if currentUser?
+        currentUser.upsertDevice(options)
     else
-      logger.info "Tring to add device #{JSON.stringify(device)} for nonexistant user"
+      throw Meteor.Error(500, "registering a device with no id")
 
+  @update: (options) ->
+    details = ServerSession.get(ACTIVE_DEVICE_DETAILS)
+    if !details?
+      details = {}
+
+    _.extend details, options
+
+    ServerSession.set(ACTIVE_DEVICE_DETAILS, details)
+    return details
+
+Meteor.methods
+  # Account settings updates
   'me/update/birthday': (month, day) ->
     Meteor.user().updateBirthday(month, day)
 
@@ -35,7 +44,23 @@ Meteor.methods
   'me/update/about': (about) ->
     Meteor.user().updateAttribute('about', about)
 
+  # Device updates
+  'device/update/location': (locationOptions) ->
+    logger.info "Adding location info #{JSON.stringify(locationOptions)}"
+    deviceId = ServerSession.get(ACTIVE_DEVICE_ID)
+    DeviceRegistrationService.registerDevice(deviceId, Meteor.user(), locationOptions)
+
+  'device/update/push': (pushOptions) ->
+    logger.info "Adding push token info #{JSON.stringify(pushOptions)}"
+    deviceId = ServerSession.get(ACTIVE_DEVICE_ID)
+    DeviceRegistrationService.registerDevice(deviceId, Meteor.user(), pushOptions)
+
   # global
+  'connectDevice': (deviceId, options) ->
+    logger.info "Connecting device #{deviceId} with options #{JSON.stringify(options)}"
+    ServerSession.set(ACTIVE_DEVICE_ID, deviceId)
+    DeviceRegistrationService.registerDevice(deviceId, Meteor.user(), options)
+
   'deleteAccount': ->
     user = Meteor.user()
     if user?
