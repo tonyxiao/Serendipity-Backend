@@ -57,6 +57,9 @@ Users.timestampable()
   education:
     type: String
     optional: true
+  email:
+    type: String
+    optional: true
   firstName:
     type: String
     optional: true
@@ -466,6 +469,7 @@ Users.helpers
     if !view?
       view = _.clone this
 
+    delete view.email
     delete view.status
     delete view.vetted
     delete view.metadata

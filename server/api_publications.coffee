@@ -13,6 +13,10 @@ Meteor.publish 'metadata', ->
     user = Users.findOne @userId
 
     metadata["vetted"] = user.isVetted()
+
+    if user.email?
+      metadata["email"] = user.email
+
     if user.metadata?
       _.extend metadata, user.metadata
 

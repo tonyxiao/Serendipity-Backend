@@ -48,6 +48,9 @@ Meteor.startup ->
     if userInfo.bio?
       info.about = userInfo.bio
 
+    if userInfo.email?
+      info.email = userInfo.email
+
     if userInfo.location?
       # TODO: consider deriving location from GPS instead.
       info.location = userInfo.location.name

@@ -48,6 +48,7 @@ template(name='userDetails')
         li <strong>Education:</strong> #{ education }
         li <strong>Location:</strong> #{ location }
         li <strong>Age:</strong> #{ age }
+        li <strong>Email:</strong> #{ email }
         li <strong>Birthday:</strong> #{ birthday }
         li <strong>Timezone:</strong> #{ timezone }
         li <strong>Next candidate refresh:</strong> #{ nextRefreshTimestamp }
@@ -68,7 +69,6 @@ template(name='userDetails')
             input#fb-access-token(value=accessToken)
             a(href="https://developers.facebook.com/tools/debug/accesstoken?q=#{ accessToken }", target="_blank")
               button Debug Me
-          li Email: #{ email }
           li Name: #{ name }
           li Gender: #{ gender }
           li TODO: Many other infos to come, location, work, etc.
