@@ -115,6 +115,13 @@ Users.attachSchema @UserSchema
 # MARK: - Instance Methods
 Users.helpers
 
+  # Logs the user out from the server by clearing login tokens
+  logout: ->
+    modifier = {}
+    modifier['services.resume.loginTokens'] = []
+    Users.update @_id,
+      $set: modifier
+
   # mark this user as having joined the ketch community
   vet: ->
     Users.update @_id,

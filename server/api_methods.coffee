@@ -35,14 +35,12 @@ Meteor.methods
   'me/update/about': (about) ->
     Meteor.user().updateAttribute('about', about)
 
-  'me/delete': ->
+  # global
+  'deleteAccount': ->
     user = Meteor.user()
     if user?
       user.markAsDeleted()
-
-  'user/report': (userIdToReport, reason) ->
-    logger.info 'user reporting not implemented'
-
+      user.logout()
 
   # Core Mechanic
   'candidate/submitChoices': (choices) ->
@@ -66,6 +64,9 @@ Meteor.methods
     connection = Connections.findOne connectionId
     if connection?
       connection.markAsReadFor Meteor.user()
+
+  'user/report': (userIdToReport, reason) ->
+    logger.info 'user reporting not implemented'
 
   # Metadata operations
   # TODO: refactor
