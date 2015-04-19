@@ -21,7 +21,7 @@ Meteor.methods
     Meteor.user().updateBirthday(month, day)
 
   'me/update/genderPref': (genderPref) ->
-    Meteor.user().updateAttribute('genderPref', education)
+    Meteor.user().updateAttribute('genderPref', genderPref)
 
   'me/update/height': (height) ->
     Meteor.user().updateAttribute('height', height)
