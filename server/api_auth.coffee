@@ -12,6 +12,9 @@ Meteor.startup ->
   # Login handler for FB
   Accounts.registerLoginHandler 'fb-access', (serviceData) ->
     loginRequest = serviceData['fb-access']
+    if !loginRequest?
+      return undefined
+
     accessToken = loginRequest.accessToken
     userInfo = Meteor.http.call('GET', "https://graph.facebook.com/me?access_token=#{accessToken}").data
 
