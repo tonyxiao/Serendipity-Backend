@@ -1,25 +1,92 @@
 logger = new KetchLogger 'publications'
 
+# TODO: get rid of this helper class
+class SettingsHelper
+
+
+Meteor.publish 'settings', ->
+  self = this
+
+  # userId to user settings properties (i.e. about, education)
+  cache = {}
+  settings = {}
+  settings["softMinBuild"] = Meteor.settings.SOFT_MIN_BUILD
+  settings["hardMinBuild"] = Meteor.settings.HARD_MIN_BUILD
+  settings["crabUserId"] = Meteor.settings.CRAB_USER_ID
+
+  console.log settings
+
+  if @userId
+    currentUserCursor = Users.find(@userId,
+      fields:
+        about: 1
+        education: 1
+        email: 1
+        genderPref: 1
+        height: 1
+        photos: 1
+        vetted: 1
+        work: 1)
+
+    currentUser = currentUserCursor.fetch()[0].settingsView()
+    _.extend settings, currentUser
+
+    handle = currentUserCursor.observeChanges(
+      added: (userId, user) ->
+        _.each user.settingsView(), (value, key) ->
+          setting = {
+            _id: key
+            value: value
+          }
+          cache[key] = value
+
+          logger.info "adding settings for #{self.userId}. <#{key}, #{value}>"
+          self.added 'settings', setting._id, setting
+
+      removed: (userId) ->
+        # should never be triggered?
+        logger.info "settings remove for user #{userId}. Not publishing"
+
+      changed: (userId, changedValues) ->
+        logger.info "settings change #{userId} | #{JSON.stringify(changedValues)}"
+
+        _.each changedValues, (value, key) ->
+          setting = {
+            _id: key
+            value: value
+          }
+
+          # TODO: do I need this cache?
+          cache[key] = value
+          logger.info "settings change #{userId} | <#{key}, #{value}>"
+          self.changed 'settings', setting._id, setting
+      )
+    initializing = false
+    @onStop ->
+      handle.stop()
+
+  console.log "settings"
+  console.log settings
+
+  # initialize by serving 'added' for everything in metadata
+  _.each settings, (value, key) ->
+    setting = {
+      _id: key
+      value: value
+    }
+    cache[key] = value
+    logger.info "initializing settings. <#{key}, #{value}>"
+    self.added 'settings', setting._id, setting
+
+  self.ready()
+
 Meteor.publish 'metadata', ->
   self = this
 
   metadata = {}
-  metadata["softMinBuild"] = Meteor.settings.SOFT_MIN_BUILD
-  metadata["hardMinBuild"] = Meteor.settings.HARD_MIN_BUILD
-  metadata["crabUserId"] = Meteor.settings.CRAB_USER_ID
-
   cache = {}
   if @userId
     user = Users.findOne @userId
-
-    metadata["vetted"] = user.isVetted()
-
-    if user.email?
-      metadata["email"] = user.email
-
-    if user.genderPref?
-      metadata["genderPref"] = user.genderPref
-
     if user.metadata?
       _.extend metadata, user.metadata
 

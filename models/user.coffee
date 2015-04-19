@@ -512,6 +512,7 @@ Users.helpers
     view.photoUrls = photoUrls
     delete view.photos
 
+  # TODO: refactor view generation code
   _clientView: (view) ->
     if !view?
       view = _.clone this
@@ -522,6 +523,13 @@ Users.helpers
     delete view.vetted
     delete view.metadata
     delete view.services
+    delete view.status
+    delete view.roles
+    delete view.nextRefreshTimestamp
+    delete view.createdAt
+    delete view.updatedAt
+    delete view.devices
+    delete view.timezone
 
     @_updateBirthdayInView(view)
     @_updatePhotoURLsInView(view)
@@ -532,6 +540,33 @@ Users.helpers
     view = @_clientView _.clone this
     delete view.lastName
     return view
+
+  _addToSettings: (user, settings, key) ->
+    if user[key]?
+      settings[key] = user[key]
+
+    return settings
+
+  settingsView:  ->
+    settings = {}
+
+    # TODO: refactor this
+    photoUrls = []
+    @sortedPhotos().forEach (photo) ->
+      if photo.active
+        photoUrls.push(photo.url)
+    settings.photoUrls = photoUrls
+
+    settings = @_addToSettings(@, settings, 'education')
+    settings = @_addToSettings(@, settings, 'about')
+    settings = @_addToSettings(@, settings, 'genderPref')
+    settings = @_addToSettings(@, settings, 'email')
+    settings = @_addToSettings(@, settings, 'height')
+    settings = @_addToSettings(@, settings, 'work')
+
+    settings["vetted"] = @.isVetted()
+
+    return settings
 
   view: ->
     view = @_clientView _.clone this
