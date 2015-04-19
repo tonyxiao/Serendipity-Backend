@@ -67,6 +67,9 @@ Users.timestampable()
     type: String
     optional: true
     allowedValues: ['male', 'female']
+  height:
+    type: Number
+    optional: true
   lastName:
     type: String
     optional: true

@@ -42,6 +42,7 @@ Meteor.methods
   'admin/user/edit': (userId, userInfo) ->
     try
       userInfo = JSON.parse userInfo
+
       Users.update userId,
         $set: userInfo
       logger.info "user #{userId} edited"
