@@ -28,28 +28,28 @@ Meteor.startup ->
     info = {
       firstName: userInfo.first_name
       lastName: userInfo.last_name
-      height: FixtureService.randomHeight() # TODO: omit height
     }
-
-    if FixtureService.mostRecentSchool(userInfo.education)?
-      info.education = FixtureService.mostRecentSchool(userInfo.education).school.name
-
-    if FixtureService.mostRecentJob(userInfo.work)?
-      work = FixtureService.mostRecentJob(userInfo.work)
-      info.work = work.employer.name
-
-    if userInfo.birthday?
-      info.birthday = new Date userInfo.birthday
-      info.age = FixtureService.age(userInfo.birthday)
 
     if userInfo.gender?
       info.gender = userInfo.gender
 
-    if userInfo.bio?
-      info.about = userInfo.bio
-
     if userInfo.email?
       info.email = userInfo.email
+
+    # do not overwrite editable info if the user already had it saved.
+    if FixtureService.mostRecentSchool(userInfo.education)? and !user.education?
+      info.education = FixtureService.mostRecentSchool(userInfo.education).school.name
+
+    if FixtureService.mostRecentJob(userInfo.work)? and !user.work?
+      work = FixtureService.mostRecentJob(userInfo.work)
+      info.work = work.employer.name
+
+    if userInfo.birthday? and !user.birthday? and !user.age?
+      info.birthday = new Date userInfo.birthday
+      info.age = FixtureService.age(userInfo.birthday)
+
+    if userInfo.bio? and !user.about?
+      info.about = userInfo.bio
 
     if userInfo.location?
       # TODO: consider deriving location from GPS instead.
