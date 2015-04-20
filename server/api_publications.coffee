@@ -51,7 +51,8 @@ Meteor.publish 'settings', ->
       changed: (userId, changedValues) ->
         logger.info "settings change #{userId} | #{JSON.stringify(changedValues)}"
 
-        _.each changedValues, (value, key) ->
+        user = Users.findOne userId
+        _.each user.settingsView(), (value, key) ->
           setting = {
             _id: key
             value: value
@@ -65,9 +66,6 @@ Meteor.publish 'settings', ->
     initializing = false
     @onStop ->
       handle.stop()
-
-  console.log "settings"
-  console.log settings
 
   # initialize by serving 'added' for everything in metadata
   _.each settings, (value, key) ->
