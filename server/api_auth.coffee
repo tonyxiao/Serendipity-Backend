@@ -24,6 +24,13 @@ Meteor.startup ->
     accountInfo = Accounts.updateOrCreateUserFromExternalService 'facebook', userInfo, {}
     user = Users.findOne(accountInfo.userId)
 
+    if user._isDeleted()
+      # TODO: if a user was marked as deleted, Account.updateOrCreateUserFromExternalService
+      # should have returned a new user. For now, simply prevet the user from logging in.
+      error =  new Meteor.Error(501, "Logging in with deleted user #{accountInfo.userId}")
+      logger.error(error)
+      throw error
+
     # Ketchy crab should not get any info pulled from Facebook.
     if user._id == Meteor.settings.CRAB_USER_ID
       return
