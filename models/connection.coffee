@@ -22,7 +22,7 @@ Connections.attachSchema new SimpleSchema
 Connections.helpers
 
   _validateUserVetted: (user) ->
-    if !!user.isVetted()
+    if !user.isVetted()
       error = new Meteor.Error(500, "Please ensure that #{user._id} is vetted before modifying connection #{@_id}")
       logger.error(error)
       throw error
@@ -38,8 +38,8 @@ Connections.helpers
 
     # Non-ketchy connections should consist of only vetted users.
     if user1._id != Meteor.settings.CRAB_USER_ID and user2._id != Meteor.settings.CRAB_USER_ID
-      _validateUserVetted user1
-      _validateUserVetted user2
+      @_validateUserVetted user1
+      @_validateUserVetted user2
 
   isExpired: ->
     return @expired
