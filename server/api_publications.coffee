@@ -28,8 +28,8 @@ Meteor.publish 'settings', ->
         vetted: 1
         work: 1)
 
-    currentUser = currentUserCursor.fetch()[0].settingsView()
-    _.extend settings, currentUser
+    currentUserSettings = Users.findOne(@userId).settingsView()
+    _.extend settings, currentUserSettings
 
     handle = currentUserCursor.observeChanges(
       added: (userId, user) ->
@@ -58,10 +58,14 @@ Meteor.publish 'settings', ->
             value: value
           }
 
-          # TODO: do I need this cache?
-          cache[key] = value
-          logger.info "settings change #{userId} | <#{key}, #{value}>"
-          self.changed 'settings', setting._id, setting
+          if !cache[key]?
+            logger.info "settings change. unexpected add #{userId} | <#{key}, #{value}>"
+            cache[key] = value
+            self.added 'settings', setting._id, setting
+          else if cache[key] != value
+            cache[key] = value
+            logger.info "settings change #{userId} | <#{key}, #{value}>"
+            self.changed 'settings', setting._id, setting
       )
     initializing = false
     @onStop ->
