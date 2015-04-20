@@ -33,19 +33,16 @@ Meteor.publish 'settings', ->
 
     handle = currentUserCursor.observeChanges(
       added: (userId, user) ->
-        logger.info "settings remove for user #{userId}. #{JSON.stringify(user)}"
-        try
-          _.each user.settingsView(), (value, key) ->
-            setting = {
-              _id: key
-              value: value
-            }
-            cache[key] = value
+        user = Users.findOne userId
+        _.each user.settingsView(), (value, key) ->
+          setting = {
+            _id: key
+            value: value
+          }
+          cache[key] = value
 
-            logger.info "adding settings for #{self.userId}. <#{key}, #{value}>"
-            self.added 'settings', setting._id, setting
-        catch error
-          logger.info(error)
+          logger.info "adding settings for #{self.userId}. <#{key}, #{value}>"
+          self.added 'settings', setting._id, setting
 
       removed: (userId) ->
         # should never be triggered?
