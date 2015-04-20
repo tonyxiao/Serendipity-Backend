@@ -29,16 +29,19 @@ class @MatchService
           Candidates.NUM_CANDIDATES_PER_GAME
 
         activeCandidates = user.activeCandidates().fetch()
+        numUsersToBeActivated = numAllowedActiveUsers - activeCandidates.length
 
-        # new game happened
-        if activeCandidates.length < numAllowedActiveUsers
-          vettedCandidates = user.vettedCandidates(
-            Meteor.settings.numAllowedActiveGames - activeCandidates.length)
-          vettedCandidates.forEach (candidate) ->
+        # if we can still activate more users, activate more users.
+        if numUsersToBeActivated > 0
+          user.vettedNotActiveCandidates().fetch().forEach (candidate) ->
+            if numUsersToBeActivated == 0
+              return
+
+            numUsersToBeActivated--
             candidate.activate()
-
           user.sendTestPushMessage "Your Ketch has arrived!"
 
+        # update the next refresh timestamp regardless
         user.updateNextRefreshTimestamp()
 
   @getMatchService: ->

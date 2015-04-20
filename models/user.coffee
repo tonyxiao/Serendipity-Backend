@@ -348,6 +348,12 @@ Users.helpers
       limit: numCandidates
     })
 
+  vettedNotActiveCandidates: ->
+    Candidates.find
+      forUserId: @_id
+      vetted: true
+      active: $ne: true
+
   filterConnections: (type, expired) ->
     selector = 'users._id': @_id
     if expired

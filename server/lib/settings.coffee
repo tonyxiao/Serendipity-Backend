@@ -11,7 +11,13 @@ if typeof Meteor.settings.HARD_MIN_BUILD == "string"
 
 
 Meteor.settings.PHOTO_COUNT_TO_DISPLAY = Meteor.settings.PHOTO_COUNT_TO_DISPLAY or process.env.PHOTO_COUNT_TO_DISPLAY or 3
+if type of Meteor.settings.PHOTO_COUNT_TO_DISPLAY == "string"
+  Meteor.settings.PHOTO_COUNT_TO_DISPLAY = parseInt(Meteor.settings.PHOTO_COUNT_TO_DISPLAY)
+
 Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES = Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES or process.env.NUM_ALLOWED_ACTIVE_GAMES or 1
+
+if typeof Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES == "string"
+  Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES = parseInt(Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES)
 
 Meteor.settings.CRAB_USER_ID = Meteor.settings.CRAB_USER_ID or process.env.CRAB_USER_ID or "crab"
 Meteor.settings.CRAB_FIRST_NAME =  Meteor.settings.CRAB_FIRST_NAME or process.env.CRAB_FIRST_NAME or "Ketchy"
