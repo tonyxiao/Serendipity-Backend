@@ -11,6 +11,7 @@ Connections.attachSchema new SimpleSchema
   'users.$.lastSentDate': type: Date, optional: true
   'users.$.lastMessageIdSeen': type: String, optional: true
   'users.$.lastTimestampSeen': type: Date, optional: true
+  'users.$.promptText': type: String, optional: true
   expiresAt: type: Date
   expired: type: Boolean, optional: true
   lastMessageText: type: String, optional: true
@@ -101,6 +102,18 @@ Connections.helpers
     @_validateUsersVetted()
     Connections.update selector, $set: modifier
 
+  unsetUserKey: (user, key) ->
+    # First modify in memory
+    info = @getUserInfo user
+    delete info[key]
+    # Then modify in db
+    selector = _id: @_id, 'users._id': user._id
+    modifier = {}
+    modifier["users.$.#{key}"] = ""
+
+    @_validateUsersVetted()
+    Connections.update selector, $unset: modifier
+
   createNewMessage: (text, sender) ->
     # TODO: error handling if text is null
     recipient = @otherUser sender
@@ -113,6 +126,11 @@ Connections.helpers
 
     @setUserKeyValue sender, 'lastSentDate', new Date
     @setUserKeyValue recipient, 'hasUnreadMessage', true
+
+    # prevent the prompt text from being shown again for both users, since an actual
+    # conversation will happen soon.
+    @unsetUserKey recipient, 'promptText'
+    @unsetUserKey sender, 'promptText'
 
     # Compute the next expiration date
     lastSentDates = _.compact _.pluck(@users, 'lastSentDate')
@@ -154,6 +172,7 @@ Connections.helpers
     view.hasUnreadMessage = @getUserInfo(refUser).hasUnreadMessage
     view.otherUserLastSeenMessageId = @getUserInfo(otherUser).lastMessageIdSeen
     view.otherUserLastSeenAt = @getUserInfo(otherUser).lastTimestampSeen
+    view.promptText = @getUserInfo(refUser).promptText
 
     delete view.users
     return view

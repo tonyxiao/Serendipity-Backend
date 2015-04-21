@@ -415,10 +415,14 @@ Users.helpers
         logger.error(error)
         throw error
 
+    prompts = PromptService.prompts()
+    prompt1Id = PromptService.getPrompt()
+    prompt2Id = PromptService.getPrompt(prompt1Id)
+
     connectionId = Connections.insert
       users: [
-        {_id: @_id, hasUnreadMessage: false}
-        {_id: userId, hasUnreadMessage: true}
+        {_id: @_id, hasUnreadMessage: false, promptText: prompts[prompt1Id]}
+        {_id: userId, hasUnreadMessage: true, promptText:  prompts[prompt2Id]}
       ]
       expiresAt: Connections.nextExpirationDate new Date
       type: connectionType

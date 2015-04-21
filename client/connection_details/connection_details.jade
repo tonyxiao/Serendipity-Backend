@@ -12,6 +12,8 @@ template(name='connectionUserActions')
     li Last Sent Message Date: #{ lastSentDate }
     li Last Seen Message: #{ lastMessageTextSeen }
     li Has Unread Message: #{ hasUnreadMessage }
+    li Prompt: #{ promptText }
+    p
       +with dereferenceUser this
         button.mark-as-read Mark As Read for #{ firstName }
   .actions
