@@ -4,9 +4,11 @@ Meteor.subscribe 'allCandidates'
 Meteor.subscribe 'allConnections'
 Meteor.subscribe 'allMessages'
 Meteor.subscribe 'metadata'
+Meteor.subscribe 'settings'
 
 ## Client side collections
 @Metadata = new Mongo.Collection 'metadata'
+@Settings = new Mongo.Collection 'settings'
 
 ## Routing
 Router.route '/users', ->
