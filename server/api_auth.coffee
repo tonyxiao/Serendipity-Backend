@@ -99,8 +99,7 @@ Meteor.startup ->
 
       crabConnection = Connections.findOne connectionId
 
-      warmWelcome = "Welcome to Ketch! I'm Ketchy the crab and I'm here to assist you if you have any questions!"
-      crabConnection.messageWithoutPushNotification warmWelcome, crabConnection.otherUser(user)
+      crabConnection.messageWithoutPushNotification Meteor.settings.WARM_WELCOME_TEXT, crabConnection.otherUser(user)
 
     # if the user device registration info came before the user login info,
     # it would be stored in the cache. We should update the user's device info accordingly
