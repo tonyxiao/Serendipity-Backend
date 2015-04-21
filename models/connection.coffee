@@ -114,7 +114,7 @@ Connections.helpers
     @_validateUsersVetted()
     Connections.update selector, $unset: modifier
 
-  createNewMessage: (text, sender) ->
+  messageWithoutPushNotification: (text, sender) ->
     # TODO: error handling if text is null
     recipient = @otherUser sender
     Messages.insert
@@ -154,6 +154,9 @@ Connections.helpers
         lastMessageText: text
         expiresAt: expiresAt
 
+  createNewMessage: (text, sender) ->
+    recipient = @otherUser sender
+    @messageWithoutPushNotification(text, sender)
     recipient.sendTestPushMessage "#{sender.firstName}: #{text}"
 
   removeAllMessages: ->
