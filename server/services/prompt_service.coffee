@@ -11,7 +11,7 @@ class @PromptService
   @getPrompt: (promptIdToExclude) ->
     prompts = @prompts()
 
-    if promptIdToExclude?
+    if !promptIdToExclude?
       index = Math.floor(Math.random() * prompts.length)
       return index
 
