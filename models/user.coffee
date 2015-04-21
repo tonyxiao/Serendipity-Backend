@@ -419,10 +419,22 @@ Users.helpers
     prompt1Id = PromptService.getPrompt()
     prompt2Id = PromptService.getPrompt(prompt1Id)
 
+    connectionUser1 = {}
+    connectionUser1['_id'] = @_id
+    connectionUser1['hasUnreadMessage'] = false
+
+    connectionUser2 = {}
+    connectionUser2['_id'] = userId
+    connectionUser2['hasUnreadMessage'] = true
+
+    if !@_id != Meteor.settings.CRAB_USER_ID and otherUser._id != Meteor.settings.CRAB_USER_ID
+      connectionUser1['promptText'] = prompts[prompt1Id]
+      connectionUser2['promptText'] = prompts[prompt2Id]
+
     connectionId = Connections.insert
       users: [
-        {_id: @_id, hasUnreadMessage: false, promptText: prompts[prompt1Id]}
-        {_id: userId, hasUnreadMessage: true, promptText:  prompts[prompt2Id]}
+        connectionUser1
+        connectionUser2
       ]
       expiresAt: Connections.nextExpirationDate new Date
       type: connectionType
