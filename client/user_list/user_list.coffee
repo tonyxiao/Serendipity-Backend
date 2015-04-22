@@ -9,9 +9,9 @@ Template.userList.helpers
     return okUsers
 
   crab: ->
-    crabUserId = Metadata.findOne("crabUserId")
-    if crabUserId?
-      return Users.findOne crabUserId.value
+    crabUser = Settings.findOne("crabUserId")
+    if crabUser?
+      return Users.findOne crabUser.value
 
   # TODO: refactor this and {@code users} to share code.
   usersRunningOutOfVettedCandidates: ->
