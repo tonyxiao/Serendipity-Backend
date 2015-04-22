@@ -38,7 +38,7 @@ Meteor.startup ->
 
     # Ketchy crab should not get any info pulled from Facebook.
     if user._id == Meteor.settings.CRAB_USER_ID
-      return
+      return userId: user._id
 
     info = {
       firstName: userInfo.first_name
