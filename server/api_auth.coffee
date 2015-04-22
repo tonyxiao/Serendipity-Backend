@@ -1,4 +1,5 @@
 logger = new KetchLogger 'auth'
+analytics.load Meteor.settings.SEGMENT_WRITE_KEY;
 
 # TODO: Do we need Meteor.startup here?
 Meteor.startup ->
@@ -8,6 +9,10 @@ Meteor.startup ->
     error = new Meteor.Error(500, 'Exception: Crab user not found! This means that users will not be able to chat with support!');
     logger.error(error)
     throw error
+
+  if !Meteor.settings.SEGMENT_WRITE_KEY?
+    error = new Meteor.Error(500, 'SEGMENT_WRITE_KEY not defined! Analytics will not be captured');
+    logger.error(error)
 
   # Login handler for FB
   Accounts.registerLoginHandler 'fb-access', (serviceData) ->
@@ -109,5 +114,17 @@ Meteor.startup ->
     # Update user photos if need be
     if !user.photoUrls?
       user.reloadPhotosFromFacebook()
+
+    # Identify this user to segment.io
+    analytics.identify
+      userId: user._id
+      traits:
+        firstName: info.firstName
+        lastName: info.lastName
+        email: info.email
+
+    analytics.track
+      userId: user._id
+      event: 'login'
 
     return userId: user._id

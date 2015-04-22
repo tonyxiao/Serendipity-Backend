@@ -24,6 +24,7 @@ Meteor.settings.CRAB_FIRST_NAME =  Meteor.settings.CRAB_FIRST_NAME or process.en
 Meteor.settings.CRAB_LAST_NAME = Meteor.settings.CRAB_LAST_NAME or process.env.CRAB_LAST_NAME or ""
 
 Meteor.settings.WARM_WELCOME_TEXT = Meteor.settings.WARM_WELCOME_TEXT or process.env.WARM_WELCOME_TEXT or "Ahoy, Sailor! I'm Ketchy, your personal assistant. I'm here to answer questions and navigate you through an ocean of dating options. Please text or talk to me any time you need anything. I'm happy to help!"
+Meteor.settings.SEGMENT_WRITE_KEY = Meteor.settings.SEGMENT_WRITE_KEY or process.env.SEGMENT_WRITE_KEY
 
 Meteor.settings.REFRESH_INTERVAL_MILLIS = Meteor.settings.REFRESH_INTERVAL_MILLIS or process.env.REFRESH_INTERVAL_MILLIS or 86400000 # 24 hours
 Meteor.settings.CRAB_EXPIRATION_DATE_MILLIS = Meteor.settings.CRAB_EXPIRATION_DATE_MILLIS or process.env.CRAB_EXPIRATION_DATE_MILLIS or 5680281600000 # December 31, 2149
