@@ -47,8 +47,12 @@ Connections.helpers
     return @expired
 
   messages: ->
-    Messages.find
+    Messages.find({
       connectionId: @_id
+    }, { sort:
+      createdAt: 1
+    })
+
 
   lastMessageBy: (userId) ->
     messagesBySender = Messages.find({
