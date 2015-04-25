@@ -171,7 +171,7 @@ Connections.helpers
         channel: '#ketchy'
         icon_emoji: ':crabby:'
         username: Meteor.settings.SERVER_ENVIRONMENT
-        text: "#{sender.firstName} #{sender.lastName}: #{text}"
+        text: "<#{Meteor.settings.ROOT_URL}connections/#{@_id}|#{sender.firstName} #{sender.lastName}>: #{text}"
       request.post(webhook_url).json(payload)
 
   removeAllMessages: ->
