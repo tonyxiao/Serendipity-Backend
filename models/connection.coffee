@@ -1,5 +1,4 @@
 logger = new KetchLogger 'connections'
-
 @Connections = new Mongo.Collection 'connections'
 Connections.attachBehaviour('timestampable')
 
@@ -159,9 +158,21 @@ Connections.helpers
         expiresAt: expiresAt
 
   createNewMessage: (text, sender) ->
+    # TODO: What's the right way to do this here? @fang refactor?
+    request = Meteor.npmRequire('request')
     recipient = @otherUser sender
     @messageWithoutPushNotification(text, sender)
     recipient.sendTestPushMessage "#{sender.firstName}: #{text}"
+
+    # Forward message to ketchy to ketchy channel in Slack
+    if recipient.isCrab()
+      webhook_url = 'https://hooks.slack.com/services/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'
+      payload =
+        channel: '#ketchy'
+        icon_emoji: ':crabby:'
+        username: Meteor.settings.SERVER_ENVIRONMENT
+        text: "#{sender.firstName} #{sender.lastName}: #{text}"
+      request.post(webhook_url).json(payload)
 
   removeAllMessages: ->
     Messages.remove

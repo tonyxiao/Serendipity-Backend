@@ -163,6 +163,9 @@ Users.helpers
   isBlocked: ->
     @vetted? && @vetted == 'blocked'
 
+  isCrab: ->
+    @_id == Meteor.settings.CRAB_USER_ID
+
   _isDeleted: ->
     @status? && @status == 'deleted'
 
