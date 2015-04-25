@@ -171,7 +171,8 @@ Connections.helpers
         channel: '#ketchy'
         icon_emoji: ':crabby:'
         username: Meteor.settings.SERVER_ENVIRONMENT
-        text: "<#{Meteor.settings.ROOT_URL}connections/#{@_id}|#{sender.firstName} #{sender.lastName}>: #{text}"
+        # TODO: How to correctly join urls without worrying about presence of '/'
+        text: "<#{Meteor.settings.ROOT_URL}/connections/#{@_id}|#{sender.firstName} #{sender.lastName}>: #{text}"
       request.post(webhook_url).json(payload)
 
   removeAllMessages: ->
