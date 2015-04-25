@@ -1,6 +1,6 @@
 
 @Messages = new Mongo.Collection 'messages'
-Messages.timestampable()
+Messages.attachBehaviour('timestampable')
 
 # MARK: - Schema Validation
 Messages.attachSchema new SimpleSchema

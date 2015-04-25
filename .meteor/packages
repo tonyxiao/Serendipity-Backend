@@ -4,25 +4,32 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
+# Core Packages
 meteor-platform
-insecure
-service-configuration
-aldeed:collection2
+accounts-password
 accounts-facebook
 accounts-ui
-meteorhacks:npm
-
-
+insecure
+service-configuration
 npm-container
-pauldowman:dotenv
-meteorhacks:async
-accounts-password
-iron:router
 coffeescript
-sewdn:collection-behaviours
+reactive-var
+
+# Community packages
+aldeed:simple-schema
+aldeed:collection2
+matb33:collection-hooks
 dburles:collection-helpers
+zimme:collection-timestampable
+
+meteorhacks:npm
+meteorhacks:async
+iron:router
 mquandalle:jade
 lauricio:less-autoprefixer
-reactive-var
 erasaur:server-session
 percolatestudio:segment.io@=1.1.1_1
+
+# Test Packages
+sanjo:jasmine
+velocity:html-reporter

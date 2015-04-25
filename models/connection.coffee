@@ -1,7 +1,7 @@
 logger = new KetchLogger 'connections'
 
 @Connections = new Mongo.Collection 'connections'
-Connections.timestampable()
+Connections.attachBehaviour('timestampable')
 
 # MARK: - Schema Validation
 Connections.attachSchema new SimpleSchema
