@@ -8,7 +8,6 @@ Meteor.startup ->
   if !crab?
     error = new Meteor.Error(500, 'Exception: Crab user not found! This means that users will not be able to chat with support!');
     logger.error(error)
-    throw error
 
   if !Meteor.settings.SEGMENT_WRITE_KEY?
     error = new Meteor.Error(500, 'SEGMENT_WRITE_KEY not defined! Analytics will not be captured');
