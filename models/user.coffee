@@ -37,6 +37,10 @@ Users.attachBehaviour('timestampable')
     type: String
     min: 1 # not empty
     optional: true
+  settings:
+    type: Object
+    blackbox: true
+    optional: true
   updatedAt:
     type: Date
   version:
@@ -174,7 +178,7 @@ Users.helpers
       $unset: status : "active"
 
   markAsDeleted: ->
-    if @_id == Meteor.settings.CRAB_USER_ID
+    if @isCrab()
       error =  new Meteor.Error(501, 'Exception: Cannot mark crab user as deleted')
       logger.error(error)
       throw error
@@ -404,7 +408,7 @@ Users.helpers
     otherUser = Users.findOne userId
 
     # validation checks for when a user connects to another (non-ketchy user
-    if !@_id != Meteor.settings.CRAB_USER_ID and otherUser._id != Meteor.settings.CRAB_USER_ID
+    if !@isCrab() and !otherUser.isCrab()
       if !@isVetted() or !otherUser? or !otherUser.isVetted()
         error = new Meteor.Error(500, "Please ensure that #{@._id} and #{otherUser._id} are vetted before inserting connection.")
         logger.error(error)
@@ -422,7 +426,7 @@ Users.helpers
     connectionUser2['_id'] = userId
     connectionUser2['hasUnreadMessage'] = true
 
-    if !@_id != Meteor.settings.CRAB_USER_ID and otherUser._id != Meteor.settings.CRAB_USER_ID
+    if !isCrab() and !otherUser.isCrab()
       connectionUser1['promptText'] = prompts[prompt1Id]
       connectionUser2['promptText'] = prompts[prompt2Id]
 
@@ -442,6 +446,11 @@ Users.helpers
     return connectionId
 
   populateCandidateQueue: (maxCount) ->
+    if @isCrab()
+      error = new Meteor.Error(500, "Cannot populate candidates for crab user.")
+    logger.error(error)
+    throw error
+
     MatchService.generateMatchesForUser this, maxCount
 
   reloadPhotosFromFacebook: ->
