@@ -1,0 +1,11 @@
+# Overwrite configs from base.yml
+env:
+  MONGO_URL: 'mongodb://heroku_app34387726:n2rjpfrhne6g023319v8drjar7@ds051131-a0.mongolab.com:51131/heroku_app34387726'
+  ROOT_URL: 'http://localhost:3000/'
+settings:
+  facebook:
+    appId: '782247221868150'
+    secret: '760323da3c8aef41395163f1c339f152'
+  azure:
+    container: 'ketch-dev'
+  segmentWriteKey: 'vfnxR5SsgYkNQqRznBWHXDp2LMFkUNTv'
