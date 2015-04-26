@@ -34,3 +34,6 @@ Meteor.publish 'allConnections', ->
 
 Meteor.publish 'allMessages', ->
   Messages.find()
+
+Meteor.publish 'allDevices', ->
+  Devices.find()

@@ -3,21 +3,20 @@ logger = new KetchLogger 'admin'
 # TODO: Consider prefixing admin methods with /admin
 Meteor.methods
   'admin/user/addPushToken': (userId, pushToken) ->
-      # TODO: Convert this method into more generic addDevice
+    # TODO: Convert this method into more generic addDevice
     user = Users.findOne userId
     if user?
-      user.upsertDevice
-        _id: pushToken
+      Devices.insert
         appId: 'co.ketchy.ketch'
         apnEnvironment: 'development'
         pushToken: pushToken
         updatedAt: new Date
 
-  'admin/user/removePushToken': (userId, pushToken) ->
-    # TODO: Convert this method into more generic addDevice
+  'admin/device/remove': (userId, deviceId) ->
+    console.log "removing device #{userId}, #{deviceId}"
     user = Users.findOne userId
     if user?
-      user.removeDevice _id: pushToken
+      user.removeDevice deviceId
 
   'admin/user/sendPushMessage': (userId, pushMessage) ->
     user = Users.findOne userId

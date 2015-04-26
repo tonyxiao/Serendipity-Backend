@@ -5,14 +5,19 @@ logger = new KetchLogger 'api'
 class @DeviceRegistrationService
   # Registers the device with the current user, if the current user is known
   # If the current user is not known, register it into the session
-  @registerDevice: (deviceId, currentUser, options, connectionId) ->
+  @registerDevice: (deviceId, options, connectionId) ->
     if deviceId?
       options['_id'] = deviceId
 
     options = DeviceRegistrationService.update(options, connectionId)
+    
+    if deviceId?
+      Devices.update deviceId, {
+        $set: options
+      },  upsert: true
 
-    if currentUser? and deviceId?
-      currentUser.upsertDevice(options)
+      if Meteor.user()?
+        Meteor.user().addDevice deviceId
 
   @update: (options, connectionId) ->
     details = SessionData.getFromConnection(connectionId, ACTIVE_DEVICE_DETAILS)
@@ -48,18 +53,31 @@ Meteor.methods
   'device/update/location': (locationOptions) ->
     logger.info "Adding location info #{JSON.stringify(locationOptions)}"
     deviceId = SessionData.getFromConnection(this.connection.id, ACTIVE_DEVICE_ID)
-    DeviceRegistrationService.registerDevice(deviceId, Meteor.user(), locationOptions, this.connection.id)
+    DeviceRegistrationService.registerDevice(deviceId, locationOptions, this.connection.id)
 
   'device/update/push': (pushOptions) ->
     logger.info "Adding push token info #{JSON.stringify(pushOptions)}"
-    deviceId = SessionData.getFromConnection(this.connection.id, ACTIVE_DEVICE_ID)
-    DeviceRegistrationService.registerDevice(deviceId, Meteor.user(), pushOptions, this.connection.id)
+
+    # TODO: this is here to enable testing, because I can't figure out how to mock
+    # this.connection. Refactor this into a connectionid utility that can be mocked.
+    connectionId = "default_connection_id"
+    if this.connection?
+      connectionId = this.connection.id
+
+    deviceId = SessionData.getFromConnection(connectionId, ACTIVE_DEVICE_ID)
+    DeviceRegistrationService.registerDevice(deviceId, pushOptions, connectionId)
 
   # global
   'connectDevice': (deviceId, options) ->
     logger.info "Connecting device #{deviceId} with options #{JSON.stringify(options)}"
-    SessionData.update(this.connection.id, ACTIVE_DEVICE_ID, deviceId)
-    DeviceRegistrationService.registerDevice(deviceId, Meteor.user(), options, this.connection.id)
+
+    # TODO: this is here to enable testing, because I can't figure out how to mock
+    # this.connection. Refactor this into a connectionid utility that can be mocked.
+    connectionId = "default_connection_id"
+    if this.connection?
+      connectionId = this.connection.id
+    SessionData.update(connectionId, ACTIVE_DEVICE_ID, deviceId)
+    DeviceRegistrationService.registerDevice(deviceId, options, connectionId)
 
   'deleteAccount': ->
     user = Meteor.user()

@@ -48,7 +48,7 @@ Template.userDetails.events
 
   'click .remove-device': (event) ->
     userId = $(event.target).closest('.user-details').data('user-id')
-    Meteor.call 'admin/user/removePushToken', userId, @_id
+    Meteor.call 'admin/device/remove', userId, @_id
 
   'click .add-push-token': ->
     textarea = $('#push-token textarea')

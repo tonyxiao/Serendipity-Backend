@@ -5,6 +5,7 @@ Meteor.subscribe 'allConnections'
 Meteor.subscribe 'allMessages'
 Meteor.subscribe 'metadata'
 Meteor.subscribe 'settings'
+Meteor.subscribe 'allDevices'
 
 ## Client side collections
 @Metadata = new Mongo.Collection 'metadata'

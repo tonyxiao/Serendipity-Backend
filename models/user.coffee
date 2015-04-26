@@ -6,48 +6,6 @@ logger = new KetchLogger 'users'
 @Users = Meteor.users
 Users.attachBehaviour('timestampable')
 
-@DeviceSchema = new SimpleSchema
-  _id:
-    type: String
-    min: 1 # not empty
-  appId:
-    type: String
-    min: 1 # not empty
-    optional: true
-  apsEnv:
-    type: String
-    min: 1 # not empty
-    optional: true
-  build:
-    type: String
-    min: 1 # not empty
-    optional: true
-  lat:
-    type: Number
-    optional: true
-    decimal: true
-  long:
-    type: Number
-    optional: true
-    decimal: true
-  timestamp:
-    type: Date
-    optional: true
-  pushToken:
-    type: String
-    min: 1 # not empty
-    optional: true
-  settings:
-    type: Object
-    blackbox: true
-    optional: true
-  updatedAt:
-    type: Date
-  version:
-    type: String
-    min: 1
-    optional: true
-
 # TODO: use metadata schema to validate metadata
 @MetadataSchema = new SimpleSchema
   bugfenderId:
@@ -72,7 +30,7 @@ Users.attachBehaviour('timestampable')
     type: Number
     optional: true
   devices:
-    type: [@DeviceSchema]
+    type: [String]
     optional: true
   education:
     type: String
@@ -218,30 +176,25 @@ Users.helpers
   getDevice: (deviceId) ->
     _.find @devices, (d) -> d._id == deviceId
 
-  upsertDevice: (device) ->
-    device['updatedAt'] = new Date
-
-    if not @devices?
+  addDevice: (deviceId) ->
+    if !@devices?
       @devices = []
-    existingDevice = @getDevice device._id
-    if existingDevice?
-      # Modify in memory
-      _.extend existingDevice, device
 
-      # Modify in DB
-      selector = _id: @_id, 'devices._id': device._id
-      modifier = _.object _.map device, (value, key) ->
-        ["devices.$.#{key}", value]
-      Users.update selector, $set: modifier
-    else
-      @devices.push device
-      Users.update @_id, $push: devices: device
+    if @devices.indexOf(deviceId) < 0
+      @devices.push deviceId
 
-  removeDevice: (device) ->
+      Users.update @_id,
+        $set: devices: @devices
+
+  removeDevice: (deviceId) ->
     if @devices?
-      @devices = _.reject @devices, (d) -> d._id == device._id
+      @devices = _.reject @devices, (d) -> d == deviceId
     Users.update @_id,
-      $pull: devices: _id: device._id
+      $set: devices: @devices
+
+  deviceDetails: () ->
+    Devices.find
+      _id: $in: @devices
 
   # TODO: Make this generic
   sendTestPushMessage: (message) ->

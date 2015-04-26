@@ -87,7 +87,7 @@ template(name='userDetails')
     section.devices
       h2 Devices
       ul
-        +each devices
+        +each deviceDetails
           li Id: #{ _id }
           li Push Token: #{ pushToken }
           li APN Env: #{ apsEnv }
