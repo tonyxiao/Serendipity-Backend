@@ -27,9 +27,9 @@ meteorhacks:async
 iron:router
 mquandalle:jade
 lauricio:less-autoprefixer
-erasaur:server-session
 percolatestudio:segment.io@=1.1.1_1
 
 # Test Packages
 sanjo:jasmine
 velocity:html-reporter
+reactive-extra
