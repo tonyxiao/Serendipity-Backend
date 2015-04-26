@@ -32,4 +32,4 @@ percolatestudio:segment.io@=1.1.1_1
 # Test Packages
 sanjo:jasmine
 velocity:html-reporter
-reactive-extra
+mrt:reactive-extra
