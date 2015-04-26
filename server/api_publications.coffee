@@ -1,7 +1,19 @@
 logger = new KetchLogger 'publications'
 
+class @DeviceService
+  @isDebugLoginEnabled: (user, deviceId) ->
+    isDebugLoginEnabled = undefined
+    if user.devices? and user.devices.length > 0
+      user.devices.forEach (device) ->
+        if device._id == deviceId and device.settings? and device.settings.debugLoginMode? and !isDebugLoginEnabled?
+          isDebugLoginEnabled =  device.settings.debugLoginMode
+
+    return isDebugLoginEnabled
+
+
 Meteor.publish 'settings', ->
   self = this
+  connectionId = this.connection.id
 
   # userId to user settings properties (i.e. about, education)
   cache = {}
@@ -10,14 +22,30 @@ Meteor.publish 'settings', ->
   settings["hardMinBuild"] = Meteor.settings.HARD_MIN_BUILD
   settings["crabUserId"] = Meteor.settings.CRAB_USER_ID
 
-  deviceId = ServerSession.get(ACTIVE_DEVICE_ID, this.connection.id)
-
   # TODO: refactor devices into its own table.
-  Users.find().fetch().forEach (user) ->
-    if user.devices? and user.devices.length > 0
-      user.devices.forEach (device) ->
-        if device._id == deviceId and device.settings? and device.settings.debugLoginMode?
-          settings["debugLoginMode"] = device.settings.debugLoginMode
+  usersWithDevice = Users.find
+    'devices._id': SessionData.getFromConnection(connectionId, ACTIVE_DEVICE_ID)
+  usersWithDevice.observeChanges(
+    added: (userId) ->
+      deviceId = SessionData.getFromConnection(connectionId, ACTIVE_DEVICE_ID)
+      if deviceId?
+        user = Users.findOne(userId)
+
+        debugLoginEnabeld = DeviceService.isDebugLoginEnabled(user, deviceId)
+        setting = {
+          _id: 'debugLoginMode'
+          value: debugLoginEnabeld
+        }
+
+        if debugLoginEnabeld? and !cache[deviceId]?
+          cache[deviceId] = debugLoginEnabeld
+          logger.info "added settings: #{JSON.stringify(setting)}"
+          self.added 'settings', setting._id, setting
+        else if debugLoginEnabeld? and cache[deviceId] != debugLoginEnabeld
+          cache[deviceId] = debugLoginEnabeld
+          logger.info "changed settings: #{JSON.stringify(setting)}"
+          self.changed 'settings', setting._id, setting
+  )
 
   if @userId
     currentUserCursor = Users.find(@userId,
