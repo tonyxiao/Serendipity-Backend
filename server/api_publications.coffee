@@ -1,9 +1,5 @@
 logger = new KetchLogger 'publications'
 
-# TODO: get rid of this helper class
-class SettingsHelper
-
-
 Meteor.publish 'settings', ->
   self = this
 
@@ -14,7 +10,14 @@ Meteor.publish 'settings', ->
   settings["hardMinBuild"] = Meteor.settings.HARD_MIN_BUILD
   settings["crabUserId"] = Meteor.settings.CRAB_USER_ID
 
-  console.log settings
+  deviceId = ServerSession.get(ACTIVE_DEVICE_ID, this.connection.id)
+
+  # TODO: refactor devices into its own table.
+  Users.find().fetch().forEach (user) ->
+    if user.devices? and user.devices.length > 0
+      user.devices.forEach (device) ->
+        if device._id == deviceId and device.settings? and device.settings.debugLoginMode?
+          settings["debugLoginMode"] = device.settings.debugLoginMode
 
   if @userId
     currentUserCursor = Users.find(@userId,
