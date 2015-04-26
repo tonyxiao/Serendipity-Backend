@@ -1,18 +1,18 @@
 {
-  "firstName":"Ketchy",
-  "lastName":"",
-  "education":"UC Sandy Beaches",
-  "work":"Happy Camper",
-  "age":24,
-  "gender":"male",
-  "about":"Welcome to Ketch!",
-  "location":"San Francisco, California",
-  "vetted":"yes",
-  "photos":[
+  "firstName": "Ketchy",
+  "lastName": "",
+  "education": "UC Sandy Beaches",
+  "work": "Happy Camper",
+  "age": 24,
+  "gender": "male",
+  "about": "Welcome to Ketch!",
+  "location": "San Francisco, California",
+  "vetted": "yes",
+  "photos": [
     {
-      "url":"https://ketch.blob.core.windows.net/ketch-prod/crab2.png",
-      "active":true,
-      "order":0
+      "url": "https://ketch.blob.core.windows.net/ketch-prod/crab2.png",
+      "active": true,
+      "order": 0
     }
   ]
 }
