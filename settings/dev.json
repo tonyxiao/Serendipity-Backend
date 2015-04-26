@@ -1,9 +1,0 @@
-{
-  "MONGO_URL": "mongodb://admin:VPH8oGJKsKJZEQbr@SG-Ketch-4454.servers.mongodirector.com:27017/admin",
-  "ROOT_URL": "http://localhost:3000/",
-  "FB_APPID": "730107913748748",
-  "AZURE_ACCOUNTID": "ketch",
-  "AZURE_CONTAINER": "ketch-dev",
-  "CRAB_USER_ID": "9PJhb5Sari34RMcFQ",
-  "SOFT_MIN_BUILD": "5"
-}
