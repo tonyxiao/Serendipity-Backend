@@ -5,7 +5,6 @@ Template.userEdit.helpers
     delete view._id
     delete view.createdAt
     delete view.updatedAt
-    delete view.devices
     delete view.nextRefreshTimestamp
 
     return JSON.stringify(view);
