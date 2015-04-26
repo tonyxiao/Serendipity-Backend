@@ -426,7 +426,7 @@ Users.helpers
     connectionUser2['_id'] = userId
     connectionUser2['hasUnreadMessage'] = true
 
-    if !isCrab() and !otherUser.isCrab()
+    if !@isCrab() and !otherUser.isCrab()
       connectionUser1['promptText'] = prompts[prompt1Id]
       connectionUser2['promptText'] = prompts[prompt2Id]
 
