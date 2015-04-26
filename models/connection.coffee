@@ -165,7 +165,8 @@ Connections.helpers
     recipient.sendTestPushMessage "#{sender.firstName}: #{text}"
 
     # Forward message to ketchy to ketchy channel in Slack
-    if recipient.isCrab()
+    # TODO: Abstract out logic for localhost into meteor settings itself
+    if recipient.isCrab() && Meteor.settings.ROOT_URL.indexOf('localhost') < 0
       webhook_url = 'https://hooks.slack.com/services/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'
       payload =
         channel: '#ketchy'
