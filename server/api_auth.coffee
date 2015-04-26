@@ -1,5 +1,5 @@
 logger = new KetchLogger 'auth'
-analytics.load Meteor.settings.SEGMENT_WRITE_KEY;
+analytics.load Meteor.settings.SEGMENT_WRITE_KEY
 
 # TODO: Do we need Meteor.startup here?
 Meteor.startup ->
