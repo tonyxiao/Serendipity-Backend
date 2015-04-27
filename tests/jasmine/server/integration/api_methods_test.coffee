@@ -9,7 +9,8 @@ describe 'Device Operations', () ->
     delete device['createdAt']
     delete device['updatedBy']
 
-    expect(deviceDetails).toEqual(device)
+    _.each deviceDetails, (value, key) ->
+      expect(deviceDetails[key]).toEqual(device[key])
 
   beforeEach () ->
     deviceOptions = { '_id' : 'deviceId' }
@@ -23,6 +24,9 @@ describe 'Device Operations', () ->
 
         @devices.push deviceId
     }
+
+    # clear devices
+    Devices.remove({})
 
     # clear the session
     SessionData.set('default_connection_id', undefined)
