@@ -401,8 +401,8 @@ Users.helpers
   populateCandidateQueue: (maxCount) ->
     if @isCrab()
       error = new Meteor.Error(500, "Cannot populate candidates for crab user.")
-    logger.error(error)
-    throw error
+      logger.error(error)
+      throw error
 
     MatchService.generateMatchesForUser this, maxCount
 
