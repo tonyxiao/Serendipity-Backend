@@ -21,7 +21,7 @@ Meteor.methods
   'admin/user/sendPushMessage': (userId, pushMessage) ->
     user = Users.findOne userId
     if user?
-      user.sendTestPushMessage pushMessage
+      user.sendNotification pushMessage
 
   'admin/user/remove': (userId) ->
     Users.remove userId

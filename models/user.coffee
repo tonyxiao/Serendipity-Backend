@@ -197,13 +197,11 @@ Users.helpers
       _id: $in: @devices
 
   # TODO: Make this generic
-  sendTestPushMessage: (message) ->
+  sendNotification: (message) ->
     devices = Devices.find
       _id: $in: @devices
     _.each devices.fetch(), (device) ->
-      # TODO: refactor this as part of device
-      if device.pushToken? and device.pushToken != "" and device.apsEnv? and device.appId?
-        PushService.sendTestMessage device.pushToken, device.apsEnv, device.appId, message
+      device.sendMessage(message)
 
   updateNextRefreshTimestamp: ->
     intervalMillis = Meteor.settings.REFRESH_INTERVAL_MILLIS
@@ -397,7 +395,7 @@ Users.helpers
 
   connectWithUserAndSendMessage: (user, connectionType) ->
     connectionId = @connectWithUser(user._id, connectionType)
-    user.sendTestPushMessage "It's a Ketch! #{@firstName} also thinks highly of you :)"
+    user.sendNotification "It's a Ketch! #{@firstName} also thinks highly of you :)"
     return connectionId
 
   populateCandidateQueue: (maxCount) ->

@@ -162,7 +162,7 @@ Connections.helpers
     request = Meteor.npmRequire('request')
     recipient = @otherUser sender
     @messageWithoutPushNotification(text, sender)
-    recipient.sendTestPushMessage "#{sender.firstName}: #{text}"
+    recipient.sendNotification "#{sender.firstName}: #{text}"
 
     # Forward message to ketchy to ketchy channel in Slack
     # TODO: Abstract out logic for localhost into meteor settings itself

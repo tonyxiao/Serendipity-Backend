@@ -39,7 +39,7 @@ class @MatchService
 
             numUsersToBeActivated--
             candidate.activate()
-          user.sendTestPushMessage "Your Ketch has arrived!"
+          user.sendNotification "Your Ketch has arrived!"
 
         # update the next refresh timestamp regardless
         user.updateNextRefreshTimestamp()

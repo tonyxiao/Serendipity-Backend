@@ -46,3 +46,8 @@ Devices.attachBehaviour('timestampable')
     optional: true
 
 Devices.attachSchema @DeviceSchema
+
+Devices.helpers
+  sendMessage: (message) ->
+    if @pushToken? and @apsEnv? and @appId?
+      PushService.sendTestMessage @pushToken, @apsEnv, @appId, message
