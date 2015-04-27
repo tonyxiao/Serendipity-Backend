@@ -1,19 +1,18 @@
 
-Tinytest.add 'Validate fixture json', (test) ->
+Tinytest.add 'Parse fixtures', (test) ->
   _(fixtureNames).each (name) ->
     data = getFixture name
-    test.isNotNull data
+    users = parseUserList data
+    test.isNotNull users
 
-Tinytest.add 'Parse fixtures', (test) ->
-  data = getFixture fixtureNames[0]
-  users = parseUserList data
-  test.isNotNull users
-
-Tinytest.add 'Import fake users', (test) ->
-  console.log process.cwd()
+Tinytest.add 'Import then clear fake users', (test) ->
+  Users.remove {}
   Tinder.importFakeUsers()
-  test.fail 'Not implemented'
+  test.equal Users.find().count(), 143
 
-Tinytest.add 'Clear fake users', (test) ->
+  Users.insert firstName: 'Tester'
+  test.equal Users.find().count(), 144
+
   Tinder.clearFakeUsers()
-  test.fail 'Not implemented'
+  test.equal Users.find().count(), 1
+

@@ -22,9 +22,8 @@
   location: RandomData.location()
   timezone: 'America/Los_Angeles'
   work: RandomData.job()
-  gender: result.gender == 0 ? 'male' : 'female'
-  createdAt: new Date
-  updatedAt: new Date
+  gender: if result.gender == 0 then 'male' else 'female'
+  _id: result._id
   services:
     tinder:
       _id: result._id
@@ -37,14 +36,15 @@
 @parseSinglePhoto = (photo) ->
   for file in photo.processedFiles
     if file.height == 640 and file.width == 640
-      return file.url
+      return url: file.url
 
 Tinder =
   importFakeUsers: ->
     _(fixtureNames).each (fixture) ->
-      data = getFixture fixture
-      users = parseUserList data
-      console.log "Will import #{users.length} users"
+      users = parseUserList getFixture fixture
+      _(users).each (user) ->
+        Users.upsert user._id, $set: user
+      console.log "Imported #{users.length} tinder users"
 
   clearFakeUsers: ->
-    console.log "Noop, not implemented yet"
+    Users.remove 'services.tinder': $ne: null

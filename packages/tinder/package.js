@@ -1,6 +1,7 @@
 Package.onUse(function(api) {
   api.versionsFrom('1.1.0.2');
   api.use(['coffeescript', 'underscore'], 'server');
+  api.use(['models']);
   api.addFiles('random_data.coffee');
   api.addFiles('tinder.coffee');
   api.addFiles([
