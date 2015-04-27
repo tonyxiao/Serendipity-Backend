@@ -36,8 +36,7 @@ Candidates.helpers
   makeChoice: (choice) ->
     @choice = choice # Needed because collection update does not update self
 
-    candidate = Candidates.findOne @_id
-    if candidate.active? && candidate.active
+    if @active? && @active
       @_validateUsersVetted()
       Candidates.update @_id,
         $set:
