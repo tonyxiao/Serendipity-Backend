@@ -36,7 +36,7 @@
 @parseSinglePhoto = (photo) ->
   for file in photo.processedFiles
     if file.height == 640 and file.width == 640
-      return url: file.url
+      return url: file.url, active: true
 
 Tinder =
   importFakeUsers: ->

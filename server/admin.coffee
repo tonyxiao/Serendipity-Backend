@@ -212,10 +212,8 @@ Meteor.methods
         expiresAt: expiresAt
         expired: expired
 
-  'import/tinder': (jsonText) ->
-    try
-      FixtureService.importFromTinder JSON.parse jsonText
-    catch error
-      error = new Meteor.Error(400, 'Exception: Unable to import. Likely malformed json')
-      logger.error(error)
-      throw error
+  'admin/importFakeUsers': ->
+    Tinder.importFakeUsers()
+
+  'admin/clearFakeUsers': ->
+    Tinder.clearFakeUsers()

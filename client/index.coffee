@@ -78,10 +78,7 @@ Template.importFixture.helpers
 Template.importFixture.events
   'click .remove-all-fake-data': ->
     if confirm ("sure?")
-      _.each Users.find().fetch(), (u) ->
-        if (u.services.tinder)
-          console.log "will delete #{u._id} #{u.firstName}"
-          Meteor.call 'admin/user/remove', u._id
+      Meteor.call 'admin/clearFakeUsers'
 
   'click .remove-next-refresh': ->
     if confirm("sure?")
@@ -89,7 +86,4 @@ Template.importFixture.events
       Meteor.call 'admin/globallySetNextRefresh', refreshTime
 
   'click .import-submit': ->
-    jsonText = $('#json-text').val()
-    $('#json-text').val('')
-    Meteor.call 'import/tinder', jsonText, (err, res) ->
-      alert unless err? then "imported #{res} users" else "#{err.reason}: #{err.details}"
+    Meteor.call 'admin/importFakeUsers'

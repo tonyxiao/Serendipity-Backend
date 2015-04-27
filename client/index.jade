@@ -9,13 +9,10 @@ body
 template(name='importFixture')
   section.import
     p
+      button.import-submit Import Fake users
       button.remove-all-fake-data Remove ALL fake data
     p
       span (ex: 1 minute from now = #{ oneMinuteFromNow })
       input#next-refresh-textbox
       button.remove-next-refresh Set Global Refresh Timestmap (UTC Millis Since Epoch)
 
-    h1 Paste json text here
-    p See example in fixtures directory
-    textarea#json-text
-    button.import-submit Submit
