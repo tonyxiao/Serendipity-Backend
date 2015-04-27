@@ -198,8 +198,10 @@ Users.helpers
 
   # TODO: Make this generic
   sendTestPushMessage: (message) ->
-    firstName = @firstName
-    _.each @devices, (device) ->
+    devices = Devices.find
+      _id: $in: @devices
+    _.each devices.fetch(), (device) ->
+      # TODO: refactor this as part of device
       if device.pushToken? and device.pushToken != "" and device.apsEnv? and device.appId?
         PushService.sendTestMessage device.pushToken, device.apsEnv, device.appId, message
 
