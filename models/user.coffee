@@ -194,12 +194,12 @@ Users.helpers
 
   deviceDetails: () ->
     Devices.find
-      _id: $in: @devices
+      _id: $in: @devices or []
 
   # TODO: Make this generic
   sendNotification: (message) ->
     devices = Devices.find
-      _id: $in: @devices
+      _id: $in: @devices or []
     _.each devices.fetch(), (device) ->
       device.sendMessage(message)
 
