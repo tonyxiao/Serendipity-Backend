@@ -86,7 +86,6 @@ Connections.helpers
   markAsReadFor: (user) ->
     @setUserKeyValue user, 'hasUnreadMessage', false
     otherUser = @otherUser user
-
     # stores the last message seen my the current user (from the other user)
     lastMessageSeenByCurrentUser = @lastMessageBy otherUser._id
     if lastMessageSeenByCurrentUser?

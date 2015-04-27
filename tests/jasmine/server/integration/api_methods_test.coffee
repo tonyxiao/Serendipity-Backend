@@ -1,4 +1,4 @@
-describe 'Device Operations', () ->
+describe 'Api Methods', () ->
   mockUser = null
   deviceOptions = null
   pushOptions = null
@@ -17,7 +17,7 @@ describe 'Device Operations', () ->
     pushOptions = { 'pushToken' : 'token' }
 
     mockUser = {
-      _id: 'testing',
+      _id: 'mockUserId',
       addDevice: (deviceId) ->
         if !@devices?
           @devices = []
@@ -34,6 +34,58 @@ describe 'Device Operations', () ->
     # user is not logged in by default
     Meteor.user = () ->
       return null
+
+  describe 'connection', () ->
+    mockSender = {
+      _id: 'mockSender'
+      isVetted: () ->
+        true
+    }
+    mockRecipient = {
+      _id: 'mockRecipient'
+      isVetted: () ->
+        true
+    }
+    connectionId = null
+    messageId = null
+
+    beforeEach () ->
+      users = []
+      users.push { _id: mockSender._id, hasUnreadMessage: true }
+      users.push { _id: mockRecipient._id, hasUnreadMessage: true }
+
+      # insert a test connection
+      connectionId = Connections.insert
+        users: users
+        expiresAt: new Date
+        expired: false
+        type: 'yes'
+
+      # insert a test message, sent by mockRecipient, to test that lastMessageIdSeen
+      # updates correctly.
+      messageId = Messages.insert
+        connectionId: connectionId
+        senderId: mockRecipient._id
+        recipientId: mockSender._id
+        text: 'message1'
+
+      spyOn(Users, 'findOne').and.callFake (userId) ->
+        if userId == mockSender._id
+          return mockSender
+        return mockRecipient
+
+    it 'connection/markAsRead should mark hasUnreadMessage', () ->
+      # user is logged in
+      Meteor.user = () ->
+        return mockSender
+
+      Meteor.call 'connection/markAsRead', connectionId, (err, res) ->
+        connection = Connections.findOne connectionId
+        senderInfo = connection.getUserInfo mockSender
+        recipientInfo = connection.getUserInfo mockRecipient
+        expect(senderInfo.hasUnreadMessage).toBe(false)
+        expect(recipientInfo.hasUnreadMessage).toBe(true)
+        expect(senderInfo.lastMessageIdSeen).toBe(messageId)
 
   it 'connectDevice should store device with user if user is logged in', () ->
     # user is logged in

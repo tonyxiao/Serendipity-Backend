@@ -100,6 +100,7 @@ Meteor.methods
   'connection/sendMessage': (connectionId, text) ->
     # TODO: Add validation for input params
     connection = Connections.findOne connectionId
+
     if connection?
       connection.createNewMessage text, Meteor.user()
 
