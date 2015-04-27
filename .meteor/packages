@@ -9,7 +9,6 @@ meteor-platform
 accounts-password
 accounts-facebook
 accounts-ui
-insecure
 service-configuration
 coffeescript
 reactive-var
@@ -37,3 +36,4 @@ mrt:reactive-extra
 alanning:roles
 
 kit:basic-auth
+force-ssl
