@@ -11,27 +11,26 @@ accounts-facebook
 accounts-ui
 insecure
 service-configuration
-npm-container
 coffeescript
 reactive-var
 reactive-dict
 
 # Community packages
-aldeed:simple-schema
-aldeed:collection2
-matb33:collection-hooks
-dburles:collection-helpers
-zimme:collection-timestampable
 
 meteorhacks:npm
+npm-container # Used by meteorhacks:npm, need to be manually added here
 meteorhacks:async
 iron:router
 mquandalle:jade
 lauricio:less-autoprefixer
 percolatestudio:segment.io@=1.1.1_1
 
+# App Packages
+models
+
 # Test Packages
 sanjo:jasmine
 velocity:html-reporter
 mrt:reactive-extra
 alanning:roles
+
