@@ -8,6 +8,7 @@
   "about": "Welcome to Ketch!",
   "location": "San Francisco, California",
   "vetted": "yes",
+  "devices": [],
   "photos": [
     {
       "url": "https://ketch.blob.core.windows.net/ketch-prod/crab2.png",
