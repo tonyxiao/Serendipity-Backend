@@ -1,6 +1,12 @@
 logger = new KetchLogger 'auth'
 analytics.load Meteor.settings.SEGMENT_WRITE_KEY
 
+Accounts.config
+  forbidClientAccountCreation: true
+  loginExpirationInDays: null # Logins on client should be basically permanent
+#  restrictCreationByEmailDomain: 'milasya.com'
+
+
 # TODO: Do we need Meteor.startup here?
 Meteor.startup ->
 

@@ -33,7 +33,6 @@ dburles:collection-helpers
 sanjo:jasmine
 velocity:html-reporter
 mrt:reactive-extra
-alanning:roles
 
 kit:basic-auth
 force-ssl
