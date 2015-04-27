@@ -26,6 +26,8 @@ parseSingleUser = (result) ->
   timezone: 'America/Los_Angeles'
   work: RandomData.job()
   gender: if result.gender == 0 then 'male' else 'female'
+  vetted: 'yes'
+  status: 'active'
   _id: result._id
   services:
     tinder:
@@ -33,6 +35,7 @@ parseSingleUser = (result) ->
 
 parsePhotos = (photos) ->
   # TODO: Consider copying photos to azure so we don't run into Tinder ip blocking us again
+  # Especially for admin website we also need https urls for photos
   # azureUrls = fbPhotoService.copyPhotosToAzure(images)
   (parseSinglePhoto(p) for p in photos)
 
