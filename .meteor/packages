@@ -36,3 +36,4 @@ velocity:html-reporter
 mrt:reactive-extra
 alanning:roles
 
+kit:basic-auth
