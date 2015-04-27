@@ -1,7 +1,6 @@
 logger = new KetchLogger 'match_service'
 
 class @MatchService
-
   constructor: ->
     @paused = false
 
@@ -14,35 +13,40 @@ class @MatchService
   unpause: ->
     @paused = false
 
+  refreshCandidate: (user, currentDate) ->
+    if !user.nextRefreshTimestamp?
+      user.nextRefreshTimestamp = currentDate
+
+    # send you new matches if you've waited for long enough
+    if currentDate >= user.nextRefreshTimestamp
+      numAllowedActiveUsers = Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES *
+        Candidates.NUM_CANDIDATES_PER_GAME
+
+      activeCandidates = user.activeCandidates().fetch()
+      numUsersToBeActivated = numAllowedActiveUsers - activeCandidates.length
+
+      # if we can still activate more users, activate more users.
+      if numUsersToBeActivated > 0
+        user.vettedNotActiveCandidates().fetch().forEach (candidate) ->
+          if numUsersToBeActivated == 0
+            return
+
+          numUsersToBeActivated--
+          candidate.activate()
+        user.sendNotification "Your Ketch has arrived!"
+
+      # update the next refresh timestamp regardless
+      user.updateNextRefreshTimestamp()
+
   refreshCandidates: (currentDate) ->
+    self = this
+
     users = Users.find({
-      vetted: "yes"
+      vetted: 'yes'
     }).fetch()
 
     users.forEach (user) ->
-      if !user.nextRefreshTimestamp?
-        user.nextRefreshTimestamp = currentDate
-
-      # send you new matches if you've waited for long enough
-      if currentDate >= user.nextRefreshTimestamp
-        numAllowedActiveUsers = Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES *
-          Candidates.NUM_CANDIDATES_PER_GAME
-
-        activeCandidates = user.activeCandidates().fetch()
-        numUsersToBeActivated = numAllowedActiveUsers - activeCandidates.length
-
-        # if we can still activate more users, activate more users.
-        if numUsersToBeActivated > 0
-          user.vettedNotActiveCandidates().fetch().forEach (candidate) ->
-            if numUsersToBeActivated == 0
-              return
-
-            numUsersToBeActivated--
-            candidate.activate()
-          user.sendNotification "Your Ketch has arrived!"
-
-        # update the next refresh timestamp regardless
-        user.updateNextRefreshTimestamp()
+      self.refreshCandidate(user, currentDate)
 
   @getMatchService: ->
     if @instance?
