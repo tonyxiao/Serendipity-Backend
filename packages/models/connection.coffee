@@ -123,7 +123,6 @@ Connections.helpers
       connectionId: @_id
       senderId: sender._id
       recipientId: recipient._id
-      isUnread: true
       text: text
 
     @setUserKeyValue sender, 'lastSentDate', new Date

@@ -55,6 +55,7 @@ describe 'Api Methods', () ->
       users.push { _id: mockRecipient._id, hasUnreadMessage: true }
 
       # insert a test connection
+      Connections.remove({})
       connectionId = Connections.insert
         users: users
         expiresAt: new Date
@@ -63,6 +64,7 @@ describe 'Api Methods', () ->
 
       # insert a test message, sent by mockRecipient, to test that lastMessageIdSeen
       # updates correctly.
+      Messages.remove({})
       messageId = Messages.insert
         connectionId: connectionId
         senderId: mockRecipient._id
@@ -75,7 +77,7 @@ describe 'Api Methods', () ->
         return mockRecipient
 
     it 'connection/markAsRead should mark hasUnreadMessage', () ->
-      # user is logged in
+      # senders is logged in
       Meteor.user = () ->
         return mockSender
 
@@ -86,6 +88,22 @@ describe 'Api Methods', () ->
         expect(senderInfo.hasUnreadMessage).toBe(false)
         expect(recipientInfo.hasUnreadMessage).toBe(true)
         expect(senderInfo.lastMessageIdSeen).toBe(messageId)
+
+    it 'connection/sendMessage should insert a new message', () ->
+      # sender is logged in
+      Meteor.user = () ->
+        return mockSender
+
+      Meteor.call 'connection/sendMessage', connectionId, 'hello', (err, res) ->
+        connection = Connections.findOne connectionId
+        expect(connection.lastMessageText).toEqual('hello')
+
+        message = Messages.findOne
+          senderId: mockSender._id
+          recipientId: mockRecipient._id
+        expect(message.text).toEqual('hello')
+        expect(message.connectionId).toEqual(connectionId)
+
 
   it 'connectDevice should store device with user if user is logged in', () ->
     # user is logged in
