@@ -155,12 +155,9 @@ Users.helpers
       candidate.unvet()
 
   profilePhotoUrl: ->
-    if @photos? and @photos.length > 0
-      photo = _.first @sortedActivePhotos()
-      if photo?
-        return photo.url
-
-    return null
+    photo = _.first @sortedActivePhotos()
+    if photo?
+      return photo.url
 
   sortedActivePhotos: ->
     activePhotos = @sortedPhotos().filter (element) ->
@@ -168,10 +165,13 @@ Users.helpers
     return activePhotos
 
   sortedPhotos: ->
-    photos = _.clone @photos
-    photos.sort (a,b) ->
-      return a.order > b.order
-    return photos
+    if @photos? and @photos.length > 0
+      photos = _.clone @photos
+      photos.sort (a,b) ->
+        return a.order > b.order
+      return photos
+    else
+      return []
 
   getDevice: (deviceId) ->
     _.find @device_ids, (d) -> d._id == deviceId
