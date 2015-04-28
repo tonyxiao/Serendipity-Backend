@@ -1,10 +1,6 @@
 describe 'Match Service', () ->
 
   beforeEach () ->
-    Users.remove({})
-    Messages.remove({})
-    Candidates.remove({})
-
     Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES = 1
     Meteor.settings.REFRESH_INTERVAL_MILLIS = 3333
 
@@ -27,6 +23,10 @@ describe 'Match Service', () ->
       Candidates.findOne(candidateId).activate()
 
     beforeEach () ->
+      Users.remove({})
+      Messages.remove({})
+      Candidates.remove({})
+
       mockDevice = {
         messages: []
         sendMessage: (message) ->
