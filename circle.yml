@@ -12,7 +12,8 @@ dependencies:
 
 test:
   override:
-    - meteor run --test --settings settings/test.json
+    # Try single run and see if it makes test more reliable, inspiration from https://circleci.com/gh/bumbleblym/meteor-ci/3
+    - JASMINE_SINGLE_RUN=1 JASMINE_BROWSER=PhantomJS meteor run --test --settings settings/test.json
 
 deployment:
   dev:
