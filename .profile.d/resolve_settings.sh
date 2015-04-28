@@ -13,7 +13,9 @@ cd .scripts
 npm install --production
 $GULP settings
 
-# Go back to original directory, and set METEOR_SETTINGS
-cd ..
+# Go back to original directory, and set METEOR_SETTINGS, make sure to
+# return to previous cwd because real app runs in the same shell
 export METEOR_SETTINGS=$(cat ../settings.json)
+cd ..
+
 
