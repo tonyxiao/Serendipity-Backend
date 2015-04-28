@@ -2,15 +2,16 @@
 dependencies:
   pre:
     - curl https://install.meteor.com | /bin/sh
-
-test:
-  override:
+  post:
     # Work around bug where the first time we run test it fails on error related to
     # node-sass which I'm not even aware that we are using
     # Removing the node_modules directory seems to fix this issue such that
     # the second time the command runs it's ok
     - meteor run --test --settings settings/test.json || true
     - rm -rf node_modules
+
+test:
+  override:
     - meteor run --test --settings settings/test.json
 
 deployment:
