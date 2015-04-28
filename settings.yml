@@ -1,0 +1,91 @@
+# This file contains all the settings the app expect to be present to be able to run
+# In addition, the following environment variables are used by meteor, to get examples from heroku,
+# Use heroku config:pull
+#
+# ---- Env expected by Meteor ----
+#   MONGO_URL (Our buildpack gets this from MONGOLAB_URI)
+#   ROOT_URL
+#   MAIL_URL
+#
+# ---- Env expected by our app ---- (@all please add to this list as documentation)
+#   SOFT_MIN_BUILD
+#   HARD_MIN_BUILD
+#
+# In general, prefer specifying configs via settings rather than env var. This is because settings can be
+# organized into hierarchies, has types of variables, defaulting patterns and many other niceties.
+# These are the few reasons I'm aware of to use env var over settings, please add to this list if you find others
+#   1. Explicitly not supported via settings (MONGO_URL, ROOT_URL, etc)
+#   2. Sensative variables (Better supported via Heroku configs rather than trying to encrypt settings)
+#   3. Values that needs to be changed frequently and automatically by external services (e.g. circle -> SOFT_MIN_BUILD)
+#
+# A key design difference from how we used to do it is that there's no overriding. Env vars and settings live in two
+# separate spaces. If a particular part of the app needs to support config via both, that's an explicit choice which
+# will need to be explicitly documented. This design hopes to increase simplicity. Once something is moved out as an
+# env var, take it out of settings asap
+
+
+_base: &DEFAULT
+  google:
+    clientId: '206738713177-70a56st49c3revvi2m44o9ibkfdnqoig.apps.googleusercontent.com'
+    secret: 'TjCos4w3_h_CYByElarS3YxL'
+  azure: &DEFAULT_AZURE
+    accountId: 'ketch'
+    accessKey: 'wRHy5KjIvuNt+Z7WmutSm+Ms1iRHxdnh2ZqgA+2w2MuIInXCDtq2BtE6XbuJlPFggO2BCO6KmOr8PCwYHuIlqA=='
+  apns:
+    keyPassphrase: 'GTgQLFnNrPnPY6Qbqefj7GVzz@#^mnyt'
+  # TODO: It's not clear to me that the following actually belong in config at all
+  crabUserId: 'ketchy'
+  numAllowedActiveGames: 3
+
+dev: &DEV
+  <<: *DEFAULT
+  env: 'dev'
+  facebook:
+    appId: '788081301284742'
+    secret: '72173118bfd43bc76e9b7e7a23f2fcad'
+  azure:
+    <<: *DEFAULT_AZURE
+    container: 'ketch-dev'
+  segmentWriteKey: 'vfnxR5SsgYkNQqRznBWHXDp2LMFkUNTv'
+  kadira:
+    appId: '7ekvFzhghgGc5nPYC'
+    appSecret: '8eb7fb0d-66b2-45a8-8549-e99259cfd5d8'
+
+prod: &PROD
+  <<: *DEFAULT
+  env: 'prod'
+  facebook:
+    appId: '730107913748748'
+    secret: '0d696947726b6524edc585ef1d2fd069'
+  azure:
+    <<: *DEFAULT_AZURE
+    container: 'ketch-prod'
+  segmentWriteKey: 'JPCrmGwQqlgohXoowBFSLwesir9Zn5Bv'
+  kadira:
+    appId: 'n5j8ZXLJhMgf7EBDh'
+    appSecret: '21413d79-e5a4-4ca6-b447-faa4a42c8fc3'
+
+# dev and prod sections must appear before local and beta because anchors must appear before their references in yaml
+# In practice beta uses the same database as prod and local uses the same db as beta
+
+local:
+  <<: *DEV
+  env: 'local'
+  facebook:
+    appId: '782247221868150'
+    secret: '760323da3c8aef41395163f1c339f152'
+  kadira:
+    appId: 'ErWd8dStpFWLPSp3o'
+    appSecret: 'a151b097-2978-411f-af2d-23573b6ef55b'
+
+beta:
+  <<: *PROD
+  env: 'beta'
+  facebook:
+    appId: '788081084618097'
+    secret: '8e8fa1887229bc6cca32a544c1f4dc66'
+  kadira:
+    appId: 'w7qdDzhFAfysv2euo'
+    appSecret: 'cc1e2dcf-04f1-41aa-a8bf-80096ea5f549'
+  segmentWriteKey: 'SGEB9gVQGFYgeptFbtnETHCka8FCOuoc'
+
