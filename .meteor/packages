@@ -36,3 +36,4 @@ mrt:reactive-extra
 
 kit:basic-auth
 force-ssl
+meteorhacks:kadira
