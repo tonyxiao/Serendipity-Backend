@@ -10,3 +10,8 @@ gulp.task 'settings', ->
     .pipe jsonEditor (json) ->
       json[env]
     .pipe gulp.dest '../'
+
+gulp.task 'watch-settings', ->
+  gulp.watch 'settings.yml', ['settings']
+
+gulp.task 'default', ['watch-settings']
