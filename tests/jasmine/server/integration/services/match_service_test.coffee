@@ -4,7 +4,7 @@ describe 'Match Service', () ->
     Meteor.settings.REFRESH_INTERVAL_MILLIS = 3333
 
   describe 'refreshCandidate', () ->
-    mockUserId = null
+    messages = {}
 
     insertVettedCandidate = (forUserId) ->
       userId = Users.insert
@@ -20,38 +20,42 @@ describe 'Match Service', () ->
       candidateId = insertVettedCandidate(forUserId)
       Candidates.findOne(candidateId).activate()
 
+    createMockDevice = (id) ->
+      return Devices.insert
+        _id: id
+        pushToken: id
+        apsEnv: id
+        appId: id
+
+    createMockUserWithDevice = (id) ->
+      deviceId = createMockDevice(id)
+
+      return Users.insert
+        nextRefreshTimestamp: new Date(1000)
+        devices: [deviceId]
+        vetted: "yes"
+
     beforeEach () ->
       Users.remove({})
       Messages.remove({})
       Candidates.remove({})
 
-      mockDevicesCursor = {
-        device:
-          messages: []
-          sendMessage: (message) ->
-            @messages.push(message)
-        fetch: () ->
-          return [@device]
-      }
-
-      Devices.find = (options) ->
-        return mockDevicesCursor
-
-      mockUserId = Users.insert
-        nextRefreshTimestamp: new Date(1000)
-        vetted: "yes"
+      # Mock the sendTestMessage method to cache sent messages in local dictionary.
+      PushService.sendTestMessage = (pushToken, apsEnv, appId, message) ->
+        messages[pushToken] = message
 
     it 'should correctly refresh candidates if vetted candidates exist', () ->
+      mockUserId = createMockUserWithDevice('token_1')
+
       insertVettedCandidate(mockUserId)
       insertVettedCandidate(mockUserId)
       insertVettedCandidate(mockUserId)
 
       mockUser = Users.findOne mockUserId
+      console.log 'should correctly refresh candidates if vetted candidates exist'
       new MatchService().refreshCandidate(mockUser, new Date(2000))
 
-      mockDevice = Devices.find().fetch()[0]
-      expect(mockDevice.messages.length).toEqual(1)
-      expect(mockDevice.messages[0]).toEqual("Your Ketch has arrived!")
+      expect(messages['token_1']).toEqual("Your Ketch has arrived!")
       # time incremented by REFRESH_INTERVAL_MILLIS
       expect(mockUser.nextRefreshTimestamp.getTime()).toEqual(4333)
 
@@ -60,6 +64,7 @@ describe 'Match Service', () ->
         expect(candidate.active).toEqual(true)
 
     it 'should not refresh candidates if not the right time', () ->
+      mockUserId = createMockUserWithDevice('token_2')
       insertVettedCandidate(mockUserId)
       insertVettedCandidate(mockUserId)
       insertVettedCandidate(mockUserId)
@@ -67,8 +72,8 @@ describe 'Match Service', () ->
       mockUser = Users.findOne mockUserId
       new MatchService().refreshCandidate(mockUser, new Date(0))
 
-      mockDevice = Devices.find().fetch()[0]
-      expect(mockDevice.messages.length).toEqual(0)
+      # no messages were sent
+      expect(messages['token_2']).toBeUndefined()
       # time should not update
       expect(mockUser.nextRefreshTimestamp.getTime()).toEqual(1000)
 
@@ -77,6 +82,7 @@ describe 'Match Service', () ->
         expect(candidate.active).toEqual(false)
 
     it 'should not refresh candidates if too many active candidates', () ->
+      mockUserId = createMockUserWithDevice('token_3')
       insertActiveCandidate(mockUserId)
       insertActiveCandidate(mockUserId)
       insertActiveCandidate(mockUserId)
@@ -84,9 +90,8 @@ describe 'Match Service', () ->
       mockUser = Users.findOne mockUserId
       new MatchService().refreshCandidate(mockUser, new Date(2000))
 
-      mockDevice = Devices.find().fetch()[0]
       # no messages were sent
-      expect(mockDevice.messages.length).toEqual(0)
+      expect(messages['token_3']).toBeUndefined()
       # time incremented by REFRESH_INTERVAL_MILLIS
       expect(mockUser.nextRefreshTimestamp.getTime()).toEqual(4333)
 
@@ -95,6 +100,7 @@ describe 'Match Service', () ->
         expect(candidate.active).toEqual(true)
 
     it 'should not activate too many candidates', () ->
+      mockUserId = createMockUserWithDevice('token_4')
       insertVettedCandidate(mockUserId)
       insertVettedCandidate(mockUserId)
       insertVettedCandidate(mockUserId)
@@ -106,8 +112,7 @@ describe 'Match Service', () ->
       new MatchService().refreshCandidate(mockUser, new Date(2000))
 
       mockDevice = Devices.find().fetch()[0]
-      expect(mockDevice.messages.length).toEqual(1)
-      expect(mockDevice.messages[0]).toEqual("Your Ketch has arrived!")
+      expect(messages['token_4']).toEqual("Your Ketch has arrived!")
       # time incremented by REFRESH_INTERVAL_MILLIS
       expect(mockUser.nextRefreshTimestamp.getTime()).toEqual(4333)
 
