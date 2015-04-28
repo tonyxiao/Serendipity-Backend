@@ -13,11 +13,11 @@ Meteor.startup ->
   crab = Users.findOne(Meteor.settings.CRAB_USER_ID)
   if !crab?
     error = new Meteor.Error(500, 'Exception: Crab user not found! This means that users will not be able to chat with support!');
-    logger.error(error)
+#    logger.error(error)
 
   if !Meteor.settings.SEGMENT_WRITE_KEY?
     error = new Meteor.Error(500, 'SEGMENT_WRITE_KEY not defined! Analytics will not be captured');
-    logger.error(error)
+#    logger.error(error)
 
   # Login handler for FB
   Accounts.registerLoginHandler 'fb-access', (serviceData) ->
