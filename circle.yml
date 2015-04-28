@@ -1,12 +1,28 @@
+
 dependencies:
-  cache_directories:
-    - ~/.meteor
   pre:
     - curl https://install.meteor.com | /bin/sh
-    # Workaround attempts for issues introduced by meteorhacks:npm
-    - npm install -g npm
-    - npm cache clean
 
 test:
   override:
+    # Work around bug where the first time we run test it fails on error related to
+    # node-sass which I'm not even aware that we are using
+    # Removing the node_modules directory seems to fix this issue such that
+    # the second time the command runs it's ok
+    - meteor run --test --settings settings/test.json || true
+    - rm -rf node_modules
     - meteor run --test --settings settings/test.json
+
+deployment:
+  dev:
+    branch: master
+    heroku:
+      appname: ketch-dev
+  beta:
+    branch: beta
+    heroku:
+      appname: ketch-beta
+  prod:
+    branch: prod
+    heroku:
+      appname: ketch
