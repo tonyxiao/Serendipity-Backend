@@ -114,7 +114,6 @@ Meteor.startup ->
     # if the user device registration info came before the user login info,
     # it would be stored in the cache. We should update the user's device info accordingly
     deviceId = SessionData.getFromConnection(this.connection.id, ACTIVE_DEVICE_ID)
-    console.log "deviceid : #{deviceId}"
     if deviceId?
       user.addDevice deviceId
 

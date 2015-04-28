@@ -13,7 +13,6 @@ Meteor.methods
         updatedAt: new Date
 
   'admin/device/remove': (userId, deviceId) ->
-    console.log "removing device #{userId}, #{deviceId}"
     user = Users.findOne userId
     if user?
       user.removeDevice deviceId

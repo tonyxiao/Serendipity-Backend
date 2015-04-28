@@ -52,7 +52,6 @@ describe 'Match Service', () ->
       insertVettedCandidate(mockUserId)
 
       mockUser = Users.findOne mockUserId
-      console.log 'should correctly refresh candidates if vetted candidates exist'
       new MatchService().refreshCandidate(mockUser, new Date(2000))
 
       expect(messages['token_1']).toEqual("Your Ketch has arrived!")
@@ -111,7 +110,6 @@ describe 'Match Service', () ->
       mockUser = Users.findOne mockUserId
       new MatchService().refreshCandidate(mockUser, new Date(2000))
 
-      mockDevice = Devices.find().fetch()[0]
       expect(messages['token_4']).toEqual("Your Ketch has arrived!")
       # time incremented by REFRESH_INTERVAL_MILLIS
       expect(mockUser.nextRefreshTimestamp.getTime()).toEqual(4333)

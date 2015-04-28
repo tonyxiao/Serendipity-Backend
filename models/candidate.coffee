@@ -55,7 +55,6 @@ Candidates.helpers
       error = new Meteor.Error(501, 'Exception: Attempting to create crab as candidate')
       logger.error(error)
       throw error
-
     @_validateUsersVetted()
     Candidates.insert
       forUserId: @userId

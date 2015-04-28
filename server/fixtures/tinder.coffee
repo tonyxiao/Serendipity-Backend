@@ -50,7 +50,6 @@ parseSinglePhoto = (photo) ->
     count = 0
     for fixtureName in _.shuffle(fixtureNames)
       users = parseUserList getFixture fixtureName
-      console.log "Parsed #{users.length} tinder users"
       for user in users
         Users.upsert user._id, $set: user
         count += 1

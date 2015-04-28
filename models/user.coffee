@@ -255,7 +255,7 @@ Users.helpers
 
   # candidates which have the active flag flipped on.
   activeCandidates: ->
-    candidates = Candidates.find
+    Candidates.find
       forUserId: @_id
       vetted: true
       active: true

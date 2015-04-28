@@ -110,7 +110,6 @@ describe 'Api Methods', () ->
       choice['yes'] = candidateId
       Meteor.call 'candidate/submitChoices', choice, (err, res) ->
         candidate = Candidates.findOne candidateId
-        console.log candidate
         expect(candidate.choice).toEqual('yes')
         expect(me.candidateQueueSize).toEqual(3)
 
