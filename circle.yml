@@ -7,14 +7,14 @@ dependencies:
     # node-sass which I'm not even aware that we are using
     # Removing the node_modules directory seems to fix this issue such that
     # the second time the command runs it's ok
-    - cd app && meteor --test || rm -rf node_modules
+    - meteor --test || rm -rf node_modules
 
 test:
   override:
     # meteor-jasmine says we need to use --release velocity:METEOR@1.1.0.2_2 but in practice we are ok without
     # See https://github.com/Sanjo/meteor-jasmine for why we use this specific release of meteor
     # Use JASMINE_SINGLE_RUN so test actually passes inspiration from https://circleci.com/gh/bumbleblym/meteor-ci/3
-    - cd app && JASMINE_SINGLE_RUN=1 JASMINE_BROWSER=PhantomJS meteor run --test --settings settings/test.json
+    - JASMINE_SINGLE_RUN=1 JASMINE_BROWSER=PhantomJS meteor run --test --settings settings/test.json
 
 deployment:
   dev:
