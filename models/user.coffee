@@ -198,7 +198,9 @@ Users.helpers
 
   # TODO: Make this generic
   sendNotification: (message) ->
-    _.each @devices().fetch(), (device) ->
+    devices = Devices.find
+      _id: $in: @device_ids or []
+    _.each devices.fetch(), (device) ->
       device.sendMessage(message)
 
   updateNextRefreshTimestamp: ->

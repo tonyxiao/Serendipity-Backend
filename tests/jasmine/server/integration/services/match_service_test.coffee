@@ -1,4 +1,7 @@
 describe 'Match Service', () ->
+  beforeAll () ->
+    matchService.pause()
+
   beforeEach () ->
     Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES = 1
     Meteor.settings.REFRESH_INTERVAL_MILLIS = 3333

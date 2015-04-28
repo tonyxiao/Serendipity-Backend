@@ -86,7 +86,7 @@ class @MatchService
       user.addUserAsCandidate matchedUser._id
 
 
-matchService = MatchService.getMatchService()
+@matchService = MatchService.getMatchService()
 Meteor.setInterval ->
   if (!matchService.paused)
     matchService.refreshCandidates new Date
