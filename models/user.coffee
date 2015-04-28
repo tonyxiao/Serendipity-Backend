@@ -126,7 +126,7 @@ Users.helpers
     @vetted? && @vetted == 'blocked'
 
   isCrab: ->
-    @_id == Meteor.settings.CRAB_USER_ID
+    @_id == Meteor.settings.crabUserId
 
   _isDeleted: ->
     @status? && @status == 'deleted'
@@ -204,7 +204,7 @@ Users.helpers
       device.sendMessage(message)
 
   updateNextRefreshTimestamp: ->
-    intervalMillis = Meteor.settings.REFRESH_INTERVAL_MILLIS
+    intervalMillis = Meteor.settings.refreshIntervalMillis
     @nextRefreshTimestamp.setTime(@nextRefreshTimestamp.getTime() + intervalMillis)
 
     @setNextRefreshTimestamp(@nextRefreshTimestamp)
@@ -262,7 +262,7 @@ Users.helpers
       choice: null
 
   addUserAsCandidate: (userId) ->
-    if userId == Meteor.settings.CRAB_USER_ID
+    if userId == Meteor.settings.crabUserId
       error =  new Meteor.Error(501, 'Excepton: Attempting to create crab as candidate')
       logger.error(error)
       throw error
@@ -407,7 +407,7 @@ Users.helpers
     MatchService.generateMatchesForUser this, maxCount
 
   reloadPhotosFromFacebook: ->
-    new FacebookPhotoService(Meteor.settings.AZURE_CONTAINER).importPhotosForUser this
+    new FacebookPhotoService(Meteor.settings.azure.container).importPhotosForUser this
 
   clearPhotos: ->
     Users.update @_id, $unset: photoUrls: ''

@@ -5,21 +5,21 @@ apn = Meteor.npmRequire 'apn'
 path = Npm.require 'path'
 
 devApnConnection = new apn.Connection
-  cert: path.join Meteor.settings.PWD, 'server/private', 'apns_sandbox-com.milasya.ketch.dev.cert.pem'
-  key: path.join Meteor.settings.PWD, 'server/private', 'milasya_apns.key.pem'
-  passphrase: Meteor.settings.APNS_KEY_PASSPHRASE
+  cert: path.join process.env.PWD, 'server/private', 'apns_sandbox-com.milasya.ketch.dev.cert.pem'
+  key: path.join process.env.PWD, 'server/private', 'milasya_apns.key.pem'
+  passphrase: Meteor.settings.apns.keyPassphrase
   production: false
 
 betaApnConnection = new apn.Connection
-  cert: path.join Meteor.settings.PWD, 'server/private', 'apns_prod-com.milasya.ketch.beta.cert.pem'
-  key: path.join Meteor.settings.PWD, 'server/private', 'milasya_apns.key.pem'
-  passphrase: Meteor.settings.APNS_KEY_PASSPHRASE
+  cert: path.join process.env.PWD, 'server/private', 'apns_prod-com.milasya.ketch.beta.cert.pem'
+  key: path.join process.env.PWD, 'server/private', 'milasya_apns.key.pem'
+  passphrase: Meteor.settings.apns.keyPassphrase
   production: true
 
 prodApnConnection = new apn.Connection
-  cert: path.join Meteor.settings.PWD, 'server/private', 'apns_prod-com.milasya.ketch.cert.pem'
-  key: path.join Meteor.settings.PWD, 'server/private', 'milasya_apns.key.pem'
-  passphrase: Meteor.settings.APNS_KEY_PASSPHRASE
+  cert: path.join process.env.PWD, 'server/private', 'apns_prod-com.milasya.ketch.cert.pem'
+  key: path.join process.env.PWD, 'server/private', 'milasya_apns.key.pem'
+  passphrase: Meteor.settings.apns.keyPassphrase
   production: true
 
 class @PushService

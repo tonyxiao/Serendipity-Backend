@@ -3,7 +3,7 @@ Future = Npm.require('fibers/future')
 gm = Meteor.npmRequire('gm').subClass(imageMagick: true)
 request = Meteor.npmRequire('request')
 util = Npm.require('util')
-IMAGE_SIZE = Meteor.settings.DEFAULT_IMAGE_SIZE or 640
+IMAGE_SIZE = Meteor.settings.defaultImageSize
 graph = Meteor.npmRequire('fbgraph')
 
 class @Image
@@ -24,8 +24,8 @@ class @FacebookPhotoService
     @containerUrl = containerUrl
     @client = Meteor.npmRequire('pkgcloud').storage.createClient
       provider: 'azure'
-      storageAccount: Meteor.settings.AZURE_ACCOUNTID or ''
-      storageAccessKey: Meteor.settings.AZURE_ACCESSKEY or ''
+      storageAccount: Meteor.settings.azure.accountId
+      storageAccessKey: Meteor.settings.azure.accessKey
 
   getFileURL: (file) ->
     util.format('%s%s.%s/%s/%s', @client.protocol, @client.config.storageAccount,
@@ -130,7 +130,7 @@ class @FacebookPhotoService
       userPhoto = {}
       userPhoto.url = azureUrls[i]
 
-      if i < Meteor.settings.PHOTO_COUNT_TO_DISPLAY
+      if i < Meteor.settings.photoCountToDisplay
         userPhoto.active = true
       else
         userPhoto.active = false

@@ -38,7 +38,7 @@ Connections.helpers
     connectionUser2 = @users[1]
 
     # Non-ketchy connections should consist of only vetted users.
-    if connectionUser1._id != Meteor.settings.CRAB_USER_ID and connectionUser2._id != Meteor.settings.CRAB_USER_ID
+    if connectionUser1._id != Meteor.settings.crabUserId and connectionUser2._id != Meteor.settings.crabUserId
       @_validateUserVetted connectionUser1
       @_validateUserVetted connectionUser2
 
@@ -143,7 +143,7 @@ Connections.helpers
 
     # This is to ensure that the Ketchy connection will not expire for at least
     # 5 years from the year that this message is sent
-    # crabUserId = Meteor.settings.CRAB_USER_ID
+    # crabUserId = Meteor.settings.crabUserId
     #if (sender._id == crabUserId || recipient._id == crabUserId) &&  !(expiresAt.getFullYear() > new Date().getFullYear() + 5)
     #  error = new Meteor.Error(500, "The Ketchy connection (#{@_id}) is about to expire ... within 5 years")
     #  logger.error(error)
@@ -169,9 +169,9 @@ Connections.helpers
       payload =
         channel: '#ketchy'
         icon_emoji: ':crabby:'
-        username: Meteor.settings.SERVER_ENVIRONMENT
+        username: Meteor.settings.env
         # TODO: How to correctly join urls without worrying about presence of '/'
-        text: "<#{Meteor.settings.ROOT_URL}/connections/#{@_id}|#{sender.firstName} #{sender.lastName}>: #{text}"
+        text: "<#{process.env.ROOT_URL}/connections/#{@_id}|#{sender.firstName} #{sender.lastName}>: #{text}"
       request.post(webhook_url).json(payload)
 
   removeAllMessages: ->

@@ -4,7 +4,7 @@ class @ExpirationService
   @expireConnections: (currentDate) ->
     Connections.update {
       $and: [
-        { 'users._id': {$ne : Meteor.settings.CRAB_USER_ID }} # connections to crab don't expire
+        { 'users._id': {$ne : Meteor.settings.crabUserId }} # connections to crab don't expire
         { expired: $ne: true }
         { expiresAt: $lte: currentDate }
       ]

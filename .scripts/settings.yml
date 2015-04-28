@@ -33,9 +33,9 @@ _base: &DEFAULT
     accessKey: 'wRHy5KjIvuNt+Z7WmutSm+Ms1iRHxdnh2ZqgA+2w2MuIInXCDtq2BtE6XbuJlPFggO2BCO6KmOr8PCwYHuIlqA=='
   apns:
     keyPassphrase: 'GTgQLFnNrPnPY6Qbqefj7GVzz@#^mnyt'
-  # TODO: It's not clear to me that the following actually belong in config at all
-  crabUserId: 'ketchy'
-  numAllowedActiveGames: 3
+  basicAuth:
+    username: 'ketchyketch'
+    password: 'Ketch2015!'
 
 dev: &DEV
   <<: *DEFAULT

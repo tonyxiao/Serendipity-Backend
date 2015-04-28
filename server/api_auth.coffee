@@ -1,5 +1,5 @@
 logger = new KetchLogger 'auth'
-analytics.load Meteor.settings.SEGMENT_WRITE_KEY
+analytics.load Meteor.settings.segmentWriteKey
 
 Accounts.config
   forbidClientAccountCreation: true
@@ -10,12 +10,12 @@ Accounts.config
 # TODO: Do we need Meteor.startup here?
 Meteor.startup ->
 
-  crab = Users.findOne(Meteor.settings.CRAB_USER_ID)
+  crab = Users.findOne(Meteor.settings.crabUserId)
   if !crab?
     error = new Meteor.Error(500, 'Exception: Crab user not found! This means that users will not be able to chat with support!');
 #    logger.error(error)
 
-  if !Meteor.settings.SEGMENT_WRITE_KEY?
+  if !Meteor.settings.segmentWriteKey?
     error = new Meteor.Error(500, 'SEGMENT_WRITE_KEY not defined! Analytics will not be captured');
 #    logger.error(error)
 
@@ -42,7 +42,7 @@ Meteor.startup ->
       throw error
 
     # Ketchy crab should not get any info pulled from Facebook.
-    if user._id == Meteor.settings.CRAB_USER_ID
+    if user._id == Meteor.settings.crabUserId
       return userId: user._id
 
     info = {
@@ -93,23 +93,23 @@ Meteor.startup ->
     # For first time users, establish connection with crab
     connectionToCrab = Connections.find
       $and: [
-        { 'users._id' : Meteor.settings.CRAB_USER_ID }
+        { 'users._id' : Meteor.settings.crabUserId }
         { 'users._id' : user._id}
       ]
 
     if connectionToCrab.fetch().length == 0
-      connectionId = user.connectWithUser(Meteor.settings.CRAB_USER_ID, "yes")
+      connectionId = user.connectWithUser(Meteor.settings.crabUserId, "yes")
 
       # in an ideal world, this would be 'never', but since we are forced to add an
       # expiration timestamp to our data model, set this to far far into the future.
-      crabExpiresAt = new Date Meteor.settings.CRAB_EXPIRATION_DATE_MILLIS
+      crabExpiresAt = new Date Meteor.settings.crabExpirationDateMillis
       Connections.update connectionId,
         $set:
           expiresAt: crabExpiresAt
 
       crabConnection = Connections.findOne connectionId
 
-      crabConnection.messageWithoutPushNotification Meteor.settings.WARM_WELCOME_TEXT, crabConnection.otherUser(user)
+      crabConnection.messageWithoutPushNotification Meteor.settings.warmWelcomeText, crabConnection.otherUser(user)
 
     # if the user device registration info came before the user login info,
     # it would be stored in the cache. We should update the user's device info accordingly

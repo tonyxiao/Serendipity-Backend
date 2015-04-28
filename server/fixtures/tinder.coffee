@@ -7,7 +7,7 @@ fixtureNames = [
 ]
 
 getFixture = (name) ->
-  filepath = path.join Meteor.settings.PWD, "server/fixtures/private/#{name}.json"
+  filepath = path.join process.env.PWD, "server/fixtures/private/#{name}.json"
   jsonfile.readFileSync filepath
 
 parseUserList = (data) ->

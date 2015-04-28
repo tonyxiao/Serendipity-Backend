@@ -19,7 +19,7 @@ class @MatchService
 
     # send you new matches if you've waited for long enough
     if currentDate >= user.nextRefreshTimestamp
-      numAllowedActiveUsers = Meteor.settings.NUM_ALLOWED_ACTIVE_GAMES *
+      numAllowedActiveUsers = Meteor.settings.numAllowedActiveGames *
         Candidates.NUM_CANDIDATES_PER_GAME
 
       activeCandidates = user.activeCandidates().fetch()
@@ -70,7 +70,7 @@ class @MatchService
         logger.error("user.allConnections returned collection #{connection._id} which does not contain the user in context (#{user._id})")
 
     ineligibleUserIds.push user._id
-    ineligibleUserIds.push Meteor.settings.CRAB_USER_ID
+    ineligibleUserIds.push Meteor.settings.crabUserId
 
     # TODO: Randomize & take into account gender, machine learning, what have you
     matchedUsers = Users.find({
