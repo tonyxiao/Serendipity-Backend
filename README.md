@@ -1,5 +1,14 @@
 # Ketch Server [![Circle CI](https://circleci.com/gh/Ketchteam/ketch-server.svg?style=svg&circle-token=ee6ecf08305b88ec6c8a075ba2cbbde38873a04d)](https://circleci.com/gh/Ketchteam/ketch-server)
 
+First you'll need to install some build time dependencies
+```
+curl https://install.meteor.com/ | sh
+npm install -g gulp
+cd .scripts
+npm install
+cd ..
+```
+
 For local development, `.env` file isn't required, just do
 ```
 ENV=local gulp settings --cwd .scripts/
