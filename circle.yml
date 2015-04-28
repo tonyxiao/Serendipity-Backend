@@ -3,6 +3,9 @@ dependencies:
     - ~/.meteor
   pre:
     - curl https://install.meteor.com | /bin/sh
+    # Workaround attempts for issues introduced by meteorhacks:npm
+    - npm install -g npm
+    - npm cache clean
 
 test:
   override:
