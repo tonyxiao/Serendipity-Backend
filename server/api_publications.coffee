@@ -3,8 +3,9 @@ logger = new KetchLogger 'publications'
 class @DeviceService
   @isDebugLoginEnabled: (user, deviceId) ->
     isDebugLoginEnabled = undefined
-    if user.devices? and user.devices.length > 0
-      user.devices.forEach (device) ->
+    devices = user.devices()
+    if devices? and devices.length > 0
+      devices.forEach (device) ->
         if device._id == deviceId and device.settings? and device.settings.debugLoginMode? and !isDebugLoginEnabled?
           isDebugLoginEnabled =  device.settings.debugLoginMode
 

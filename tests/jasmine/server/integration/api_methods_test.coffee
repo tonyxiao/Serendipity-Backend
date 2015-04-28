@@ -119,6 +119,7 @@ describe 'Api Methods', () ->
   describe 'Devices', () ->
     deviceOptions = null
     pushOptions = null
+    currentUserId = null
 
     verifyDevice = (deviceDetails) ->
       device = Devices.findOne deviceDetails._id
@@ -130,43 +131,35 @@ describe 'Api Methods', () ->
         expect(deviceDetails[key]).toEqual(device[key])
 
     beforeEach () ->
+      # clear dbs
+      Devices.remove({})
+      Users.remove({})
+
       deviceOptions = { '_id' : 'deviceId' }
       pushOptions = { 'pushToken' : 'token' }
 
-      mockUser = {
-        _id: 'mockUserId',
-        addDevice: (deviceId) ->
-          if !@devices?
-            @devices = []
-
-          @devices.push deviceId
-      }
-
-      # clear devices
-      Devices.remove({})
+      currentUserId = Users.insert
+        firstName : 'testUser'
 
       # clear the session
       SessionData.set('default_connection_id', undefined)
 
       # user is not logged in by default
       Meteor.user = () ->
-        return null
+        return undefined
 
     it 'connectDevice should store device with user if user is logged in', () ->
       # user is logged in
       Meteor.user = () ->
-        return mockUser
+        return Users.findOne currentUserId
       Meteor.call 'connectDevice', 'deviceId', deviceOptions, (err, res) ->
         expect(SessionData.getFromConnection("default_connection_id", ACTIVE_DEVICE_ID))
             .toEqual('deviceId')
-        expect(mockUser.devices).toEqual(['deviceId'])
+        expect(Meteor.user().device_ids).toEqual(['deviceId'])
         verifyDevice(deviceOptions)
 
-
     it 'connectDevice should store device in session if user is not logged in', () ->
-      spyOn(mockUser, 'addDevice')
       Meteor.call 'connectDevice', 'deviceId', deviceOptions, (err, res) ->
-        expect(mockUser.devices).toBeUndefined()
         expect(SessionData.getFromConnection("default_connection_id", ACTIVE_DEVICE_ID))
             .toEqual('deviceId')
         verifyDevice(deviceOptions)
@@ -174,7 +167,7 @@ describe 'Api Methods', () ->
     it 'device/update/push should store info with device if user logged in', () ->
       # user is logged in
       Meteor.user = () ->
-        return mockUser
+        return Users.findOne currentUserId
 
       SessionData.update('default_connection_id', ACTIVE_DEVICE_ID, 'testDeviceId')
 
@@ -184,22 +177,19 @@ describe 'Api Methods', () ->
           pushToken: 'token'
         }
 
-        expect(mockUser.devices).toEqual(['testDeviceId'])
+        expect(Meteor.user().device_ids).toEqual(['testDeviceId'])
         expect(SessionData.getFromConnection("default_connection_id", ACTIVE_DEVICE_DETAILS))
             .toEqual(expectedDeviceDetails)
         verifyDevice(expectedDeviceDetails)
 
     it 'device/update/push should store info in session if user is not logged in', () ->
       SessionData.update('default_connection_id', ACTIVE_DEVICE_ID, 'testDeviceId')
-      spyOn(mockUser, 'addDevice')
-
       Meteor.call 'device/update/push', pushOptions, (err, res) ->
         expectedDeviceDetails = {
           _id: 'testDeviceId'
           pushToken: 'token'
         }
 
-        expect(mockUser.devices).toBeUndefined()
         expect(SessionData.getFromConnection("default_connection_id", ACTIVE_DEVICE_DETAILS))
             .toEqual(expectedDeviceDetails)
         verifyDevice(expectedDeviceDetails)

@@ -29,7 +29,7 @@ Users.attachBehaviour('timestampable')
   age:
     type: Number
     optional: true
-  devices:
+  device_ids:
     type: [String]
     optional: true
   education:
@@ -174,33 +174,31 @@ Users.helpers
     return photos
 
   getDevice: (deviceId) ->
-    _.find @devices, (d) -> d._id == deviceId
+    _.find @device_ids, (d) -> d._id == deviceId
 
   addDevice: (deviceId) ->
-    if !@devices?
-      @devices = []
+    if !@device_ids?
+      @device_ids = []
 
-    if @devices.indexOf(deviceId) < 0
-      @devices.push deviceId
+    if @device_ids.indexOf(deviceId) < 0
+      @device_ids.push deviceId
 
       Users.update @_id,
-        $set: devices: @devices
+        $set: device_ids: @device_ids
 
   removeDevice: (deviceId) ->
-    if @devices?
-      @devices = _.reject @devices, (d) -> d == deviceId
+    if @device_ids?
+      @device_ids = _.reject @device_ids, (d) -> d == deviceId
     Users.update @_id,
-      $set: devices: @devices
+      $set: device_ids: @device_ids
 
-  deviceDetails: () ->
+  devices: () ->
     Devices.find
-      _id: $in: @devices or []
+      _id: $in: @device_ids or []
 
   # TODO: Make this generic
   sendNotification: (message) ->
-    devices = Devices.find
-      _id: $in: @devices or []
-    _.each devices.fetch(), (device) ->
+    _.each @devices().fetch(), (device) ->
       device.sendMessage(message)
 
   updateNextRefreshTimestamp: ->
@@ -507,7 +505,7 @@ Users.helpers
     delete view.nextRefreshTimestamp
     delete view.createdAt
     delete view.updatedAt
-    delete view.devices
+    delete view.device_ids
     delete view.timezone
 
     @_updateBirthdayInView(view)

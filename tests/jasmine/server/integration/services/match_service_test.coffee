@@ -32,7 +32,7 @@ describe 'Match Service', () ->
 
       return Users.insert
         nextRefreshTimestamp: new Date(1000)
-        devices: [deviceId]
+        device_ids: [deviceId]
         vetted: "yes"
 
     beforeEach () ->
