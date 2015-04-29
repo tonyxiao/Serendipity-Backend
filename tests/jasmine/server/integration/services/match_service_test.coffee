@@ -10,7 +10,6 @@ describe 'Match Service', () ->
 
     insertVettedCandidate = (forUserId) ->
       userId = Users.insert
-        nextRefreshTimestamp: new Date(1000)
         vetted: "yes"
       return Candidates.insert
         forUserId: forUserId
