@@ -28,7 +28,10 @@ parseSingleUser = (result) ->
   gender: if result.gender == 0 then 'male' else 'female'
   vetted: 'yes'
   status: 'active'
-  _id: result._id
+  # _id starting with a number get sent down with '-' as prefix, which isn't
+  # by current implementation of NSManagedObjectId and causes client to crash
+  # we'll forcefully prefix with tin_ to solve this problem
+  _id: "tin_#{result._id}"
   services:
     tinder:
       _id: result._id

@@ -14,3 +14,5 @@ describe 'Fixtures', ->
 
       Tinder.clearFakeUsers()
       expect(Users.find().count()).toEqual(1)
+
+  # TODO: Add a test to make sure tinder user id does not change in subscription
