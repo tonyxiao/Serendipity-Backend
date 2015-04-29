@@ -204,14 +204,10 @@ Users.helpers
       device.sendMessage(message)
 
   updateNextRefreshTimestamp: ->
-    intervalMillis = Meteor.settings.refreshIntervalMillis
-    @nextRefreshTimestamp.setTime(@nextRefreshTimestamp.getTime() + intervalMillis)
+    @nextRefreshTimestamp = DateUtil.nextNotificationTimeMillis(@nextRefreshTimestamp)
 
-    @setNextRefreshTimestamp(@nextRefreshTimestamp)
-
-  setNextRefreshTimestamp: (timestamp) ->
     Users.update @_id,
-      $set: nextRefreshTimestamp : timestamp
+      $set: nextRefreshTimestamp : @nextRefreshTimestamp
 
   # all candidates for which the user had made a choice
   previousCandidates: ->

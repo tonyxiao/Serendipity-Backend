@@ -4,7 +4,6 @@ describe 'Match Service', () ->
 
   beforeEach () ->
     Meteor.settings.numAllowedActiveGames = 1
-    Meteor.settings.refreshIntervalMillis= 3333
 
   describe 'refreshCandidate', () ->
     messages = {}
@@ -34,7 +33,7 @@ describe 'Match Service', () ->
       deviceId = createMockDevice(id)
 
       return Users.insert
-        nextRefreshTimestamp: new Date(1000)
+        nextRefreshTimestamp: new Date(1)
         device_ids: [deviceId]
         vetted: "yes"
 
@@ -48,6 +47,7 @@ describe 'Match Service', () ->
         messages[pushToken] = message
 
     it 'should correctly refresh candidates if vetted candidates exist', () ->
+      now = new Date(2) # now > nextRefreshTimestamp
       mockUserId = createMockUserWithDevice('token_1')
 
       insertVettedCandidate(mockUserId)
@@ -55,53 +55,55 @@ describe 'Match Service', () ->
       insertVettedCandidate(mockUserId)
 
       mockUser = Users.findOne mockUserId
-      new MatchService().refreshCandidate(mockUser, new Date(2000))
+      new MatchService().refreshCandidate(mockUser, now)
 
       expect(messages['token_1']).toEqual("Your Ketch has arrived!")
-      # time incremented by REFRESH_INTERVAL_MILLIS
-      expect(mockUser.nextRefreshTimestamp.getTime()).toEqual(4333)
+      expect(mockUser.nextRefreshTimestamp.getTime()).toEqual(84813000)
 
       # Candidates are now active
       Candidates.find().fetch().forEach (candidate) ->
         expect(candidate.active).toEqual(true)
 
     it 'should not refresh candidates if not the right time', () ->
+      now = new Date(0) # now < nextRefreshTimestamp
       mockUserId = createMockUserWithDevice('token_2')
       insertVettedCandidate(mockUserId)
       insertVettedCandidate(mockUserId)
       insertVettedCandidate(mockUserId)
 
       mockUser = Users.findOne mockUserId
-      new MatchService().refreshCandidate(mockUser, new Date(0))
+      new MatchService().refreshCandidate(mockUser, now)
 
       # no messages were sent
       expect(messages['token_2']).toBeUndefined()
       # time should not update
-      expect(mockUser.nextRefreshTimestamp.getTime()).toEqual(1000)
+      expect(mockUser.nextRefreshTimestamp.getTime()).toEqual(1)
 
       # Candidates are not active
       Candidates.find().fetch().forEach (candidate) ->
         expect(candidate.active).toEqual(false)
 
     it 'should not refresh candidates if too many active candidates', () ->
+      now = new Date(2) # now > nextRefreshTimestamp
       mockUserId = createMockUserWithDevice('token_3')
       insertActiveCandidate(mockUserId)
       insertActiveCandidate(mockUserId)
       insertActiveCandidate(mockUserId)
 
       mockUser = Users.findOne mockUserId
-      new MatchService().refreshCandidate(mockUser, new Date(2000))
+      new MatchService().refreshCandidate(mockUser, now)
 
       # no messages were sent
       expect(messages['token_3']).toBeUndefined()
-      # time incremented by REFRESH_INTERVAL_MILLIS
-      expect(mockUser.nextRefreshTimestamp.getTime()).toEqual(4333)
+      # apr 29, 15:33:33 PDT
+      expect(mockUser.nextRefreshTimestamp.getTime()).toEqual(84813000)
 
       # Candidates are active
       Candidates.find().fetch().forEach (candidate) ->
         expect(candidate.active).toEqual(true)
 
     it 'should not activate too many candidates', () ->
+      now = new Date(2) # now > nextRefreshTimestamp
       mockUserId = createMockUserWithDevice('token_4')
       insertVettedCandidate(mockUserId)
       insertVettedCandidate(mockUserId)
@@ -111,11 +113,11 @@ describe 'Match Service', () ->
       insertVettedCandidate(mockUserId)
 
       mockUser = Users.findOne mockUserId
-      new MatchService().refreshCandidate(mockUser, new Date(2000))
+      new MatchService().refreshCandidate(mockUser, now)
 
       expect(messages['token_4']).toEqual("Your Ketch has arrived!")
-      # time incremented by REFRESH_INTERVAL_MILLIS
-      expect(mockUser.nextRefreshTimestamp.getTime()).toEqual(4333)
+      # apr 29, 15:33:33 PDT
+      expect(mockUser.nextRefreshTimestamp.getTime()).toEqual(84813000)
 
       numActiveCandidates = 0
       Candidates.find().fetch().forEach (candidate) ->
