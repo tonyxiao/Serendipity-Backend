@@ -10,7 +10,6 @@ Meteor.methods
         appId: 'co.ketchy.ketch'
         apnEnvironment: 'development'
         pushToken: pushToken
-        updatedAt: new Date
 
   'admin/device/remove': (userId, deviceId) ->
     user = Users.findOne userId
