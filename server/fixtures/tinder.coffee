@@ -26,6 +26,7 @@ parseSingleUser = (result) ->
   timezone: 'America/Los_Angeles'
   work: RandomData.job()
   gender: if result.gender == 0 then 'male' else 'female'
+  genderPref: if result.gender == 0 then 'women' else 'men'
   vetted: 'yes'
   status: 'active'
   # _id starting with a number get sent down with '-' as prefix, which isn't
