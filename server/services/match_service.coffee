@@ -72,15 +72,25 @@ class @MatchService
     ineligibleUserIds.push user._id
     ineligibleUserIds.push Meteor.settings.crabUserId
 
-    # TODO: Randomize & take into account gender, machine learning, what have you
-    matchedUsers = Users.find({
+
+    selector =
       _id: $nin: ineligibleUserIds
-      vetted: "yes"
-      status: $ne: "deleted"
-    }, {
+      vetted: 'yes'
+      status: $ne: 'deleted'
+      genderPref: $in: ['both', if user.gender == 'male' then 'men' else 'women']
+
+    # TODO: Make sure user has genderPref by default
+    if not user.genderPref?
+      user.genderPref = if user.gender == 'male' then 'women' else 'men'
+
+    if user.genderPref != 'both'
+      selector.gender = if user.genderPref == 'men' then 'male' else 'female'
+
+    # TODO: Randomize & take into account machine learning, what have you
+    matchedUsers = Users.find(selector,
       limit: maxCount
       fields: _id: 1
-    }).fetch()
+    ).fetch()
 
     for matchedUser in matchedUsers
       user.addUserAsCandidate matchedUser._id

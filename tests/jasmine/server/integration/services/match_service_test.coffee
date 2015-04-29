@@ -1,46 +1,58 @@
+# Helpers
+insertVettedCandidate = (forUserId) ->
+  userId = Users.insert
+    vetted: "yes"
+  return Candidates.insert
+    forUserId: forUserId
+    userId: userId
+    vetted: true
+    active: false
+
+insertActiveCandidate = (forUserId) ->
+  candidateId = insertVettedCandidate(forUserId)
+  Candidates.findOne(candidateId).activate()
+
+createMockDevice = (id) ->
+  return Devices.insert
+    _id: id
+    pushToken: id
+    apsEnv: id
+    appId: id
+
+createMockUserWithDevice = (id, gender = 'male', genderPref='women') ->
+  deviceId = createMockDevice(id)
+
+  return Users.insert
+    nextRefreshTimestamp: new Date(1)
+    device_ids: [deviceId]
+    vetted: 'yes'
+    gender: gender
+    genderPref: genderPref
+
+# TODO: Make this a custom matcher
+Meteor.users.helpers
+  hasUserAsCandidate: (user) ->
+    (_.find @allCandidates().fetch(), (candidate) -> candidate.userId == user._id)?
+
+
+# Tests
 describe 'Match Service', () ->
-  beforeAll () ->
+  beforeAll ->
     matchService.pause()
 
-  beforeEach () ->
-    Meteor.settings.numAllowedActiveGames = 1
+  beforeEach ->
+    Users.remove {}
+    Messages.remove {}
+    Candidates.remove {}
+    Devices.remove {}
 
   describe 'refreshCandidate', () ->
     messages = {}
 
-    insertVettedCandidate = (forUserId) ->
-      userId = Users.insert
-        vetted: "yes"
-      return Candidates.insert
-        forUserId: forUserId
-        userId: userId
-        vetted: true
-        active: false
+    beforeAll ->
+      Meteor.settings.numAllowedActiveGames = 1
 
-    insertActiveCandidate = (forUserId) ->
-      candidateId = insertVettedCandidate(forUserId)
-      Candidates.findOne(candidateId).activate()
-
-    createMockDevice = (id) ->
-      return Devices.insert
-        _id: id
-        pushToken: id
-        apsEnv: id
-        appId: id
-
-    createMockUserWithDevice = (id) ->
-      deviceId = createMockDevice(id)
-
-      return Users.insert
-        nextRefreshTimestamp: new Date(1)
-        device_ids: [deviceId]
-        vetted: "yes"
-
-    beforeEach () ->
-      Users.remove({})
-      Messages.remove({})
-      Candidates.remove({})
-
+    beforeEach ->
       # Mock the sendTestMessage method to cache sent messages in local dictionary.
       PushService.sendTestMessage = (pushToken, apsEnv, appId, message) ->
         messages[pushToken] = message
@@ -123,3 +135,33 @@ describe 'Match Service', () ->
         numActiveCandidates += candidate.active ? 1 : 0
 
       expect(numActiveCandidates).toEqual(3)
+
+  describe 'matchUsers', ->
+    it 'should match based on gender', ->
+      straightGuy = Users.findOne createMockUserWithDevice('token_1', 'male', 'women')
+      straightGirl = Users.findOne createMockUserWithDevice('token_2', 'female', 'men')
+      gayGuy = Users.findOne createMockUserWithDevice('token_3', 'male', 'men')
+      lesbianGirl = Users.findOne createMockUserWithDevice('token_4', 'female', 'women')
+      lesbianGirl2 = Users.findOne createMockUserWithDevice('token_44', 'female', 'women')
+      biGirl = Users.findOne createMockUserWithDevice('token_5', 'female', 'both')
+      biGuy = Users.findOne createMockUserWithDevice('token_6', 'male', 'both')
+
+      for user in [straightGuy, straightGirl, gayGuy, lesbianGirl, lesbianGirl2, biGuy, biGirl]
+        MatchService.generateMatchesForUser user
+
+      # TODO: Make this a custom matcher so result output is much more userful
+      expect(straightGuy.hasUserAsCandidate(straightGirl)).toBe(true)
+      expect(straightGuy.hasUserAsCandidate(biGirl)).toBe(true)
+      expect(straightGuy.hasUserAsCandidate(lesbianGirl)).toBe(false)
+      expect(straightGuy.hasUserAsCandidate(gayGuy)).toBe(false)
+      expect(straightGuy.hasUserAsCandidate(biGuy)).toBe(false)
+
+      expect(straightGirl.hasUserAsCandidate(straightGuy)).toBe(true)
+      expect(straightGirl.hasUserAsCandidate(biGirl)).toBe(false)
+      expect(straightGirl.hasUserAsCandidate(lesbianGirl)).toBe(false)
+      expect(straightGirl.hasUserAsCandidate(gayGuy)).toBe(false)
+      expect(straightGirl.hasUserAsCandidate(biGuy)).toBe(true)
+
+      expect(lesbianGirl.hasUserAsCandidate(lesbianGirl2)).toBe(true)
+      expect(biGuy.hasUserAsCandidate(biGirl)).toBe(true)
+
