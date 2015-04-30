@@ -93,10 +93,13 @@ class @FacebookPhotoService
         profilePicAlbumId = album.id
 
     # if the user does not have a profile picture album, default to photos of them.
-    if profilePicAlbumId == null
-      res = graphGet('/me/photos').data
-    else
-      res = graphGet(util.format('%s/photos', profilePicAlbumId)).data
+    res = graphGet('/me/photos').data
+
+    if profilePicAlbumId != null
+      try
+        res = graphGet(util.format('%s/photos', profilePicAlbumId)).data
+      catch e
+        logger.info "Profile picture album #{profilePicAlbumId} does not yield photos."
 
     logger.info "Will import facebook photos for #{user._id} : #{user.firstName}"
     imagesToDownload = []
