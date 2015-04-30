@@ -23,4 +23,4 @@ describe 'Api Methods', () ->
     expect(fakeRequest.url).toEqual(Meteor.settings.slack.url)
     expect(fakeRequest.json.channel).toEqual('#channel')
     expect(fakeRequest.json.icon_emoji).toEqual(':crabby:')
-    expect(fakeRequest.json.message).toEqual('test')
+    expect(fakeRequest.json.text).toEqual('test')

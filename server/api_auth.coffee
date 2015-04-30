@@ -30,7 +30,10 @@ Meteor.startup ->
 
     userInfo.accessToken = accessToken
     userInfo.expireAt = loginRequest.expire_at
-    
+
+    existingUser = Users.findOne
+      'services.facebook.id': userInfo.id
+
     accountInfo = Accounts.updateOrCreateUserFromExternalService 'facebook', userInfo, {}
     user = Users.findOne(accountInfo.userId)
 
@@ -132,5 +135,9 @@ Meteor.startup ->
     analytics.track
       userId: user._id
       event: 'login'
+
+    if !existingUser?
+      message = "<#{process.env.ROOT_URL}users/#{user._id}|#{info.firstName} #{info.lastName}> just signed up!"
+      new SlackService('#growth', ':crabby:').send(message)
 
     return userId: user._id
