@@ -162,10 +162,13 @@ Connections.helpers
     @messageWithoutPushNotification(text, sender)
     recipient.sendNotification "#{sender.firstName}: #{text}"
 
+    console.log "ROOT_URL"
+    console.log process.env.ROOT_URL
+
     # Forward message to ketchy to ketchy channel in Slack
     # TODO: Abstract out logic for localhost into meteor settings itself
-    if recipient.isCrab() && Meteor.settings.ROOT_URL.indexOf('localhost') < 0
-      webhook_url = 'https://hooks.slack.com/services/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'
+    if recipient.isCrab() && process.env.ROOT_URL.indexOf('localhost') < 0
+      webhook_url = Meteor.settings.slack.url
       payload =
         channel: '#ketchy'
         icon_emoji: ':crabby:'

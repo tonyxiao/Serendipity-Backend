@@ -36,6 +36,8 @@ _base: &DEFAULT
   basicAuth:
     username: 'ketchyketch'
     password: 'Ketch2015!'
+  slack:
+    url: 'https://hooks.slack.com/services/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'
 
 dev: &DEV
   <<: *DEFAULT

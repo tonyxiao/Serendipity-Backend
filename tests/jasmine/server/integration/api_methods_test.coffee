@@ -1,3 +1,20 @@
+insertVettedUser = (id) ->
+  return Users.insert
+    vetted: 'yes'
+
+# Mock of npm 'request'
+class FakeRequest
+  constructor: () ->
+    @url = null
+    @json = null
+  post: (url) ->
+    self = this
+    @url = url
+    return {
+      json: (json) ->
+        self.json = json
+    }
+
 describe 'Api Methods', () ->
   mockUser = null
 
@@ -5,26 +22,25 @@ describe 'Api Methods', () ->
   ### Connection API ###
   ######################
   describe 'Connection', () ->
-    mockSender = {
-      _id: 'mockSender'
-      isVetted: () ->
-        true
-    }
-    mockRecipient = {
-      _id: 'mockRecipient'
-      isVetted: () ->
-        true
-    }
+    senderId = null
+    recipientId = null
     connectionId = null
     messageId = null
 
     beforeEach () ->
+      Users.remove({})
+      Connections.remove({})
+      Messages.remove({})
+
+      senderId = insertVettedUser()
+      recipientId = insertVettedUser()
+
       users = []
-      users.push { _id: mockSender._id, hasUnreadMessage: true }
-      users.push { _id: mockRecipient._id, hasUnreadMessage: true }
+      users.push { _id: senderId, hasUnreadMessage: true }
+      users.push { _id: recipientId, hasUnreadMessage: true }
 
       # insert a test connection
-      Connections.remove({})
+
       connectionId = Connections.insert
         users: users
         expiresAt: new Date
@@ -33,27 +49,24 @@ describe 'Api Methods', () ->
 
       # insert a test message, sent by mockRecipient, to test that lastMessageIdSeen
       # updates correctly.
-      Messages.remove({})
       messageId = Messages.insert
         connectionId: connectionId
-        senderId: mockRecipient._id
-        recipientId: mockSender._id
+        senderId: recipientId
+        recipientId: senderId
         text: 'message1'
 
-      spyOn(Users, 'findOne').and.callFake (userId) ->
-        if userId == mockSender._id
-          return mockSender
-        return mockRecipient
-
     it 'connection/markAsRead should mark hasUnreadMessage', () ->
+      sender = Users.findOne senderId
+      recipient = Users.findOne recipientId
+
       # senders is logged in
       Meteor.user = () ->
-        return mockSender
+        return Users.findOne senderId
 
       Meteor.call 'connection/markAsRead', connectionId, (err, res) ->
         connection = Connections.findOne connectionId
-        senderInfo = connection.getUserInfo mockSender
-        recipientInfo = connection.getUserInfo mockRecipient
+        senderInfo = connection.getUserInfo sender
+        recipientInfo = connection.getUserInfo recipient
         expect(senderInfo.hasUnreadMessage).toBe(false)
         expect(recipientInfo.hasUnreadMessage).toBe(true)
         expect(senderInfo.lastMessageIdSeen).toBe(messageId)
@@ -61,17 +74,41 @@ describe 'Api Methods', () ->
     it 'connection/sendMessage should insert a new message', () ->
       # sender is logged in
       Meteor.user = () ->
-        return mockSender
+        return Users.findOne senderId
 
       Meteor.call 'connection/sendMessage', connectionId, 'hello', (err, res) ->
         connection = Connections.findOne connectionId
         expect(connection.lastMessageText).toEqual('hello')
 
         message = Messages.findOne
-          senderId: mockSender._id
-          recipientId: mockRecipient._id
+          senderId: senderId
+          recipientId: recipientId
         expect(message.text).toEqual('hello')
         expect(message.connectionId).toEqual(connectionId)
+
+    it 'connection/sendMessage should send a slack notification if recipient is crab', () ->
+      fakeRequest = new FakeRequest()
+
+      spyOn(Meteor, 'npmRequire').and.returnValue(fakeRequest)
+
+      # sender is logged in
+      Meteor.user = () ->
+        return Users.findOne senderId
+
+      # sender is sending to crab
+      Meteor.settings.crabUserId = recipientId
+
+      Meteor.call 'connection/sendMessage', connectionId, 'hello', (err, res) ->
+        connection = Connections.findOne connectionId
+        expect(connection.lastMessageText).toEqual('hello')
+
+        message = Messages.findOne
+          senderId: senderId
+          recipientId: recipientId
+        expect(message.text).toEqual('hello')
+        expect(message.connectionId).toEqual(connectionId)
+        expect(fakeRequest.url).toEqual(Meteor.settings.slack.url)
+        expect(fakeRequest.json.channel).toEqual('#ketchy')
 
   #####################
   ### Candidate API ###
