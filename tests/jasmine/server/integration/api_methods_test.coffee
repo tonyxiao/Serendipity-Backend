@@ -1,7 +1,3 @@
-insertVettedUser = (id) ->
-  return Users.insert
-    vetted: 'yes'
-
 # Mock of npm 'request'
 class FakeRequest
   constructor: () ->

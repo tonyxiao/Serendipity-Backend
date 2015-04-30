@@ -1,39 +1,7 @@
-# Helpers
-insertVettedCandidate = (forUserId) ->
-  userId = Users.insert
-    vetted: "yes"
-  return Candidates.insert
-    forUserId: forUserId
-    userId: userId
-    vetted: true
-    active: false
-
-insertActiveCandidate = (forUserId) ->
-  candidateId = insertVettedCandidate(forUserId)
-  Candidates.findOne(candidateId).activate()
-
-createMockDevice = (id) ->
-  return Devices.insert
-    _id: id
-    pushToken: id
-    apsEnv: id
-    appId: id
-
-createMockUserWithDevice = (id, gender = 'male', genderPref='women') ->
-  deviceId = createMockDevice(id)
-
-  return Users.insert
-    nextRefreshTimestamp: new Date(1)
-    device_ids: [deviceId]
-    vetted: 'yes'
-    gender: gender
-    genderPref: genderPref
-
 # TODO: Make this a custom matcher
 Meteor.users.helpers
   hasUserAsCandidate: (user) ->
     (_.find @allCandidates().fetch(), (candidate) -> candidate.userId == user._id)?
-
 
 # Tests
 describe 'Match Service', () ->
