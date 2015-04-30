@@ -157,7 +157,6 @@ Connections.helpers
 
   createNewMessage: (text, sender) ->
     # TODO: What's the right way to do this here? @fang refactor?
-    request = Meteor.npmRequire('request')
     recipient = @otherUser sender
     @messageWithoutPushNotification(text, sender)
     recipient.sendNotification "#{sender.firstName}: #{text}"
@@ -165,14 +164,9 @@ Connections.helpers
     # Forward message to ketchy to ketchy channel in Slack
     # TODO: Abstract out logic for localhost into meteor settings itself
     if recipient.isCrab() && process.env.ROOT_URL.indexOf('localhost') < 0
-      webhook_url = Meteor.settings.slack.url
-      payload =
-        channel: '#ketchy'
-        icon_emoji: ':crabby:'
-        username: Meteor.settings.env
-        # TODO: How to correctly join urls without worrying about presence of '/'
-        text: "<#{process.env.ROOT_URL}/connections/#{@_id}|#{sender.firstName} #{sender.lastName}>: #{text}"
-      request.post(webhook_url).json(payload)
+      # TODO: How to correctly join urls without worrying about presence of '/'
+      message = "<#{process.env.ROOT_URL}connections/#{@_id}|#{sender.firstName} #{sender.lastName}>: #{text}"
+      new SlackService('#ketchy', ':crabby:').send(message)
 
   removeAllMessages: ->
     Messages.remove
