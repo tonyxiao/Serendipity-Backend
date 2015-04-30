@@ -162,9 +162,6 @@ Connections.helpers
     @messageWithoutPushNotification(text, sender)
     recipient.sendNotification "#{sender.firstName}: #{text}"
 
-    console.log "ROOT_URL"
-    console.log process.env.ROOT_URL
-
     # Forward message to ketchy to ketchy channel in Slack
     # TODO: Abstract out logic for localhost into meteor settings itself
     if recipient.isCrab() && process.env.ROOT_URL.indexOf('localhost') < 0
