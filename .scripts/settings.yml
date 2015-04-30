@@ -36,7 +36,7 @@ _base: &DEFAULT
   basicAuth:
     username: 'ketchyketch'
     password: 'Ketch2015!'
-  slack:
+  slack: # Incoming ketchy message -> Slack https://milasya.slack.com/services/4624255571
     url: 'https://hooks.slack.com/services/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'
 
 dev: &DEV
@@ -90,4 +90,4 @@ beta:
     appId: 'w7qdDzhFAfysv2euo'
     appSecret: 'cc1e2dcf-04f1-41aa-a8bf-80096ea5f549'
   segmentWriteKey: 'SGEB9gVQGFYgeptFbtnETHCka8FCOuoc'
-
+ 

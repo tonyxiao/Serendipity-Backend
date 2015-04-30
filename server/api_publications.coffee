@@ -18,11 +18,8 @@ Meteor.publish 'settings', ->
 
   # userId to user settings properties (i.e. about, education)
   cache = {}
-  settings = {}
-  settings["softMinBuild"] = Meteor.settings.softMinBuild
-  settings["hardMinBuild"] = Meteor.settings.hardMinBuild
-  settings["crabUserId"] = Meteor.settings.crabUserId
-
+  settings = _.clone(Meteor.settings.public)
+  
   # TODO: refactor devices into its own table.
   usersWithDevice = Users.find
     'devices._id': SessionData.getFromConnection(connectionId, ACTIVE_DEVICE_ID)
