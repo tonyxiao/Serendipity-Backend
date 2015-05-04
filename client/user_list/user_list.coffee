@@ -1,7 +1,11 @@
 
 Template.userList.helpers
   users: ->
-    users = Users.find().fetch()
+    users = Users.find({
+      'services.tinder': {
+        $exists: false
+      }
+    }).fetch()
     okUsers = []
     Users.find().fetch().forEach (user) ->
       if user.candidateQueue().fetch().length >= Candidates.NUM_CANDIDATES_PER_GAME
@@ -16,7 +20,9 @@ Template.userList.helpers
   # TODO: refactor this and {@code users} to share code.
   usersRunningOutOfVettedCandidates: ->
     runningOutOfMatches = []
-    Users.find().fetch().forEach (user) ->
+    Users.find(
+      $exists: false
+    ).fetch().forEach (user) ->
       if user.candidateQueue().fetch().length < Candidates.NUM_CANDIDATES_PER_GAME
         runningOutOfMatches.push(user)
     return runningOutOfMatches
