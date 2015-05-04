@@ -105,6 +105,8 @@ Users.helpers
     Users.update @_id,
       $set: vetted: "yes"
 
+    @sendNotification "Thanks for waiting! Your Ketch journey awaits!"
+
   block: ->
     @_changeVetStatus "blocked"
 
