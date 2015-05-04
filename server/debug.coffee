@@ -22,6 +22,13 @@ Meteor.startup ->
 
     throw Meteor.Error(400, "Trying to log in with fake user #{serviceData} failed")
 
+Meteor.methods
+  'debug/user/populateAndActivate': (userId) ->
+    user = Users.findOne(userId)
+    user.populateCandidateQueue 200
+    user.allCandidates().forEach (candidate) ->
+      candidate.activate()
+
 # Publish all documents
 Meteor.publish 'allUsers', ->
   Users.find()

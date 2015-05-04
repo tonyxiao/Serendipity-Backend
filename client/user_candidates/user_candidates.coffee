@@ -46,9 +46,14 @@ Template.userCandidates.events
       Meteor.call 'user/populateCandidateQueue', @_id, 2
       Meteor.call 'user/populateCandidateQueue', Meteor.user()._id, 2
 
+  'click .populate-and-activate-queue': ->
+    if confirm('sure?')
+      if confirm('Are you really sure?')
+        Meteor.call 'debug/user/populateAndActivate', @_id
+
   'click .populate-queue': ->
     if confirm('sure?')
-      Meteor.call 'user/populateCandidateQueue', @_id
+      Meteor.call 'user/populateCandidateQueue', @_id, 200
 
   'click .clear-queue': ->
     if confirm('sure?')

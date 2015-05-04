@@ -57,7 +57,7 @@ class @MatchService
 
   # TOOD: Make user part of constructor
   @generateMatchesForUser: (user, maxCount) ->
-    maxCount ?= 200 # Default to 12 max
+    maxCount ?= 12 # Default to 12 max
     # current candidates should not be surfaced in the match queue.
     ineligibleUserIds = _.map user.allCandidates().fetch(), (candidate) -> candidate.userId
 
@@ -71,7 +71,6 @@ class @MatchService
 
     ineligibleUserIds.push user._id
     ineligibleUserIds.push Meteor.settings.crabUserId
-
 
     selector =
       _id: $nin: ineligibleUserIds
