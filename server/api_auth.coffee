@@ -120,8 +120,8 @@ Meteor.startup ->
     if deviceId?
       user.addDevice deviceId
 
-    # Update user photos if need be
-    if !user.photoUrls?
+    # Reload photos from facebook if the user did not have photos before.
+    if !user.photos?
       user.reloadPhotosFromFacebook()
 
     # Identify this user to segment.io
